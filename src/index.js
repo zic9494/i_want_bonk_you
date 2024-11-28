@@ -1,6 +1,4 @@
-import { setCookie,  getCookie} from "./Cookie.js"; 
-
+// import { setCookie,  getCookie} from "./cookie.js"; 
+// import { transaction } from "./transaction";
 window.onload = function(){
-    console.log("Peko");
-    setCookie("Test", 2, 2)
 }

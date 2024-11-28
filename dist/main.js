@@ -1,1 +1,1 @@
-(()=>{"use strict";window.onload=function(){var o,e,t;console.log("Peko"),o="Test",e="",(t=new Date).setTime(t.getTime()+1728e5),e="; expires="+t.toUTCString(),console.log(o+"=2"+e+"; path=/"),document.cookie=o+"=2"+e+"; path=/",console.log(document.cookie)}})();
+window.onload=function(){};

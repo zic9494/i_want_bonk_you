@@ -1,3 +1,6 @@
+import { setCookie,  getCookie} from "./Cookie.js"; 
+
 window.onload = function(){
-    document.getElementById("Test").innerText = "peko"
+    console.log("Peko");
+    setCookie("Test", "peko", 2)
 }

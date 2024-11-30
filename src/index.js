@@ -7,11 +7,13 @@ window.onload = function(){
     document.getElementById('connect-wallet').addEventListener('click',connectWallet)
     document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
 }
-
-document.querySelectorAll('.navbar a').forEach(anchor => {
-    anchor.addEventListener('click', function(e){
-        e.preventDefault()
-        var targetID = this.getAttribute('href')
-        smoothScroll(targetID, 1000) // 呼叫捲動函式(ID, time(ms))
+document.addEventListener('DOMContentLoaded', () => {
+    const navbarAnchors = document.querySelectorAll('.navbar a');
+    navbarAnchors.forEach(anchor => {
+        anchor.addEventListener('click', function(e){
+            e.preventDefault()
+            var targetID = this.getAttribute('href')
+            smoothScroll(targetID, 1000) // 呼叫捲動函式(ID, time(ms))
+        })
     })
 })

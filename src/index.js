@@ -2,13 +2,16 @@
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
 import { UserInfo} from "./transaction.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
+import {addUser} from "../sql/fetch_test.js"
+
 
 //現在操作使用者的資料，JS沒有指標所以用Object實現類似功能
 let UIF = {User : new UserInfo(null)}
 
 window.onload = function(){
-    document.getElementById('connect-wallet').addEventListener('click',connectWallet)
-    document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
+    document.getElementById('test-fetch').addEventListener('click',addUser)
+    //document.getElementById('connect-wallet').addEventListener('click',connectWallet)
+    //document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
 }
 document.addEventListener('DOMContentLoaded', () => {
     //導覽列的動畫
@@ -47,5 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("MSG_Connect").style.display = "block"
         smoothScroll("#User_Info", 1000)
     })
+
 
 })

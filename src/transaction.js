@@ -1,12 +1,18 @@
 export class transaction {
     #PrivateKey
-    Data(TGaddress, Amount, charge, private) {
+    constructor(TGaddress, Amount, charge, Key) {
         this.TargetAddress = TGaddress
         this.Amount = Amount
         this.Charge = charge
-        this.#PrivateKey = private
+        this.#PrivateKey = key
     }
     Chage_PrivateKey(NewKey){
         this.#PrivateKey = NewKey
+    }
+}
+export class UserInfo{
+    #PrivateKey
+    constructor(key){
+        this.#PrivateKey = key
     }
 }

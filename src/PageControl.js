@@ -24,6 +24,8 @@ export function smoothScroll(target, duration){
     }
     requestAnimationFrame(animation)
 }
+
 export function Generate_Game_Page(){
-    
+    document.getElementById("MSG_Connect").style.display = "none"
+    document.getElementById("Game_UI").style.display = "block"
 }

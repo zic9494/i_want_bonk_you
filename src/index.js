@@ -1,7 +1,10 @@
-// import { setCookie,  getCookie} from "./cookie.js"; 
-// import { transaction } from "./transaction";
-import { Generate_Game_Page, smoothScroll } from "./PageScroll.js"
+// import { setCookie,  getCookie} from "./cookie.js";
+import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
+import { UserInfo} from "./transaction.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
+
+//現在操作使用者的資料
+let UIF = {User : new UserInfo(null)}
 
 window.onload = function(){
     document.getElementById('connect-wallet').addEventListener('click',connectWallet)
@@ -20,10 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     //主頁的點擊引導至輸入錢包地址
-    const Guide_To_Info = document.getElementsByClassName("Guide_To_Game_Info");
+    const Guide_To_Info = document.getElementsByClassName("Guide_To_User_Info");
     Array.prototype.forEach.call(Guide_To_Info, function(anchor) {
             anchor.addEventListener("click", function() {
-            smoothScroll("#Game_Info", 1000);
+            smoothScroll("#User_Info", 1000);
         });
     });
 
@@ -37,6 +40,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("Private_Key").value = ""
         Generate_Game_Page()
         smoothScroll("#Game_Page", 1000)
+    })
+
+    document.getElementById("Quit").addEventListener("click", ()=>{
+        UIF.User = new UserInfo(null)
+        document.getElementById("Game_UI").style.display = "none"
+        document.getElementById("MSG_Connect").style.display = "block"
+        smoothScroll("#User_Info", 1000)
     })
 
 })

@@ -50,12 +50,15 @@ section{
     position: absolute;
     bottom: 10px;
 }
-.Game_Info{
+.User_Info{
     background-color: black;
 }
-.Game_Info label{
+.User_Info label{
     color: white;
 }
 .content{
     padding-top: 50px;
+}
+#Game_UI{
+    display: none;
 }

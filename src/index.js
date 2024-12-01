@@ -3,7 +3,7 @@ import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
 import { UserInfo} from "./transaction.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
 
-//現在操作使用者的資料
+//現在操作使用者的資料，JS沒有指標所以用Object實現類似功能
 let UIF = {User : new UserInfo(null)}
 
 window.onload = function(){
@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {
         anchor.addEventListener('click', function(e){
-            console.log("miko");
             e.preventDefault()
             var targetID = this.getAttribute('href')
             smoothScroll(targetID, 1000) // 呼叫捲動函式(ID, time(ms))

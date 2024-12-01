@@ -5,13 +5,11 @@ export function smoothScroll(target, duration){
     var startPosition = window.pageYOffset
     var distance = TargetPosition - startPosition
     var startTime = null
-    console.log(target, TargetPosition, startPosition, distance, startTime)
-
+    
     function animation(currentTime){
         if (startTime === null)startTime = currentTime
         var timeElapsed = currentTime - startTime
         var run = ease(timeElapsed, startPosition, distance, duration)
-        console.log(run)
         window.scrollTo(0, run)
         if (timeElapsed < duration) requestAnimationFrame(animation)
     }
@@ -25,4 +23,7 @@ export function smoothScroll(target, duration){
         //減速段的緩動方程式函數
     }
     requestAnimationFrame(animation)
-} 
+}
+export function Generate_Game_Page(){
+    
+}

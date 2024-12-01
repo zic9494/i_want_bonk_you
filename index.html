@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8">DA
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./HomePage.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -13,18 +13,22 @@
     
     <div class="navbar">
         <a href="#Home_Page"><i class="fas fa-home"></i>Home</a>
-        <a href="#Game_Introduce">Game Introduce</a>
-        <a href="">Start Game</a>
+        <a href="#Game_Info">Game info</a>
     </div>
-    <div class="Font_Page">    
-        <section id="Home_Page" class="Home_page content">
-            Home
+    <div id="Font_Page" class="Font_Page">    
+        <section id="Home_Page" class="Home_page content Guide_To_Game_Info">
+            <a class="Guide_To_Game_Info">connect wallet and play the game<br></a>
+            <span class="Guide_To_Game_Info">&#10507;</span>
         </section>
-        <section id="Game_Introduce" class="Game_Introduce content">
-            Game Introduce
+        <section id="Game_Info" class="Game_Info content">
+            <form>
+                <label id="wallet-info">Priveta Key<br><input type="password" id="Private_Key"></label>
+                <button id="connect_wallet" type="button">connect wallet</button>
+            </form>    
         </section>
-    </div>
-    <div class="GamePage">
+        <section id="Game_Page" class="content">
+            Before Play The Game Please Connect Wallet 
+        </section>
     </div>
     <!--test
     <div>

@@ -31,7 +31,30 @@ section{
     color:black;
 }
 .Home_page{
+    display: flex;
     background-color: aqua;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+.Home_page a {
+    position: absolute;
+    text-decoration: none;
+    color: black;
+    bottom: 50px;
+    font-size: 24px;
+}
+.Home_page span {
+    font-size: 36px;
+    position: absolute;
+    bottom: 10px;
+}
+.Game_Info{
+    background-color: black;
+}
+.Game_Info label{
+    color: white;
 }
 .content{
     padding-top: 50px;

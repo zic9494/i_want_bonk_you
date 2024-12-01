@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "<h3>Hi</h3>",
   "main": "./src/index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack"
@@ -14,6 +15,9 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@solana/web3.js": "^1.95.5"
+    "@solana/web3.js": "^1.95.5",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "mssql": "^11.0.1"
   }
 }

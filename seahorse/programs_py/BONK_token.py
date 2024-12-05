@@ -1,14 +1,16 @@
-from seahorse.prelude import *
+from seahorse.prelude import 
 
-declare_id('2Y3qTdF2xTdE1j41hXwqScD1v59TEu67a7MdPEL46nX6')
+declare_id('HPAHsBjcC8NRQcp9x4tFYL6HPBAsnJJqR1RnJp3jYWo5')
 
-class Admin(Account):
-    admin_address: Pubkey
-    Token_Account: Pubkey
-    mint_Account: Pubkey
+class Admin(Account)
+    admin_address Pubkey
+    Token_Account_Address Pubkey
+    Token_Account_Bump u8
+    mint_Account_Address Pubkey
+    mint_Account_Bump u8
 
 @instruction
-def init_admin(owner: Signer, admin: Empty[Admin]):
+def init_admin(owner Signer, admin Empty[Admin])
     
     admin = admin.init(
         payer = owner,
@@ -18,9 +20,9 @@ def init_admin(owner: Signer, admin: Empty[Admin]):
     admin.admin_address = owner.key()
 
 @instruction
-def token_mint(signer: Signer, BONK_mint: Empty[TokenMint], admin: Admin):
+def token_mint(signer Signer, BONK_mint Empty[TokenMint], admin Admin)
     
-    assert(signer.key() == admin.admin_address), "Only Admin authorized to call this function"
+    assert(signer.key() == admin.admin_address), Only Admin authorized to call this function
 
     BONK_mint.init(
         payer = signer,
@@ -30,10 +32,11 @@ def token_mint(signer: Signer, BONK_mint: Empty[TokenMint], admin: Admin):
     )
 
     pda_pubkey, bump = Pubkey.find_program_address(['bonk_mint', signer])
-    admin.Token_Account = pda_pubkey
+    admin.mint_Account_Address = pda_pubkey
+    admin.mint_Account_Bump = bump
 
 @instruction
-def admin_token_account(signer: Signer, admin_account: Empty[TokenAccount], mint: TokenMint, admin: Admin):
+def admin_token_account(signer Signer, admin_account Empty[TokenAccount], mint TokenMint, admin Admin)
    
     admin_account.init(
         payer = signer, 
@@ -43,12 +46,13 @@ def admin_token_account(signer: Signer, admin_account: Empty[TokenAccount], mint
     )
 
     pda_pubkey, bump = Pubkey.find_program_address(['admin_token', signer])
-    admin.Token_Account = pda_pubkey
+    admin.Token_Account_Address = pda_pubkey
+    admin.Token_Account_Bump = bump
 
 @instruction
-def mint_tokens(signer: Signer, mint: TokenMint, recipient: TokenAccount, admin: Admin, amount: u64):
+def mint_tokens(signer Signer, mint TokenMint, recipient TokenAccount, admin Admin, amount u64)
 
-    assert(signer.key() == admin.admin_address), "Only Admin authorized to call this function"
+    assert(signer.key() == admin.admin_address), Only Admin authorized to call this function
   
     mint.mint(
         authority = signer,

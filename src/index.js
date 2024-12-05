@@ -1,10 +1,12 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
-import {connectWallet,disconnectWallet, test_wallet} from "./wallet.js"
+import { UserInfo} from "./transaction.js"
+import {connectWallet, disconnectWallet} from "./wallet.js"
+import {addUser} from "../sql/fetch_test.js"
 
 
 window.onload = function(){
-    //document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
+    document.getElementById('test-fetch').addEventListener('click',addUser)
 }
 document.addEventListener('DOMContentLoaded', () => {
     //導覽列的動畫
@@ -44,5 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("MSG_Connect").style.display = "block"
         smoothScroll("#User_Info", 1000)
     })
+
 
 })

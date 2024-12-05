@@ -9,6 +9,7 @@ export function setCookie(name, value, days) {
     document.cookie = name + "=" + (value || "") + expires + "; path=/"; 
     console.log(document.cookie);
 }
+
 export function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);

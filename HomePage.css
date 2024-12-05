@@ -51,10 +51,22 @@ section{
     bottom: 10px;
 }
 .User_Info{
+    display: flex;
     background-color: black;
-}
-.User_Info label{
     color: white;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100vh;
+    text-align: left;
+}
+#wallet-info , #connect_wallet{
+    display: block;
+    width: fit-content;
+}
+#connect_wallet{
+    margin-left: 8px;
+    margin-top: 10px;
 }
 .content{
     padding-top: 50px;

@@ -6,11 +6,13 @@ export async function connectWallet(){  //連接錢包
         try{
             const response = await window.solana.connect();
             console.log("Address:",response.publicKey.toString());
+            return true
         }catch(err){
             console.log("Error:",err);
         }
     }else{
         console.log("not found wallet");
+        return false
     }
 }
 
@@ -29,3 +31,7 @@ export async function disconnectWallet(){   //斷開連接
     }
 }
 
+export function test_wallet() {
+    console.log('phantom' in window);
+    
+}

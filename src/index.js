@@ -1,14 +1,10 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
-import { UserInfo} from "./transaction.js"
-import {connectWallet,disconnectWallet} from "./wallet.js"
+import {connectWallet,disconnectWallet, test_wallet} from "./wallet.js"
 
-//現在操作使用者的資料，JS沒有指標所以用Object實現類似功能
-let UIF = {User : new UserInfo(null)}
 
 window.onload = function(){
-    document.getElementById('connect-wallet').addEventListener('click',connectWallet)
-    document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
+    //document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
 }
 document.addEventListener('DOMContentLoaded', () => {
     //導覽列的動畫
@@ -30,19 +26,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     //送出錢包資料後
-    document.getElementById("connect_wallet").addEventListener("click", ()=>{
-        /*
-
-            連接錢包的判斷式，成功後執行下面程式就會完成後續的動作
-
-        */
-        document.getElementById("Private_Key").value = ""
-        Generate_Game_Page()
-        smoothScroll("#Game_Page", 1000)
+    document.getElementById("connect_wallet").addEventListener("click", async ()=>{
+        let connected = await connectWallet()
+        if(connected){
+            Generate_Game_Page()
+            smoothScroll("#Game_Page", 1000)
+        }else{
+            if(!('phantom' in window)){
+                window.open('https://phantom.app/', '_blank')
+            }
+        }
     })
 
     document.getElementById("Quit").addEventListener("click", ()=>{
-        UIF.User = new UserInfo(null)
+        disconnectWallet()
         document.getElementById("Game_UI").style.display = "none"
         document.getElementById("MSG_Connect").style.display = "block"
         smoothScroll("#User_Info", 1000)

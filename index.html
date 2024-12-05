@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <head>
-    <meta charset="UTF-8">DA
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./HomePage.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js"></script>
-    
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <title>I Want Bonk You</title>
 </head>
 <body>
@@ -21,10 +21,8 @@
             <span class="Guide_To_User_Info">&#10507;</span>
         </section>
         <section id="User_Info" class="User_Info content">
-            <form>
-                <label id="wallet-info">Priveta Key<br><input type="password" id="Private_Key"></label>
-                <button id="connect_wallet" type="button">connect wallet</button>
-            </form>    
+            <label id="wallet-info">Connect wallet</label>
+            <a id="connect_wallet">touch me!</a>
         </section>
         <section id="Game_Page" class="content">
             <label id="MSG_Connect">Before Play The Game<br>Please Connect Wallet</label>

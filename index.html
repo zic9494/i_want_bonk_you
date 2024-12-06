@@ -4,9 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./HomePage.css" rel="stylesheet">
     <link href="./Login.css" rel="stylesheet">
+    <link href="./UserInfo.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
-    <script src="./dist/main.js"></script>
+    <script src="./dist/main.js" defer></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <title>I Want Bonk You</title>
 </head>
@@ -23,8 +24,37 @@
             <span class="Guide_To_User_Info">&#10507;</span>
         </section>
         <section id="User_Info" class="User_Info content">
-            <label id="wallet-info">Connect wallet</label>
-            <a id="connect_wallet">touch me!</a>
+            <div class="user-profile-container">
+                <h3>UserInfo</h3>
+                <!-- 動態加載部分 -->
+                <div id="dynamic-user-info">
+                    <!-- Avatar -->
+                    <div class="user-avatar">
+                        <img id="user-avatar-image" src="https://via.placeholder.com/150" alt="User Avatar">
+                        <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <!-- Nickname -->
+                    <div class="user-detail-item">
+                        <label for="user-nickname">Name:</label>
+                        
+                    </div>
+        
+                    <!-- Bio -->
+                    <div class="user-detail-item">
+                        <label for="user-bio">Bio:</label>
+                        <p id="user-bio-display">This is your bio. Click "Edit" to modify it.</p>
+                        <textarea id="user-bio-edit" placeholder="Write something about yourself..." style="display: none;"></textarea>
+                        <button id="edit-bio-button">Edit</button>
+                        <button id="save-bio-button" style="display: none;">Save</button>
+                    </div>
+                </div>
+        
+
+                <button id="add-detail-button">Other function</button>
+
+
+            </div>
         </section>
         
         <section id="Game_Page" class="content">
@@ -38,7 +68,7 @@
         </section>
     </div>
     
-
+    <!-- 登入登出彈窗 -->
     <div id="LoginSignUp-popup" class="LoginSignUp-popup">
         <div class="LoginSignUp-popup-content">
             <span class="close">&times;</span>
@@ -49,7 +79,7 @@
                     <label for="username">Username:</label>
                     <input type="text" id="username" name="user_name" required oninvalid="this.setCustomValidity('Please enter your username')">
                     
-                    <label for="nickname">Nickname:</label>
+                    <label for="nickname">Name:</label>
                     <input type="text" id="nickname" name="nick_name" required oninvalid="this.setCustomValidity('Please enter your nickname')">
                     
                     <label for="password">Password:</label>

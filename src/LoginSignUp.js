@@ -1,5 +1,5 @@
 export function setLoginAandSignUp(){
-    
+    console.log("qwe");
     //登入註冊畫面
     const popup = document.getElementById('LoginSignUp-popup');
     const closeBtn = popup.querySelector('.close');
@@ -8,6 +8,7 @@ export function setLoginAandSignUp(){
     const showLogin = document.getElementById('show-login');
     const showSignup = document.getElementById('show-signup');
     const loginBtn = document.getElementById('Login-btn');
+    
 
     //打開跳窗
     loginBtn.addEventListener('click',()=>{
@@ -104,5 +105,5 @@ export function setLoginAandSignUp(){
     })
 
     //登入後切換頁面邏輯
-    
+
 }

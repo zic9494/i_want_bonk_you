@@ -1,22 +1,17 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
-import { UserInfo} from "./transaction.js"
+//import { UserInfo} from "./transaction.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
-
+import { setUserInfo } from "./UserInfo.js";
+    
 //現在操作使用者的資料，JS沒有指標所以用Object實現類似功能
-let UIF = {User : new UserInfo(null)}
-
-window.onload = function(){
-    //document.getElementById('test-fetch').addEventListener('click',addUser)
-    //document.getElementById('connect-wallet').addEventListener('click',connectWallet)
-    //document.getElementById('disconnect-wallet').addEventListener('click',disconnectWallet)
-}
-
+//let UIF = {User : new UserInfo(null)}
 
 document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
+    setUserInfo();
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

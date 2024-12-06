@@ -1,12 +1,9 @@
 import sql from 'mssql'; 
 import express from 'express'; 
 import fs from 'fs/promises';
-import bcrypt from 'bcrypt';
 import cors from 'cors';
 
 //node db.js運行Express伺服器，這樣我們就可以call自己定義的API去操作SQL
-let pool = null;
-const saltRounds = 10;
 
 const config ={ 
     server: 'bonk-you.database.windows.net', //伺服器名稱
@@ -15,7 +12,7 @@ const config ={
     database: 'Bonk You', //資料庫名稱
 };
 
-
+let pool = null;
 
 async function connectToDatabase() {    //連接SQL Server
     try {
@@ -45,80 +42,21 @@ const app = express();
 app.use(cors()); //中間件:允許跨域請求
 app.use(express.json()); //中間件:解析json檔
 
-app.post('/api/users/signup',async (req,res) => {  //新增使用者的POST請求
-    try{
-        const user_name = req.body.user_name;
-        const nick_name = req.body.nick_name;
-        const password = req.body.password;
-        
-        
-        const checkSQL = `SELECT * FROM Users WHERE User_name = @User_name`;
-
-        const checkUserResponse = await pool.request()
-                            .input('User_name',sql.VarChar(50),user_name)
-                            .query(checkSQL);
-
-        //檢查用戶是否註冊過
-        if (checkUserResponse.recordset.length>0){
-            return res.status(409).json({
-                status: 409,
-                message: "Username already exist"
-            })          
-        }
-
-        const hashedPassword = await bcrypt.hash(password,saltRounds);
-        //新增到SQL
-        await pool.request()
-            .input('User_name', sql.Char(50), user_name)
-            .input('Nick_name', sql.VarChar(50), nick_name)
-            .input('Password', sql.VarChar(255), hashedPassword)
-            .query(
-                `INSERT INTO Users(User_name,Nick_name,Password)
-                VALUES (@User_name, @Nick_name, @Password)`
-            );
-        
-        res.status(201).json({
-            status: 201,
-            message: "User created successfully"
-        })
-        console.log('created successfully');
-    }catch(err){
-        console.error('Error:',err);
+app.post('/api/users',async (req,res) => {  //新增使用者的POST請求
+    const newUser = {
+        address:req.body.address,
+        userName:req.body.userName,
+        photoURL:req.body.photoURL
     }
-});
-
-app.post('/api/users/login',async (req,res) => {  //新增使用者的POST請求
-    console.log(req.body);
-    const user_name = req.body.user_name;
-    const password = req.body.password;
-    
-    const checkSQL = `SELECT * FROM Users WHERE User_name = @User_name`;
-
-    const checkUserResponse = await pool.request()
-                        .input('User_name',sql.VarChar(50),user_name)
-                        .query(checkSQL);
-    //檢查用戶是否存在
-    if (!checkUserResponse.recordset.length){
-        return res.status(409).json({
-            status: 409,
-            message: "Incorrect password or Username doesn't exist"
-        })          
-    }
-
-    //檢查密碼
-    const isPasswordCorrect = bcrypt.compare(password,checkUserResponse.recordset[0].password);
-    if(!isPasswordCorrect){
-        return res.status(409).json({
-            status: 409,
-            message: "Incorrect password or Username doesn't exist"
-        })      
-    }
-    
-    res.status(201).json({
-        status: 201,
-        message: "Login successfully"
-    })
-    console.log('Login');
+    await pool.request()
+        .input('Address', sql.Char(50), newUser.address)
+        .input('User_name', sql.VarChar(50), newUser.userName)
+        .input('PhotoURL', sql.VarChar(255),newUser.photoURL)
+        .query(
+            `INSERT INTO Users(Address,User_name,PhotoURL)
+            VALUES (@Address, @User_name, @PhotoURL)`
+        );
+    console.log('Add success');
 
 });
 

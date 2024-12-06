@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./HomePage.css" rel="stylesheet">
+    <link href="./Login.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js"></script>
@@ -14,6 +15,7 @@
     <div class="navbar">
         <a href="#Home_Page"><i class="fas fa-home"></i>Home</a>
         <a href="#User_Info">User info</a>
+        <button id="Login-btn">Login/SignUp</button>
     </div>
     <div id="Font_Page" class="Font_Page">    
         <section id="Home_Page" class="Home_page content Guide_To_User_Info">
@@ -24,17 +26,57 @@
             <label id="wallet-info">Connect wallet</label>
             <a id="connect_wallet">touch me!</a>
         </section>
+        
         <section id="Game_Page" class="content">
             <label id="MSG_Connect">Before Play The Game<br>Please Connect Wallet</label>
             <div id="Game_UI">
                 <button>Hit other</button>
                 <button>Stretch your head</button>
                 <button id="Quit">Quit the game</button>
-            </div> 
+            </div>      
             
         </section>
     </div>
     
+
+    <div id="LoginSignUp-popup" class="LoginSignUp-popup">
+        <div class="LoginSignUp-popup-content">
+            <span class="close">&times;</span>
+            <div id="form-container">
+                <!-- SignUp 表單 -->
+                <form id="signupForm" class="form-style" action="http://localhost:3000/api/users/signup" method="POST">
+                    <h2>Sign Up</h2>
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="user_name" required oninvalid="this.setCustomValidity('Please enter your username')">
+                    
+                    <label for="nickname">Nickname:</label>
+                    <input type="text" id="nickname" name="nick_name" required oninvalid="this.setCustomValidity('Please enter your nickname')">
+                    
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required oninvalid="this.setCustomValidity('Please enter your password')">
+                    <label for="Confirm onpassword">Confirm Password:</label>
+                    <input type="password" id="confirmpassword" name="confirmpassword" oninvalid="this.setCustomValidity('Please confirm your password')">
+                    
+                    <button type="submit">Sign Up</button>
+                    <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+                </form>
+    
+                <!-- Login 表單 -->
+                <form id="loginForm" class="form-style" action="http://localhost:3000/api/users/login" method="POST" style="display: none;">
+                    <h2>Login</h2>
+                    <label for="username-login">Username:</label>
+                    <input type="text" id="usernameLogin" name="user_name" required oninvalid="this.setCustomValidity('Please enter your password')">
+                    
+                    <label for="password-login">Password:</label>
+                    <input type="password" id="passwordLogin" name="password" required oninvalid="this.setCustomValidity('Please enter your password')">
+                    
+                    <button type="submit">Login</button>
+                    <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
+                </form>
+            </div>
+        </div>
+
+    </div>
     
     <!--test
     <div>

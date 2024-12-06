@@ -8,7 +8,10 @@ import {addUser} from "../sql/fetch_test.js"
 window.onload = function(){
     document.getElementById('test-fetch').addEventListener('click',addUser)
 }
+
+
 document.addEventListener('DOMContentLoaded', () => {
+    setLoginAandSignUp();
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

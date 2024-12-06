@@ -1,0 +1,168 @@
+/* Container */
+.user-profile-container {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 10;
+    padding: 40px;
+    padding-top: 10px;
+    width: 30%;
+
+    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.user-profile-container h3{
+    font-size: 20px;         
+    font-weight: bold;        
+    color: #333;                  
+    text-align: center;     
+    line-height: 1.5;       
+    letter-spacing: 1px;    
+}   
+
+/* Dynamic Info Section */
+.user-avatar,
+.user-detail-item {
+    margin-bottom: 20px;
+}
+
+.user-avatar{
+    display: flex;            
+    flex-direction: column;   
+    align-items: center;       
+}
+
+
+
+/* 大頭貼樣式 */
+.user-avatar img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 2px solid #007BFF;
+    object-fit: cover;
+    cursor: pointer; /* 鼠標指針 */
+    position: relative;
+    transition: all 0.3s ease; /* 添加過渡效果 */
+}
+
+/* 上傳符號樣式 */
+.user-avatar img.upload-mode {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    filter: brightness(0.6); /* 使圖片變暗 */
+}
+
+/* 隱藏的上傳按鈕 */
+#avatar-upload-input {
+    display: none;
+}
+
+/* Avatar Upload Button */
+.user-avatar button {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-avatar button:hover {
+    background-color: #0056b3;
+}
+
+/* User Details Label */
+.user-detail-item label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+    display: block;
+}
+
+/* User Details Input and Textarea */
+.user-detail-item input,
+.user-detail-item textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+    transition: border-color 0.3s ease;
+    resize: none;
+}
+
+
+
+/* Add New Detail Button */
+#add-detail-button {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+#add-detail-button:hover {
+    background-color: #5a6268;
+}
+
+/*自我介紹樣式*/
+#user-bio-display {
+    padding: 10px;
+    font-size: 14px;
+    color: #555;
+    border: none;
+    background-color: transparent; 
+    white-space: pre-wrap;
+    word-wrap: break-word; 
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+    margin: 5px;
+    max-width: 100%;
+}
+
+/* Textarea Style */
+#user-bio-edit {
+    width: 100%;
+    padding: 10px;
+    margin: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    display: none; 
+    word-wrap: break-word; 
+    word-break: break-word; 
+    overflow-wrap: break-word; 
+}
+
+/* Button Styles */
+#edit-bio-button,
+#save-bio-button {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#edit-bio-button:hover,
+#save-bio-button:hover {
+    background-color: #0056b3;
+}

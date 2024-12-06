@@ -15,8 +15,6 @@ const config ={
     database: 'Bonk You', //資料庫名稱
 };
 
-
-
 async function connectToDatabase() {    //連接SQL Server
     try {
         console.log(typeof config.server);

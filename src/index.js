@@ -1,8 +1,10 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
+//import { UserInfo} from "./transaction.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
+
 
 window.onload = function(){
     //document.getElementById('test-fetch').addEventListener('click',addUser)
@@ -13,6 +15,7 @@ window.onload = function(){
 
 document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
+    setUserInfo();
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

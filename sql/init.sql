@@ -6,6 +6,7 @@ BEGIN
         Password VARCHAR(255) NOT NULL,
         Nick_name VARCHAR(50) NOT NULL,     
         PhotoURL VARCHAR(255) NULL,
+        Bio VARCHAR(255) NULL,
         Created_at DATETIME2 DEFAULT GETDATE()     
     )
 END

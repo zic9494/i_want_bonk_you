@@ -86,9 +86,9 @@
     margin-bottom: 5px;
     display: block;
 }
-
+.user-detail-item 
 /* User Details Input and Textarea */
-.user-detail-item input,
+
 .user-detail-item textarea {
     width: 100%;
     padding: 10px;
@@ -119,6 +119,11 @@
     background-color: #5a6268;
 }
 
+#user-nickname{
+    font-size: 14px;
+    color: #555;
+    display: inline;
+}
 /*自我介紹樣式*/
 #user-bio-display {
     padding: 10px;

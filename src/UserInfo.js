@@ -30,6 +30,9 @@ export function setUserInfo(){
         //大頭貼切換
         avatarImage.classList.remove("upload-mode");
         avatarImage.removeEventListener('click',triggerUpload);
+
+        //更新資料庫
+        
     });
     function triggerUpload(){
         avatarInput.click();    //為了觸發<input type="file">

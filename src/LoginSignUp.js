@@ -16,7 +16,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
     const local_user = localStorage.getItem('user_name');
     console.log(local_user);
     if(local_user!=null){
-        console("ssss");
+
         const local_bio = localStorage.getItem('bio');
         const local_photo = localStorage.getItem('photoBase64');
         profile.style.display = 'block';

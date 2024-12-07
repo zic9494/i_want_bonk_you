@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             var targetID = this.getAttribute('href')
             smoothScroll(targetID, 1000) // 呼叫捲動函式(ID, time(ms))
         })
-    })
+    });
 
     //主頁的點擊引導至輸入錢包地址
     const Guide_To_Info = document.getElementsByClassName("Guide_To_User_Info");
@@ -41,19 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.open('https://phantom.app/', '_blank')
             }
         }
-    })
+    });
 
     document.getElementById("connect_wallet").addEventListener("mouseover", ()=>{
         if (document.getElementById("connect_wallet").innerText != "connect"){
             document.getElementById("Wallet_Contrel").style.display = "block"
         }
-    })
+    });
 
     document.getElementById("Wallet_set").addEventListener("mouseleave",()=>{
         document.getElementById("Wallet_Contrel").style.display = 'none'
-    })
-
-
+    });
 
     document.getElementById("Quit").addEventListener("click", ()=>{
         disconnectWallet()

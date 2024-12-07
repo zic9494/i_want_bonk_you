@@ -5,21 +5,21 @@ export function setUserInfo(){
     const saveBioButton = document.getElementById('save-bio-button');
     const avatarImage = document.getElementById("user-avatar-image");
     const avatarInput = document.getElementById("avatar-upload-input");
-    
+
     editBioButton.addEventListener('click',()=>{
         //自我介紹切換
         bioEdit.value = bioDisplay.innerText;
-        bioEdit.style.display = 'block';
-        bioDisplay.style.display = 'none';
-        //按鈕切換
-        editBioButton.style.display = 'none';
-        saveBioButton.style.display = 'block';
-        //大頭貼切換
-        avatarImage.classList.add("upload-mode");
+            bioEdit.style.display = 'block';
+            bioDisplay.style.display = 'none';
+            //按鈕切換
+            editBioButton.style.display = 'none';
+            saveBioButton.style.display = 'block';
+            //大頭貼切換
+            avatarImage.classList.add("upload-mode");
         avatarImage.addEventListener('click',triggerUpload);
     });
 
-    saveBioButton.addEventListener('click',()=>{
+    saveBioButton.addEventListener('click',async ()=>{
         //自我介紹切換
         bioDisplay.innerText = bioEdit.value; 
         bioEdit.style.display = 'none';
@@ -32,6 +32,25 @@ export function setUserInfo(){
         avatarImage.removeEventListener('click',triggerUpload);
 
         //更新資料庫
+        const updateBio = bioEdit.value;
+        const photoBase64 = avatarImage.src;
+        const user_name = localStorage.getItem('user_name');
+        const response = await fetch('http://localhost:3000/api/users/info',{
+            method:'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                updateBio,
+                photoBase64,
+                user_name
+            })
+        });
+        if(response.ok){
+            alert('Successfully saved');
+        }else{
+            alert('Saved Error');
+        }
         
     });
     function triggerUpload(){
@@ -46,6 +65,8 @@ export function setUserInfo(){
             };
             reader.readAsDataURL(file);
         }
+
     });
 }
+
 

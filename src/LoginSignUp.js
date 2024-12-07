@@ -1,5 +1,7 @@
-export function setLoginAandSignUp(){
-    //登入註冊畫面
+
+
+export function setLoginAandSignUp(){ //登入註冊畫面
+    
     const popup = document.getElementById('LoginSignUp-popup');
     const closeBtn = popup.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
@@ -8,6 +10,29 @@ export function setLoginAandSignUp(){
     const showSignup = document.getElementById('show-signup');
     const loginBtn = document.getElementById('Login-btn');
     const profile = document.getElementById('profile');
+    const logoutBtn = document.getElementById('Logout-btn');
+    
+    //保持使用者是登入狀態
+    const local_user = localStorage.getItem('user_name');
+    console.log(local_user);
+    if(local_user){
+        const local_bio = localStorage.getItem('bio');
+        const local_photo = localStorage.getItem('photoBase64');
+        profile.style.display = 'block';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'block';
+        document.getElementById('user-nickname').innerText = localStorage.getItem('nick_name');
+        if (local_bio) {
+            document.getElementById('user-bio-display').innerText = local_bio;
+        }
+        if (local_photo) {
+            document.getElementById('user-avatar-image').src = local_photo;
+        }
+    } else {
+        // 用戶未登入
+        profile.style.display = 'none';
+        loginBtn.style.display = 'block';
+    }
     
 
     //打開跳窗
@@ -50,6 +75,7 @@ export function setLoginAandSignUp(){
             return;
         }
         try{
+            showLoading();
             const response = await fetch('http://localhost:3000/api/users/signup',{
                 method:'POST',
                 headers: {
@@ -57,6 +83,7 @@ export function setLoginAandSignUp(){
                 },
                 body: JSON.stringify(newUser)
             });
+            hideLoading();
             if(response.ok){
                 const data = await response.json();
                 
@@ -80,7 +107,9 @@ export function setLoginAandSignUp(){
         e.preventDefault();
         const user_name = loginForm.querySelector('#usernameLogin').value;
         const password = loginForm.querySelector('#passwordLogin').value;
+        showLoading();
         try{
+
             const response = await fetch('http://localhost:3000/api/users/login',{
                 method:'POST',
                 headers: {
@@ -90,14 +119,16 @@ export function setLoginAandSignUp(){
                     user_name,password
                 })
             });
+            hideLoading();
             if(response.ok){    //登入成功
                 const data = await response.json();
                 alert(data.message);
                 await call_UserInfo(user_name);
-                
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
                 popup.style.display = 'none';
                 profile.style.display = 'block';
-                
+            
             }else{
                 const errData = await response.json();
                 alert(errData.message);
@@ -109,8 +140,13 @@ export function setLoginAandSignUp(){
         }
     })
 
-    //登入後切換頁面邏輯
-
+    //處理登出邏輯
+    logoutBtn.addEventListener('click',()=>{
+        localStorage.clear();
+        window.location.reload();
+        document.getElementById('Logout-btn').style.display = 'none';
+        document.getElementById('Login-btn').style.display = 'display';
+    })
 }
 
 async function call_UserInfo(user_name){  //處理登入與UserInfo交互邏輯
@@ -130,13 +166,13 @@ async function call_UserInfo(user_name){  //處理登入與UserInfo交互邏輯
             const data = res.recordset[0];
 
             //將使用者資料存到localstorage
-            localStorage.setItem('user_name',data.User_name);
+            localStorage.setItem('user_name',user_name);
             localStorage.setItem('nick_name',data.Nick_name);
-            localStorage.setItem('photoURL',data.PhotoURL);
+            localStorage.setItem('photoBase64',data.PhotoBase64);
             localStorage.setItem('bio',data.Bio);
             profile_name.innerText = data.Nick_name;
             if (data.Bio!=null) profile_bio.innerText = data.Bio; //空就不回傳
-            if (data.PhotoURL!=null) profile_photo.src = data.PhotoURL;
+            if (data.PhotoBase64!=null) profile_photo.src = data.PhotoBase64;
         }else{
             const errData = await response.json();
             alert(errData.message);
@@ -147,3 +183,17 @@ async function call_UserInfo(user_name){  //處理登入與UserInfo交互邏輯
     }
 
 } 
+
+function showLoading() {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        spinner.style.display = 'block'; // 顯示轉圈圈
+    }
+}
+
+function hideLoading() {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        spinner.style.display = 'none'; // 隱藏轉圈圈
+    }
+}

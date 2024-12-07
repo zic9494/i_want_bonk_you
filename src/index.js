@@ -4,7 +4,7 @@ import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
 import {connectWallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
-
+import { setUserInfo } from "./UserInfo.js"
 
 window.onload = function(){
     //document.getElementById('test-fetch').addEventListener('click',addUser)
@@ -15,7 +15,9 @@ window.onload = function(){
 
 document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
-    setUserInfo();
+    setUserInfo(JSON.parse(localStorage.getItem('user_name')));
+
+    
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {
@@ -56,3 +58,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 })
+

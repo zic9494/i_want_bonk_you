@@ -5,6 +5,7 @@
     <link href="./HomePage.css" rel="stylesheet">
     <link href="./Login.css" rel="stylesheet">
     <link href="./UserInfo.css" rel="stylesheet">
+    <link href="./Loading.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js" defer></script>
@@ -17,6 +18,7 @@
         <a href="#Home_Page"><i class="fas fa-home"></i>Home</a>
         <a href="#User_Info">User info</a>
         <button id="Login-btn">Login/SignUp</button>
+        <button id="Logout-btn" style="display:none;">Logout</button>
     </div>
     <div id="Font_Page" class="Font_Page">    
         <section id="Home_Page" class="Home_page content Guide_To_User_Info">
@@ -106,6 +108,9 @@
             </div>
         </div>
 
+    </div>
+    <div id="loading-spinner" style="display: none;">
+        <div class="spinner"></div>
     </div>
     
     <!--test

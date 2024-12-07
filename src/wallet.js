@@ -31,7 +31,15 @@ export async function disconnectWallet(){   //斷開連接
     }
 }
 
-export function test_wallet() {
-    console.log('phantom' in window);
-    
+export function Copy_Wallet(){
+    const TempInput = document.createElement("input")
+    TempInput.value = window.solana.publicKey.toString()
+    document.body.appendChild(TempInput)
+
+    TempInput.select()
+    TempInput.setSelectionRange(0,9999)
+    document.execCommand("copy")
+
+    document.body.removeChild(TempInput)
+    alert("已複製金鑰")
 }

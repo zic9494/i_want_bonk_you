@@ -1,6 +1,6 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
-import {connectWallet,disconnectWallet} from "./wallet.js"
+import {connectWallet,Copy_Wallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
 import { setUserInfo } from "./UserInfo.js"
@@ -45,10 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById("connect_wallet").addEventListener("mouseover", ()=>{
-        if (document.getElementById("connect_wallet").innerText != "connect"){
+        if (window.solana.publicKey != null){
             document.getElementById("Wallet_Contrel").style.display = "block"
         }
     });
+
+    document.getElementById("Copy_Address").addEventListener("click", Copy_Wallet)
+    document.getElementById("Disconnect").addEventListener("click",()=>{
+        disconnectWallet()
+        document.getElementById("connect_wallet").innerText="connect"
+        document.getElementById("Wallet_Contrel").style.display = "block"
+    })
 
     document.getElementById("Wallet_set").addEventListener("mouseleave",()=>{
         document.getElementById("Wallet_Contrel").style.display = 'none'

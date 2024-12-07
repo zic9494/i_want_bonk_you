@@ -1,0 +1,133 @@
+/* === 主容器樣式 === */
+.user-profile-container {
+    background-color: #fff9eb; /* 柔和米色背景 */
+    border: 2px solid #ffd5a5; /* 柔和邊框 */
+    border-radius: 20px; /* 圓角 */
+    padding: 30px 40px; /* 內間距 */
+    width: 400px; /* 調整寬度 */
+    margin: 20px auto;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 陰影效果 */
+    font-family: 'Comic Sans MS', cursive;
+    text-align: center;
+}
+
+/* 標題樣式 */
+.user-profile-container h3 {
+    font-size: 24px; /* 放大字體 */
+    font-weight: bold;
+    color: #ff7b72; /* 橘紅色文字 */
+    margin-bottom: 20px;
+}
+
+/* === 大頭貼樣式 === */
+.user-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.user-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%; /* 圓形 */
+    border: 3px solid #ff7b72; /* 鮮豔外邊框 */
+    object-fit: cover;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.user-avatar img:hover {
+    transform: scale(1.1); /* 懸停放大 */
+    box-shadow: 0 8px 15px rgba(255, 82, 82, 0.4); /* 增強陰影 */
+}
+
+/* 隱藏的上傳按鈕 */
+#avatar-upload-input {
+    display: none;
+}
+
+/* === 資訊區樣式 === */
+.user-detail-item {
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 16px;
+    color: #555; /* 深灰色文字 */
+}
+
+/* Nickname 樣式 */
+.user-detail-item span {
+    font-size: 16px;
+    color: #333; /* 更深的文字顏色 */
+    font-weight: bold;
+    line-height: 1.5;
+}
+
+/* 自我介紹文字樣式 */
+#user-bio-display {
+    font-size: 16px;
+    color: #555;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    border: 1px solid #ddd; /* 輕微邊框 */
+}
+
+/* Textarea 編輯框樣式 */
+#user-bio-edit {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ffd5a5;
+    border-radius: 10px;
+    resize: none;
+    display: none; /* 隱藏編輯狀態 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 陰影效果 */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#user-bio-edit:focus {
+    border-color: #ff7b72;
+    box-shadow: 0 6px 15px rgba(255, 123, 114, 0.3); /* 聚焦時增加陰影 */
+}
+
+/* === 按鈕樣式 === */
+.user-profile-container button {
+    background-color: #ff7b72;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    margin-top: 10px;
+}
+
+.user-profile-container button:hover {
+    background-color: #ff5252;
+    transform: scale(1.05);
+}
+
+/* Save 和 Edit 按鈕 */
+#edit-bio-button,
+#save-bio-button {
+    margin-right: 10px; /* 增加間距 */
+}
+
+#save-bio-button {
+    display: none; /* 預設隱藏 */
+}
+
+/* 其他功能按鈕 */
+#add-detail-button {
+    background-color: #66bb6a; /* 綠色背景 */
+}
+
+#add-detail-button:hover {
+    background-color: #4caf50; /* 懸停時更深綠色 */
+}

@@ -30,5 +30,5 @@ export function Wallet_Contorl_List(){
 }
 export function Generate_Game_Page(){
     document.getElementById("MSG_Connect").style.display = "none"
-    document.getElementById("Game_UI").style.display = "block"
+    document.getElementById("game_ui").style.display = "block"
 }

@@ -4,13 +4,14 @@ import {connectWallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
 import { setUserInfo } from "./UserInfo.js"
+import { setGamePage } from "./GamePage.js"
 
 
 document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
     setUserInfo();
+    setGamePage();
 
-    console.log('tets')
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {
@@ -55,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("Quit").addEventListener("click", ()=>{
         disconnectWallet()
-        document.getElementById("Game_UI").style.display = "none"
+        document.getElementById("game_ui").style.display = "none"
         document.getElementById("MSG_Connect").style.display = "block"
         smoothScroll("#User_Info", 1000)
     })

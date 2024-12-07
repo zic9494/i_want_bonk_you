@@ -2,10 +2,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="./HomePage.css" rel="stylesheet">
-    <link href="./Login.css" rel="stylesheet">
-    <link href="./UserInfo.css" rel="stylesheet">
-    <link href="./Loading.css" rel="stylesheet">
+    <link href="./css/HomePage.css" rel="stylesheet">
+    <link href="./css/Login.css" rel="stylesheet">
+    <link href="./css/UserInfo.css" rel="stylesheet">
+    <link href="./css/Loading.css" rel="stylesheet">
+    <link href="./css/Game.css" rel="stylesheet">
+    <link href="./css/Stretch.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js" defer></script>
@@ -62,21 +64,50 @@
                         <button id="save-bio-button" style="display: none;">Save</button>
                     </div>
                 </div>
-        
-
                 <button id="add-detail-button">Other function</button>
-
-
             </div>
         </section>
         
         <section id="Game_Page" class="content">
             <label id="MSG_Connect">Before Play The Game<br>Please Connect Wallet</label>
-            <div id="Game_UI">
-                <button>Hit other</button>
-                <button>Stretch your head</button>
-                <button id="Quit">Quit the game</button>
-            </div>      
+            <div id='game_ui' class="game-ui">
+                <div class="game-header">
+                    <img src="./images/icon.png" alt="Game Icon" class="game-icon">
+                    <p>Your BONK Balance: <span id="bonk-balance">1000</span> BONK</p>
+                </div>
+                <div class="game-actions">
+                    <button id="bonk-button" class="action-button bonk-btn">
+                        BONK!
+                    </button>
+                    <button id="stretch-button" class="action-button stretch-btn">
+                        Stretch!
+                    </button>
+                </div>
+            </div>
+            <!-- Stretch UI -->
+            <div id="stretch_ui" style="display: none;">
+                <div class="stretch-container">
+                    <!-- 角色區域 -->
+                    <div class="character">
+                        <div class="head"></div>
+                        <div class="neck"></div>
+                    </div>
+            
+                    <!-- 設定與數據區域 -->
+                    <div class="settings">
+                        <label for="bet-amount">Bet Amount (BONK):</label>
+                        <input type="number" id="bet-amount" min="1" placeholder="Enter your bet" />
+            
+                        <p id="duration-display">Stretch Duration: 0 seconds</p>
+                        <p id="profit-display">Current Profit: 0 BONK</p>
+                    </div>
+            
+                    <!-- 控制按鈕 -->
+                    <button id="start-stretch-button" class="stretch-button">Start Stretching</button>
+                    <button id="stop-stretch-button" class="stretch-button" style="display: none;">Stop Stretching</button>
+                    <button id="back-button" class="back-button">Back to Game</button>
+                </div>
+            </div>
             
         </section>
     </div>

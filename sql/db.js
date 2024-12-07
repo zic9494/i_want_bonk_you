@@ -41,9 +41,9 @@ await init_db();
 
 const app = express();
 app.use(cors()); //中間件:允許跨域請求
-app.use(express.json()); //中間件:解析json檔
+app.use(express.json({limit:'10mb'})); //中間件:解析json檔
 
-app.post('/api/users/signup',async (req,res) => {  //新增使用者的POST請求
+app.post('/api/users/signup',async (req,res) => {  //註冊的POST請求
     try{
         const user_name = req.body.user_name;
         const nick_name = req.body.nick_name;
@@ -58,10 +58,7 @@ app.post('/api/users/signup',async (req,res) => {  //新增使用者的POST請�
 
         //檢查用戶是否註冊過
         if (checkUserResponse.recordset.length>0){
-            return res.status(409).json({
-                status: 409,
-                message: "Username already exist"
-            })          
+            return res.status(409).json({message: "Username already exist"});        
         }
 
         const hashedPassword = await bcrypt.hash(password,saltRounds);
@@ -75,50 +72,93 @@ app.post('/api/users/signup',async (req,res) => {  //新增使用者的POST請�
                 VALUES (@User_name, @Nick_name, @Password)`
             );
         
-        res.status(201).json({
-            status: 201,
-            message: "User created successfully"
-        })
+        res.status(201).json({message: "User created successfully"});
         console.log('created successfully');
     }catch(err){
         console.error('Error:',err);
     }
 });
 
-app.post('/api/users/login',async (req,res) => {  //新增使用者的POST請求
-    console.log(req.body);
-    const user_name = req.body.user_name;
-    const password = req.body.password;
-    
-    const checkSQL = `SELECT * FROM Users WHERE User_name = @User_name`;
+app.post('/api/users/login',async (req,res) => { //登入的POST請求
+    try{
 
-    const checkUserResponse = await pool.request()
+        const user_name = req.body.user_name;
+        const password = req.body.password;
+
+        const checkSQL = `SELECT * FROM Users WHERE User_name = @User_name`;
+
+        const checkUserResponse = await pool.request()
+                            .input('User_name',sql.VarChar(50),user_name)
+                            .query(checkSQL);
+        //檢查用戶是否存在
+        if (!checkUserResponse.recordset.length){
+            return res.status(409).json({message: "Incorrect password or Username doesn't exist"})          
+        }
+
+        //檢查密碼
+        const isPasswordCorrect = await bcrypt.compare(password,checkUserResponse.recordset[0].Password);
+        if(!isPasswordCorrect){
+            return res.status(409).json({message: "Incorrect password or Username doesn't exist"})      
+        }
+
+        res.status(201).json({message: "Login successfully"})
+    }catch(err){
+        console.error(err);
+    }
+});
+
+app.get('/api/users/info',async (req,res)=>{  //登入回傳使用者資訊的GET請求
+    const user_name = req.query.user_name;
+    const checkSQL = `SELECT Nick_name,Bio,PhotoBase64 FROM Users WHERE User_name = @User_name`;
+
+    const query = await pool.request()
                         .input('User_name',sql.VarChar(50),user_name)
                         .query(checkSQL);
     //檢查用戶是否存在
-    if (!checkUserResponse.recordset.length){
-        return res.status(409).json({
-            status: 409,
-            message: "Incorrect password or Username doesn't exist"
-        })          
+    if (!query.recordset.length){
+        return res.status(404).json({message: "Not found User"})          
     }
 
-    //檢查密碼
-    const isPasswordCorrect = bcrypt.compare(password,checkUserResponse.recordset[0].password);
-    if(!isPasswordCorrect){
-        return res.status(409).json({
-            status: 409,
-            message: "Incorrect password or Username doesn't exist"
-        })      
-    }
-    
-    res.status(201).json({
-        status: 201,
-        message: "Login successfully"
-    })
-    console.log('Login');
-
+    res.status(201).json(query);
 });
+
+app.post('/api/users/info',async (req,res) => { //更新info的POST請求
+    try{
+
+        const user_name = req.body.user_name;
+        const bio = req.body.updateBio;
+        const photoBase64 = req.body.photoBase64;
+        
+        const checkSQL = `SELECT * FROM Users WHERE User_name = @User_name`;
+
+        const checkUserResponse = await pool.request()
+                            .input('User_name',sql.VarChar(50),user_name)
+                            .query(checkSQL);
+        //檢查用戶是否存在
+        if (!checkUserResponse.recordset.length){
+            return res.status(409).json({message: "Username doesn't exist"});     
+        }
+
+        //更新profile
+        const updateSQL = `
+            UPDATE Users
+            SET Bio = @Bio,PhotoBase64 = @PhotoBase64
+            WHERE User_name = @User_name
+            `
+        await pool.request()
+            .input('Bio',sql.VarChar(255),bio)
+            .input('PhotoBase64',sql.NVarChar(sql.MAX),photoBase64)
+            .input('User_name',sql.VarChar(50),user_name)
+            .query(updateSQL);
+
+        
+
+        res.status(201).json({message: "update successfully"})
+    }catch(err){
+        console.error(err);
+    }   
+});
+
 
 
 const PORT = 3000;

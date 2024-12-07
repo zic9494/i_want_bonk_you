@@ -1,6 +1,7 @@
-export function setLoginAandSignUp(){
-    console.log("qwe");
-    //登入註冊畫面
+
+
+export function setLoginAandSignUp(){ //登入註冊畫面
+    
     const popup = document.getElementById('LoginSignUp-popup');
     const closeBtn = popup.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
@@ -8,6 +9,30 @@ export function setLoginAandSignUp(){
     const showLogin = document.getElementById('show-login');
     const showSignup = document.getElementById('show-signup');
     const loginBtn = document.getElementById('Login-btn');
+    const profile = document.getElementById('profile');
+    const logoutBtn = document.getElementById('Logout-btn');
+    
+    //保持使用者是登入狀態
+    const local_user = localStorage.getItem('user_name');
+    console.log(local_user);
+    if(local_user){
+        const local_bio = localStorage.getItem('bio');
+        const local_photo = localStorage.getItem('photoBase64');
+        profile.style.display = 'block';
+        loginBtn.style.display = 'none';
+        logoutBtn.style.display = 'block';
+        document.getElementById('user-nickname').innerText = localStorage.getItem('nick_name');
+        if (local_bio) {
+            document.getElementById('user-bio-display').innerText = local_bio;
+        }
+        if (local_photo) {
+            document.getElementById('user-avatar-image').src = local_photo;
+        }
+    } else {
+        // 用戶未登入
+        profile.style.display = 'none';
+        loginBtn.style.display = 'block';
+    }
     
 
     //打開跳窗
@@ -50,6 +75,7 @@ export function setLoginAandSignUp(){
             return;
         }
         try{
+            showLoading();
             const response = await fetch('http://localhost:3000/api/users/signup',{
                 method:'POST',
                 headers: {
@@ -57,9 +83,12 @@ export function setLoginAandSignUp(){
                 },
                 body: JSON.stringify(newUser)
             });
+            hideLoading();
             if(response.ok){
                 const data = await response.json();
+                
                 alert(data.message);
+                signupForm.reset();
                 popup.style.display = 'none';
                 loginForm.style.display = 'flex';
                 signupForm.style.display = 'none';  
@@ -78,7 +107,9 @@ export function setLoginAandSignUp(){
         e.preventDefault();
         const user_name = loginForm.querySelector('#usernameLogin').value;
         const password = loginForm.querySelector('#passwordLogin').value;
+        showLoading();
         try{
+
             const response = await fetch('http://localhost:3000/api/users/login',{
                 method:'POST',
                 headers: {
@@ -88,14 +119,19 @@ export function setLoginAandSignUp(){
                     user_name,password
                 })
             });
-            if(response.ok){
+            hideLoading();
+            if(response.ok){    //登入成功
                 const data = await response.json();
                 alert(data.message);
+                await call_UserInfo(user_name);
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
                 popup.style.display = 'none';
-
+                profile.style.display = 'block';
+            
             }else{
                 const errData = await response.json();
-                alert('Login failed:',errData.message);
+                alert(errData.message);
             }
 
         }catch(err){
@@ -104,6 +140,60 @@ export function setLoginAandSignUp(){
         }
     })
 
-    //登入後切換頁面邏輯
+    //處理登出邏輯
+    logoutBtn.addEventListener('click',()=>{
+        localStorage.clear();
+        window.location.reload();
+        document.getElementById('Logout-btn').style.display = 'none';
+        document.getElementById('Login-btn').style.display = 'display';
+    })
+}
 
+async function call_UserInfo(user_name){  //處理登入與UserInfo交互邏輯
+    const profile_name = document.getElementById('user-nickname');
+    const profile_bio = document.getElementById('user-bio-display');
+    const profile_photo = document.getElementById('user-avatar-image');  
+    try{
+        const response = await fetch(`
+            http://localhost:3000/api/users/info?user_name=${encodeURIComponent(user_name)}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        if(response.ok){
+            const res = await response.json();
+            const data = res.recordset[0];
+
+            //將使用者資料存到localstorage
+            localStorage.setItem('user_name',user_name);
+            localStorage.setItem('nick_name',data.Nick_name);
+            localStorage.setItem('photoBase64',data.PhotoBase64);
+            localStorage.setItem('bio',data.Bio);
+            profile_name.innerText = data.Nick_name;
+            if (data.Bio!=null) profile_bio.innerText = data.Bio; //空就不回傳
+            if (data.PhotoBase64!=null) profile_photo.src = data.PhotoBase64;
+        }else{
+            const errData = await response.json();
+            alert(errData.message);
+        }
+    }catch(err){
+        console.error(err);
+        alert('Login failed:',err);
+    }
+
+} 
+
+function showLoading() {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        spinner.style.display = 'block'; // 顯示轉圈圈
+    }
+}
+
+function hideLoading() {
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+        spinner.style.display = 'none'; // 隱藏轉圈圈
+    }
 }

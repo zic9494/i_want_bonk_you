@@ -6,13 +6,13 @@ export async function connectWallet(){  //連接錢包
         try{
             const response = await window.solana.connect();
             console.log("Address:",response.publicKey.toString());
-            return true
+            return response
         }catch(err){
             console.log("Error:",err);
         }
     }else{
         console.log("not found wallet");
-        return false
+        return {}
     }
 }
 

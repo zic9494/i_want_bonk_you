@@ -20,16 +20,15 @@ BEGIN
 END
 IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Friendsships' AND xtype='U')
 BEGIN
-    CREATE TABLE Friendsships(
-        User_id1 INT NOT NULL ,
-        User_id2 INT NOT NULL ,
+    CREATE TABLE Friendships(
+        From_user VARCHAR(50) NOT NULL ,
+        To_user VARCHAR(50) NOT NULL ,
         Status VARCHAR(10) NOT NULL DEFAULT 'pending',
         Created_at DATETIME2 DEFAULT GETDATE() ,
-        PRIMARY KEY (User_id1,User_id2) ,
-        FOREIGN KEY (User_id1) REFERENCES Users(Id) ON DELETE CASCADE,
-        FOREIGN KEY (User_id2) REFERENCES Users(Id) ON DELETE CASCADE,
+        PRIMARY KEY (From_user,To_user) ,
+        FOREIGN KEY (From_user) REFERENCES Users(User_name) ,
+        FOREIGN KEY (To_user) REFERENCES Users(User_name) ,
         CHECK (Status in ('pending','confirmed')),
-        CHECK (User_id1 < User_id2),
     );
 END
 

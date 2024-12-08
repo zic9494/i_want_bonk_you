@@ -13,7 +13,14 @@ export function setGamePage(){
     const realWallet = document.getElementById('connect_wallet');
     const toProfile = document.getElementById('user-info-button');
     const profile = document.getElementById('profile');
-    
+    const toFriend = document.getElementById('friends-button');
+    const friend = document.getElementById('friend');
+
+    toFriend.addEventListener('click',()=>{
+        friend.style.display = 'block';
+        gameUI.style.display = 'none';
+    });
+    //跳到FriendList
     toProfile.addEventListener('click',()=>{
         profile.style.display = 'block';
         gameUI.style.display = 'none';    

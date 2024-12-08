@@ -204,6 +204,74 @@ app.get('/develop', async (req, res)=>{
     return res.status(200).json(data)
 })
 
+//送出好友請求
+app.post('/api/friends/send',async (req,res) => {
+    try{
+        const from_user = req.body.from_user;
+        const to_user = req.body.to_user;
+        const checkSQL = `SELECT status FROM Friendships WHERE 
+                    (From_user = @from_user AND To_user = @to_user) 
+                    OR (From_user = @to_user AND To_user = @from_user)`;
+        const query = await pool.request()
+                .input('from_user',sql.VarChar(50),from_user)
+                .input('to_user',sql.VarChar(50),to_user)
+                .query(checkSQL);
+        if(query.recordset.length>0){
+            const currentStatus = query.recordset[0].Status;
+            res.json({message:`The relationship is currently ${currentStatus}`});
+        }else{
+            const insertSQL = `INSERT INTO Friendships(From_user,To_user,Status)
+                                VALUES (@from_user, @to_user, 'pending')`;
+            await pool.request()
+                    .input('from_user',sql.VarChar(50),from_user)
+                    .input('to_user',sql.VarChar(50),to_user)
+                    .query(insertSQL);
+            res.json({message:`Friend request sent`});
+        }
+    }catch(err){
+        console.error(err);
+    }
+})
+
+//接受好友請求
+app.post('/api/friends/confirm',async (req,res) => {
+    try{
+        const from_user = req.body.from_user;
+        const to_user = req.body.to_user;
+
+        const checkSQL = `SELECT Status FROM Friendships 
+                    WHERE (From_user = @from_user AND To_user = @to_user AND Status='pending')`;
+        const query = await pool.request()
+                .input('from_user',sql.VarChar(50),from_user)
+                .input('to_user',sql.VarChar(50),to_user)
+                .query(checkSQL);
+        if(!query.recordset.length){
+            res.status(404).json({message:`The relationship dosen't exist`});
+        }else{
+            const updateSQL = `UPDATE Friendships
+                               SET Status = 'confirmed'
+                               WHERE (From_user = @from_user AND to_user = @to_user)`;
+            await pool.request()
+                    .input('from_user',sql.VarChar(50),from_user)
+                    .input('to_user',sql.VarChar(50),to_user)
+                    .query(updateSQL);
+            res.status(200).json({message:`Comfirm request successfully`});
+        }
+    }catch(err){
+        console.error(err);
+    }
+})
+
+app.get('/api/friends/query',async (req,res)=>{
+    const user_name = req.query.user_name;
+    const querySQL = `SELECT From_user FROM Friendships 
+                    WHERE From_user = @user_name OR To_user = @user_name`;
+    const query = await pool.request()
+                    .input('user_name',sql.VarChar(50),user_name)
+                    .query(querySQL);
+    res.status(200).json(query.recordset);
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`伺服器運行中：http://localhost:${PORT}`);

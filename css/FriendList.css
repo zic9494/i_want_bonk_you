@@ -1,0 +1,202 @@
+/* === 主容器樣式 === */
+.friends-container {
+    background: #fff9eb; /* 柔和米色背景 */
+    padding: 30px;
+    border-radius: 20px;
+    width: 600px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Comic Sans MS', sans-serif;
+    display: none;
+    color: #333;
+}
+
+/* 返回按鈕樣式 */
+.friend-back-btn {
+    background-color: #007BFF;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+/* === Tabs 樣式 === */
+.friends-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab {
+    background-color: #ddd; /* 預設背景色 */
+    border: none; /* 無邊框 */
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tab.active {
+    background-color: #007BFF; /* 激活背景色 */
+    color: white; /* 激活文字顏色 */
+}
+
+.tab:hover {
+    background-color: #0056b3; /* 懸停背景色 */
+    color: white; /* 懸停文字顏色 */
+}
+
+/* === 表格樣式 === */
+.friends-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.friends-table th,
+.friends-table td {
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* 表頭樣式 */
+.friends-table th {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    border-bottom: 2px solid #444;
+}
+
+/* 表格行樣式 */
+.friends-table tr:nth-child(odd) {
+    background-color: #f9f9f9; /* 偶數行背景 */
+}
+
+.friends-table tr:nth-child(even) {
+    background-color: #fff; /* 奇數行背景 */
+}
+
+.friends-table tr:hover {
+    background-color: #f1f1f1; /* 懸停行背景 */
+}
+
+/* === Avatar 樣式 === */
+.friend-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+/* === 狀態樣式 === */
+.status {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.status-green {
+    background-color: #4caf50; /* 綠色 */
+    color: white;
+}
+
+.status-red {
+    background-color: #f44336; /* 紅色 */
+    color: white;
+}
+
+/* === 動作按鈕樣式 === */
+.bonk-btn {
+    background-color: #ff5252; /* 紅色背景 */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.bonk-btn:hover {
+    background-color: #ff7961;
+    transform: scale(1.05); /* 懸停放大 */
+}
+
+.accept-btn {
+    background-color: #4caf50; /* 綠色背景 */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.accept-btn:hover {
+    background-color: #66bb6a;
+}
+
+.decline-btn {
+    background-color: #f44336; /* 紅色背景 */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.decline-btn:hover {
+    background-color: #f6685e;
+}
+
+/* === 分頁按鈕樣式 === */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.page-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+}
+
+.page-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.page-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+#current-page {
+    font-size: 14px;
+    font-weight: bold;
+}

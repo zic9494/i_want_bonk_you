@@ -1,0 +1,146 @@
+/* === Leaderboard 主容器 === */
+.leaderboard {
+    background: #fff9eb; /* 柔和米色背景 */
+    padding: 30px;
+    border-radius: 20px;
+    width: 600px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+/* 返回按鈕樣式 */
+.back-btn {
+    background-color: #007BFF;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 標題樣式 */
+.leaderboard-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.leaderboard-header h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.rules-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rules-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* 表格樣式 */
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.leaderboard-table th {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+}
+
+.leaderboard-table tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: #fff;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* === 規則彈窗 === */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h2 {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: #333;
+}
+
+.modal-content p {
+    font-size: 16px;
+    color: #555;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #f44336;
+}

@@ -167,7 +167,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
 app.get('/api/GetStretch', async (req, res) =>{
     const data = await pool.request()
         .query(`SELECT * FROM Online_Users
-            WHERE Stretched = 1`)
+            WHERE Stretched = 'true'`)
     return res.status(200).json(data)
 })
 
@@ -175,7 +175,6 @@ app.get('/api/ChangeStretch', async (req, res)=>{
     try{
         const user_name = req.query.user_name
         const action = Boolean(req.query.action)
-        console.log(req.body.action);
         
 
         await pool.request()
@@ -191,9 +190,17 @@ app.get('/api/ChangeStretch', async (req, res)=>{
     }
 })
 
-app.get('/api/online_user', async (req, res)=>{
+app.get('/develop', async (req, res)=>{
+    const commed = 
+    `
+        SELECT * FROM Online_Users
+    `
+    // `
+    //     INSERT INTO Online_Users(user_name)
+    //     VALUES('qwe')
+    // `
     const data = await pool.request()
-        .query(`SELECT * FROM Users`)
+        .query(commed)
     return res.status(200).json(data)
 })
 

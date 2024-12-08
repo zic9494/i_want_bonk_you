@@ -102,7 +102,7 @@
                
                 <!-- 遊戲功能按鈕 -->
                 <div class="game-actions">
-                    <button class="action-button bonk-btn">BONK!</button>
+                    <button id='Bonk-button' class="action-button bonk-btn">BONK!</button>
                     <button id='stretch-button'class="action-button stretch-btn">Stretch!</button>
                 </div>
             
@@ -134,6 +134,17 @@
                     <button id="start-stretch-button" class="stretch-button">Start Stretching</button>
                     <button id="stop-stretch-button" class="stretch-button" style="display: none;">Stop Stretching</button>
                     <button id="back-button" class="back-button">Back to Game</button>
+                </div>
+            </div>
+
+            <div id="bonk_ui" style="display: none;">
+                <div class="stretch-container">
+                    <label>Pick one you want bonk</label>
+                    <div id="Can_bonk_list">
+                        
+                    </div>
+                    <label id="Price"></label>
+                    <button id="Bonk" class="stretch-button" disabled>Bonk</button>
                 </div>
             </div>
             

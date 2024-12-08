@@ -9,6 +9,7 @@
     height: 100%;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.5);
+    font-family: 'Comic Sans MS', cursive;
 }
 
 /* 模態內容 */
@@ -16,26 +17,34 @@
     background-color: white;
     margin: auto;
     padding: 20px;
-    border: 1px solid #888;
+    border: none; /* 移除邊框 */
     width: 50%;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    min-height: 400px; /* 設定最小高度，保持統一 */
+    border-radius: 15px; /* 更柔和的圓角 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3); /* 加強陰影效果 */
+    min-height: 400px;
     position: relative;
     top: 50%;
+    transform: translateY(-50%); /* 垂直居中 */
     transform: translateY(-50%); /* 垂直居中 */
     transition: height 0.3s ease; /* 添加過渡效果 */
 }
 
+.LoginSignUp-popup-content span{
+    position: absolute;
+    font-size: 24px;
+    right: 30px;
+    top: 20px;
+    color: #333;
+}
 /* 表單容器樣式 */
 .form-container {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
     background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
+    border-radius: 15px; /* 與模態一致的圓角 */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); /* 更柔和的陰影 */
+
 }
 
 /* 通用表單樣式 */
@@ -50,15 +59,20 @@
     font-weight: bold;
     color: #333;
 }
+.form-style h2 {
+    font-weight: bold;
+    color: #333;
+}
 
 .form-style input {
     width: 97%;
     padding: 10px;
     font-size: 14px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    transition: border-color 0.3s;
+    border-radius: 10px; /* 圓角統一 */
+    transition: border-color 0.3s, box-shadow 0.3s ease; /* 加入陰影過渡 */
 }
+
 
 .form-style input:focus {
     border-color: #007BFF;
@@ -74,13 +88,16 @@
     color: white;
     background-color: #007BFF;
     border: none;
-    border-radius: 5px;
+    border-radius: 50px; /* 統一圓角按鈕樣式 */
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 按鈕陰影 */
 }
 
 .form-style button:hover {
     background-color: #0056b3;
+    transform: scale(1.03); /* 懸停放大 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 陰影加深 */
 }
 
 /* 表單標題樣式 */

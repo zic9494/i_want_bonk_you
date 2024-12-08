@@ -4,6 +4,10 @@ export function setGamePage(){
     const stretchUI = document.getElementById('stretch_ui');
     const stretchButton = document.getElementById('stretch-button');
     const backButton = document.getElementById('back-button');
+    const gameOverlay = document.getElementById('wallet-overlay'); 
+    const walletBtn = document.getElementById('connect-wallet-button')
+    const realWallet = document.getElementById('connect_wallet');
+    
 
     //跳到stretch
     stretchButton.addEventListener('click', () => {
@@ -16,5 +20,10 @@ export function setGamePage(){
         stretchUI.style.display = 'none'; 
         gameUI.style.display = 'block'; 
     });
+
+    walletBtn.addEventListener('click',()=>{
+        realWallet.click();
+        gameOverlay.style.display = 'none';
+    })
 
 }

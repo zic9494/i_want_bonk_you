@@ -9,6 +9,7 @@
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 陰影效果 */
     font-family: 'Comic Sans MS', cursive;
     text-align: center;
+    display: none;
 }
 
 /* 標題樣式 */

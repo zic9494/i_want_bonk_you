@@ -1,6 +1,6 @@
 body{
-    color: white;
-    font-family: Arial, Helvetica, sans-serif;
+    color: #ffffff;
+    font-family: 'Comic Sans MS', sans-serif;
     margin: 0;
     scroll-behavior: smooth;
 }
@@ -11,26 +11,108 @@ section{
     align-items: center;
     font-size: 2em;
 }
-.navbar{
+/* === Navbar Styles === */
+.navbar {
     position: fixed;
     top: 0;
     width: 100%;
-    overflow: hidden;
     background-color: #333;
     z-index: 1000;
+    display: flex;
+    align-items: center; /* 垂直居中 */
+
 }
-.navbar a {
-    float: left;
-    display: block;
+
+/* Navbar Item 通用樣式 */
+.nav-item {
+    display: flex;
+    align-items: center;
     color: #f2f2f2;
-    text-align: center;
-    padding: 14px 20px;
     text-decoration: none;
+    padding: 14px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease;
 }
-.navbar a:hover{
+
+.nav-item:hover {
     background-color: #ddd;
-    color:black;
+    color: black;
+    border-radius: 5px; /* 添加圓角 */
 }
+
+/* Icon 样式 */
+.nav-icon {
+    width: 30px;
+    height: auto;
+}
+
+/* === Wallet Dropdown === */
+.wallet-dropdown {
+    position: relative; /* 父元素定位 */
+}
+
+.wallet-btn {
+    cursor: pointer;
+    text-decoration: none;
+    color: #f2f2f2;
+    padding: 14px 20px;
+    font-size: 16px;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.wallet-btn:hover {
+    background-color: #ddd;
+    color: black;
+    border-radius: 5px;
+}
+
+/* 下拉列表样式 */
+.list-container {
+    display: none;
+    position: absolute;
+    top: 50px; /* 距離按鈕的間距 */
+    left: 290px;
+    background-color: #444;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    z-index: 9999;
+    min-width: 150px; /* 確保列表有一定寬度 */
+}
+
+.list-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 10px;
+}
+
+.list-container ul li {
+    font-size: 14px;
+    color: #f2f2f2;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.list-container ul li:hover {
+    background-color: #555;
+    border-radius: 5px;
+}
+
+/* 顯示下拉列表 */
+.wallet-dropdown:hover .list-container {
+    display: block; /* 懸停時顯示列表 */
+}
+
+
+#Game_Page{
+    background: linear-gradient(to bottom, #3C3C3C, #272727);;
+}
+.content{
+    padding-top: 50px;
+}
+
 .Home_page{
     display: flex;
     background: linear-gradient(to bottom, #4F4F4F, #3C3C3C);
@@ -65,46 +147,4 @@ section{
     height: 100vh;
     text-align: left;
 }
-#connect_wallet {
-    display: NONE;
-    position: absolute;
-    right: 100px;
-    top: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 10px 20px;
-}
-
-.list-container {
-    display: none;
-    position: absolute;
-    background-color: black;
-    border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    top: 50px;
-    right: 102px;
-    z-index: 999;
-}
-.list-container ul{
-    font-size: 16px;
-    list-style-type: none;
-    padding: 10px;
-}
-.list-containerm ul li{
-    font-size: 16px;
-    color: #333;
-    margin: 5px, 0;
-    padding: 10px;
-}
-#connect_wallet {
-    margin-left: auto; /* 這裡是將按鈕推向右側的關鍵 */
-}
-#Game_Page{
-    background: linear-gradient(to bottom, #272727, #000000);;
-}
-.content{
-    padding-top: 50px;
-}
-
-
 

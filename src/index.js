@@ -1,5 +1,5 @@
 // import { setCookie,  getCookie} from "./cookie.js";
-import { Generate_Game_Page, smoothScroll } from "./PageControl.js"
+import { smoothScroll } from "./PageControl.js"
 import {connectWallet,Copy_Wallet,disconnectWallet} from "./wallet.js"
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
@@ -36,12 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if(connected != {}){
             var Key = connected.publicKey.toString()
             document.getElementById("connect_wallet").innerText = Key.slice(0,4)+"..."+Key.slice(Key.length-5, Key.length-1)
-            Generate_Game_Page()
+            
         }else{
             if(!('phantom' in window)){
                 window.open('https://phantom.app/', '_blank')
             }
         }
+        gameOverlay.style.display = 'none';
     });
 
     document.getElementById("connect_wallet").addEventListener("mouseover", ()=>{
@@ -60,13 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("Wallet_set").addEventListener("mouseleave",()=>{
         document.getElementById("Wallet_Contrel").style.display = 'none'
     });
-
-    document.getElementById("Quit").addEventListener("click", ()=>{
-        disconnectWallet()
-        document.getElementById("game_ui").style.display = "none"
-        document.getElementById("MSG_Connect").style.display = "block"
-        smoothScroll("#User_Info", 1000)
-    })
 
 
 })

@@ -20,60 +20,35 @@
 <body>
     
     <div class="navbar">
-        <a href="#Home_Page"><img src="./images/icon_white_rat.png" alt="HomeBtn" style="width: 30px;height: auto;"></a>
-        <a href="#User_Info">User info</a>
-        <a id="Login-btn">Login/SignUp</a>
-        <a id="Logout-btn" style="display:none;cursor: pointer;">Log out</a>
+        <a href="#Home_Page" class="nav-item" ><img src="./images/icon_white_rat.png" alt="HomeBtn" style="width: 30px;height: auto;"></a>
+        <a href="#Game_Page" class="nav-item">Start Game</a>
+        <a id="Login-btn" class="nav-item">Login/SignUp</a>
+        <a id="Logout-btn" style="display:none;cursor: pointer;" class="nav-item">Log out</a>
+        <div id ="Wallet_set">
+            <a id="connect_wallet" class="nav-item wallet-btn">connect wallet</a>
+            <div id="Wallet_Contrel" class="list-container">
+                <ul>
+                    <li id="Copy_Address" style="cursor: pointer;">Copy address</li>
+                    <li id="Disconnect" style="cursor: pointer;">Disconnect</li>
+                </ul>
+            </div>
+        </div>
     </div>
     <div id="Font_Page" class="Font_Page">    
         <section id="Home_Page" class="Home_page content Guide_To_User_Info">
-            <h3>Get Bonk<br> or Bonk someone on head</h3>
-            <a class="Guide_To_User_Info" style="color: white;">connect wallet and play the game<br></a>
-            <span class="Guide_To_User_Info">&#10507;</span>
+            <h3>Get Bonk or Bonk someone on head</h3>
+            
         </section>
-
+        <!--
         <section id="User_Info" class="User_Info content">
-            <div id ="Wallet_set">
-                <button id="connect_wallet">connect wallet</button>
-                <div id="Wallet_Contrel" class="list-container">
-                    <ul>
-                        <li id="Copy_Address" style="cursor: pointer;">Copy address</li>
-                        <li><br></li>
-                        <li id="Disconnect" style="cursor: pointer;">Disconnect</li>
-                    </ul>
-                </div>
-            </div>
-            <div id='profile' class="user-profile-container">
-                <h3>UserInfo</h3>
-                <!-- 動態加載部分 -->
-                <div id="dynamic-user-info">
-                    <!-- Avatar -->
-                    <div class="user-avatar">
-                        <img id="user-avatar-image" src="https://via.placeholder.com/150" alt="User Avatar">
-                        <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
-                    </div>
-                    
-                    <!-- Nickname -->
-                    <div class="user-detail-item" style="display: flex;">
-                        <label for="user-nickname" style="margin-right: 15px; display: inline;">Name:</label>
-                        <span id="user-nickname"></span>
-                    </div>
-        
-                    <!-- Bio -->
-                    <div class="user-detail-item">
-                        <label for="user-bio">Bio:</label>
-                        <p id="user-bio-display">This is your bio. Click "Edit" to modify it.</p>
-                        <textarea id="user-bio-edit" placeholder="Write something about yourself..." style="display: none;"></textarea>
-                        <button id="edit-bio-button">Edit</button>
-                        <button id="save-bio-button" style="display: none;">Save</button>
-                    </div>
-                </div>
-                <button id="add-detail-button">Other function</button>
-            </div>
+            
         </section>
+        !-->
         
         <section id="Game_Page" class="content">
+            <!--
             <label id="MSG_Connect">Before Play The Game<br>Please Connect Wallet</label>
+            !-->
             <div id='game_ui' class="game-ui">
                 <!-- 餘額區域 -->
                 <div class="balance-container">
@@ -108,8 +83,42 @@
             
                 <!-- How to Play 按鈕 -->
                 <button id="how-to-play-button" class="help-btn">?</button>
+                <!-- 遮罩 -->
+                <div id="wallet-overlay" class="wallet-overlay">
+                    <div class="overlay-content">
+                        <p>Please connect your wallet to start playing!</p>
+                        <button id="connect-wallet-button" class="connect-wallet-btn">Connect Wallet</button>
+                    </div>
+                </div>
             </div>
             
+             <div id='profile' class="user-profile-container">
+                <h3>UserInfo</h3>
+                <!-- 動態加載部分 -->
+                <div id="dynamic-user-info">
+                    <!-- Avatar -->
+                    <div class="user-avatar">
+                        <img id="user-avatar-image" src="https://via.placeholder.com/150" alt="User Avatar">
+                        <input type="file" id="avatar-upload-input" accept="image/*" style="display: none;">
+                    </div>
+                    
+                    <!-- Nickname -->
+                    <div class="user-detail-item" style="display: flex;">
+                        <label for="user-nickname" style="margin-right: 15px; display: inline;">Name:</label>
+                        <span id="user-nickname"></span>
+                    </div>
+        
+                    <!-- Bio -->
+                    <div class="user-detail-item">
+                        <label for="user-bio">Bio:</label>
+                        <p id="user-bio-display">This is your bio. Click "Edit" to modify it.</p>
+                        <textarea id="user-bio-edit" placeholder="Write something about yourself..." style="display: none;"></textarea>
+                        <button id="edit-bio-button">Edit</button>
+                        <button id="save-bio-button" style="display: none;">Save</button>
+                    </div>
+                </div>
+                <button id="add-detail-button">Other function</button>
+            </div>
 
 
             <!-- Stretch UI -->
@@ -135,7 +144,9 @@
                     <button id="stop-stretch-button" class="stretch-button" style="display: none;">Stop Stretching</button>
                     <button id="back-button" class="back-button">Back to Game</button>
                 </div>
+                
             </div>
+            
             
         </section>
     </div>
@@ -183,13 +194,5 @@
         <div class="spinner"></div>
     </div>
     
-    <!--test
-    <div>
-        <button id="test-fetch">Test Add User</button>
-    <div>
-    <div>
-        <button id="connect-wallet">touch me</button>
-        <button id="disconnect-wallet">don touch me X</button>
-    </div>
-    -->
-</body>
+
+</body>     

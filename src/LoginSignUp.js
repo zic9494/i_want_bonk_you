@@ -1,7 +1,7 @@
 
 
 export function setLoginAandSignUp(){ //登入註冊畫面
-    
+
     const popup = document.getElementById('LoginSignUp-popup');
     const closeBtn = popup.querySelector('.close');
     const loginForm = document.getElementById('loginForm');
@@ -12,7 +12,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
     const profile = document.getElementById('profile');
     const logoutBtn = document.getElementById('Logout-btn');
     const connect_wallet = document.getElementById('connect_wallet')
-    
+    const game = document.getElementById('game_ui')
     //保持使用者是登入狀態
     const local_user = localStorage.getItem('user_name');
     console.log(local_user);
@@ -20,7 +20,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
         connect_wallet.style.display = "block"
         const local_bio = localStorage.getItem('bio');
         const local_photo = localStorage.getItem('photoBase64');
-        profile.style.display = 'block';
+        game.style.display = 'block';
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'block';
         document.getElementById('user-nickname').innerText = localStorage.getItem('nick_name');
@@ -131,7 +131,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
                 loginBtn.style.display = 'none';
                 logoutBtn.style.display = 'block';
                 popup.style.display = 'none';
-                profile.style.display = 'block';
+                game.style.display = 'block';
             
             }else{
                 const errData = await response.json();

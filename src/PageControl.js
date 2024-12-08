@@ -28,7 +28,3 @@ export function Wallet_Contorl_List(){
     document.getElementById("connect_wallet").style.display = "block"
     
 }
-export function Generate_Game_Page(){
-    document.getElementById("MSG_Connect").style.display = "none"
-    document.getElementById("game_ui").style.display = "block"
-}

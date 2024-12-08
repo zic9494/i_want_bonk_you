@@ -164,6 +164,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
     }   
 });
 
+//取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
     const data = await pool.request()
         .query(`SELECT * FROM Online_Users
@@ -171,6 +172,7 @@ app.get('/api/GetStretch', async (req, res) =>{
     return res.status(200).json(data)
 })
 
+//改變伸、縮頭
 app.get('/api/ChangeStretch', async (req, res)=>{
     try{
         const user_name = req.query.user_name
@@ -190,15 +192,14 @@ app.get('/api/ChangeStretch', async (req, res)=>{
     }
 })
 
+//後門
 app.get('/develop', async (req, res)=>{
     const commed = 
     `
-        SELECT * FROM Online_Users
+        UPDATE Online_Users
+        SET User_name = 'gura'
+        WHERE User_name = 'gura                                              '
     `
-    // `
-    //     INSERT INTO Online_Users(user_name)
-    //     VALUES('qwe')
-    // `
     const data = await pool.request()
         .query(commed)
     return res.status(200).json(data)

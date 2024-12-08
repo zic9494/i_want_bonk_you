@@ -62,12 +62,12 @@ def initialize_counter(signer: Signer, counter: Empty[counter], admin: admin):
 
 # 初始化用戶PDA帳戶
 @instruction
-def initialize_user_pda(signer: Signer, token_account: Empty[TokenAccount], sol_account: Empty[user_pda], mint: TokenMint, counter: counter):
+def initialize_user_pda(signer: Signer, token_account: Empty[TokenAccount], sol_account: Empty[user_pda], mint: TokenMint, counter: counter, user: user_pda):
     # 新增用戶的代幣帳戶
     user_bonk = token_account.init(
         payer = signer,
         mint = mint,
-        authority = signer,
+        authority = user,
         seeds = ['user_bonk', signer.key()]
     )
 
@@ -113,10 +113,10 @@ def withdraw_BONK(signer: Signer, amount: u64, userPDA_account: TokenAccount, us
 
     # 轉賬 BONK 代幣
     userPDA_account.transfer(
-        authority = signer,
+        authority = user,
         to = user_account,
         amount = amount,
-        signer = ['user_bonk', signer.key(), bump]
+        signer = ['user_sol', signer.key(), bump]
     )
 
 # 用戶提取 SOL

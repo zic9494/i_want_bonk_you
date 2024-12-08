@@ -14,6 +14,6 @@ IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Online_Users' AND xtype=
 BEGIN
     CREATE TABLE Online_Users(
         User_name VARCHAR(50) NOT NULL UNIQUE,
-        Stretch bool NOT NULL DEFAULT FALSE
+        Stretched BIT NOT NULL DEFAULT 0
     )
 END

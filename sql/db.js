@@ -74,6 +74,13 @@ app.post('/api/users/signup',async (req,res) => {  //註冊的POST請求
         
         res.status(201).json({message: "User created successfully"});
         console.log('created successfully');
+        
+        await pool.request()
+            .input('User_name', sql.Char(50), user_name)
+            .query(
+                `INSERT INTO Online_Users(User_name)
+                VALUES (@User_name)`
+            );
     }catch(err){
         console.error('Error:',err);
     }
@@ -149,9 +156,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
             .input('Bio',sql.VarChar(255),bio)
             .input('PhotoBase64',sql.NVarChar(sql.MAX),photoBase64)
             .input('User_name',sql.VarChar(50),user_name)
-            .query(updateSQL);
-
-        
+            .query(updateSQL);     
 
         res.status(201).json({message: "update successfully"})
     }catch(err){
@@ -159,7 +164,38 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
     }   
 });
 
+app.get('/api/GetStretch', async (req, res) =>{
+    const data = await pool.request()
+        .query(`SELECT * FROM Online_Users
+            WHERE Stretched = 1`)
+    return res.status(200).json(data)
+})
 
+app.get('/api/ChangeStretch', async (req, res)=>{
+    try{
+        const user_name = req.query.user_name
+        const action = Boolean(req.query.action)
+        console.log(req.body.action);
+        
+
+        await pool.request()
+            .input('action', sql.Bit ,action)
+            .input('User_name',sql.VarChar(50),user_name)
+            .query(`UPDATE Online_Users
+                SET Stretched = @action
+                WHERE User_name = @User_name`)
+
+        res.status(200).json({massage: "update successfully"})
+    }catch(err){
+        console.log(err);
+    }
+})
+
+app.get('/api/online_user', async (req, res)=>{
+    const data = await pool.request()
+        .query(`SELECT * FROM Users`)
+    return res.status(200).json(data)
+})
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -11,14 +11,15 @@ export function setLoginAandSignUp(){ //登入註冊畫面
     const loginBtn = document.getElementById('Login-btn');
     const profile = document.getElementById('profile');
     const logoutBtn = document.getElementById('Logout-btn');
-    const connect_wallet = document.getElementById('Wallet_set')
-    const connect_wallet2 = document.getElementById('connect_wallet')
+    const walletSet = document.getElementById('Wallet_set')
+    const connect_wallet = document.getElementById('connect_wallet')
     const game = document.getElementById('game_ui')
+    
     //保持使用者是登入狀態
     const local_user = localStorage.getItem('user_name');
     console.log(local_user);
     if(local_user!=null){
-        connect_wallet.style.display = "block"
+        walletSet.style.display = "block"
         const local_bio = localStorage.getItem('bio');
         const local_photo = localStorage.getItem('photoBase64');
         game.style.display = 'block';
@@ -33,7 +34,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
         }
     } else {
         // 用戶未登入
-        connect_wallet.style.display = "none"
+        walletSet.style.display = "none"
         profile.style.display = 'none';
         loginBtn.style.display = 'block';
     }

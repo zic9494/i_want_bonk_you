@@ -132,3 +132,19 @@
 #add-detail-button:hover {
     background-color: #4caf50; /* 懸停時更深綠色 */
 }
+
+.back-button {
+    background: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}

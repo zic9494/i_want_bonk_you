@@ -2,25 +2,47 @@
 .game-ui {
     background: #fff9eb; /* 柔和米色背景 */
     padding: 40px;
-    padding-top: 30px;
     border-radius: 30px;
     width: 600px;
     text-align: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     font-family: 'Comic Sans MS', sans-serif;
     position: relative; /* 用於定位 "?" 按鈕 */
+    display: none;
+}
+
+/* === 餘額區域樣式 === */
+.balance-container {
+    display: flex;
+    justify-content: flex-start; /* 左對齊 */
+    gap: 20px; /* 圖標間距 */
+    margin-bottom: 20px; /* 與其他內容的間距 */
+}
+
+.balance-item {
+    display: flex;
+    align-items: center; /* 圖標和文字垂直居中 */
+    gap: 10px; /* 圖標與文字間距 */
+    font-size: 16px;
+    font-weight: bold;
+    color: #555;
+}
+
+.balance-icon {
+    width: 24px; /* 圖標大小 */
+    height: 24px;
 }
 
 /* === 功能按鈕區域樣式 === */
 .top-actions {
-    display: flex; /* 彈性佈局 */
-    justify-content: left; /* 居中排列 */
+    display: flex;
+    justify-content: center; /* 功能按鈕居中排列 */
     gap: 20px; /* 按鈕間距 */
-    margin-bottom: 6%; /* 與下方內容的間距 */
+    margin-bottom: 20px;
 }
 
 .info-btn {
-    background: #007bff; /* 黃色背景 */
+    background: #007bff;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
@@ -36,7 +58,7 @@
 }
 
 .friends-btn {
-    background: #007bff; /* 藍色背景 */
+    background: #007bff;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
@@ -52,7 +74,7 @@
 }
 
 .leaderboard-btn {
-    background: #007bff; /* 綠色背景 */
+    background: #007bff;
     color: white;
     padding: 10px 20px;
     font-size: 16px;
@@ -67,33 +89,21 @@
     transform: scale(1.05);
 }
 
-/* === 遊戲圖標與餘額 === */
+/* === 遊戲圖標樣式 === */
 .game-header {
     margin-bottom: 20px;
 }
 
-.game-header p {
-    font-size: 18px;
-    color: #555;
+.game-header img {
+    width: 100px; /* 圖標大小 */
 }
 
-.game-header .balance {
-    font-weight: bold;
-    color: #ff7b72;
-    font-size: 24px;
-}
-
-.game-icon {
-    width: 100px;
-    margin-bottom: 20px;
-}
-
-/* === 遊戲按鈕 === */
+/* === 遊戲功能按鈕樣式 === */
 .game-actions {
     display: flex;
-    justify-content: space-between;
-    gap: 20px;
-    margin-top: 20px;
+    justify-content: space-between; /* BONK 和 Stretch 按鈕左右分佈 */
+    gap: 20px; /* 按鈕間距 */
+    margin-top: 30px;
 }
 
 .action-button {
@@ -129,8 +139,7 @@
     transform: scale(1.05);
 }
 
-
-/* === How to Play 按鈕 === */
+/* === How to Play 按鈕樣式 === */
 .help-btn {
     position: absolute; /* 固定位置 */
     top: 20px; /* 距離底部 */

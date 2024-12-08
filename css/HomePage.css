@@ -1,4 +1,5 @@
 body{
+    color: white;
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     scroll-behavior: smooth;
@@ -32,11 +33,14 @@ section{
 }
 .Home_page{
     display: flex;
-    background-color: aqua;
+    background: linear-gradient(to bottom, #4F4F4F, #3C3C3C);
     align-items: center;
     justify-content: center;
     flex-direction: column;
     text-align: center;
+}
+.Home_page h3{
+    text-align: left;
 }
 .Home_page a {
     position: absolute;
@@ -54,14 +58,13 @@ section{
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 頂部對齊 */
-    align-items: flex-end; /* 右側對齊 */
-    background-color: black;
+    justify-content: flex-start;
+    align-items: flex-end;
+    background: linear-gradient(to bottom, #3C3C3C, #272727);
     color: white;
     height: 100vh;
     text-align: left;
 }
-
 #connect_wallet {
     position: absolute;
     right: 100px;
@@ -95,7 +98,9 @@ section{
 #connect_wallet {
     margin-left: auto; /* 這裡是將按鈕推向右側的關鍵 */
 }
-
+#Game_Page{
+    background: linear-gradient(to bottom, #272727, #000000);;
+}
 .content{
     padding-top: 50px;
 }

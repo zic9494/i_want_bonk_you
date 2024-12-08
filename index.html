@@ -11,6 +11,7 @@
     <link href="./css/Loading.css" rel="stylesheet">
     <link href="./css/Game.css" rel="stylesheet">
     <link href="./css/Stretch.css" rel="stylesheet">
+    <link href="./css/GamePage.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js" defer></script>
@@ -148,13 +149,13 @@
             </div>
 
             <div id="bonk_ui" style="display: none;">
-                <div class="stretch-container">
-                    <label>Pick one you want bonk</label>
-                    <div id="Can_bonk_list">
-                        
+                <div class="stretch-container BonkPerparPage">
+                    <div id="bonk_page" >
+                        loading
                     </div>
-                    <label id="Price"></label>
+                    <button id="back-button1" class="back-button">Back to Game</button>
                     <button id="Bonk" class="stretch-button" disabled>Bonk</button>
+                    <input id="Target" type="hidden" value="-1">
                 </div>
             </div>
             

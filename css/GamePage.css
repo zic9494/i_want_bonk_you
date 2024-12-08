@@ -1,0 +1,23 @@
+#Can_bonk_list{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
+}
+
+.TargetUser{
+    top:10px;
+    color: black;
+    width: 170px;
+    height: 295px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.BonkPerparPage{
+    height: 460px;
+}
+
+.arrow{
+    display: none;
+}

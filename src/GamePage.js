@@ -1,9 +1,12 @@
+import { Can_bonk_list } from "./bonk.js";
+
 export function setGamePage(){
        
     const gameUI = document.getElementById('game_ui');
     const stretchUI = document.getElementById('stretch_ui');
     const stretchButton = document.getElementById('stretch-button');
     const backButton = document.getElementById('back-button');
+    const backButton1 = document.getElementById('back-button1');
     const bonk_ui = document.getElementById('bonk_ui')
     const bonkButton = document.getElementById('Bonk-button')
     const start_streching = document.getElementById('start-stretch-button')
@@ -16,7 +19,6 @@ export function setGamePage(){
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none'; 
         stretchUI.style.display = 'block';
-        //stretch_start()
     });
 
     //stretch回主頁
@@ -25,12 +27,19 @@ export function setGamePage(){
         gameUI.style.display = 'block'; 
     })
 
+    //跳到bonk
     bonkButton.addEventListener("click", ()=>{
         gameUI.style.display = "none"
         bonk_ui.style.display = "block"
         Can_bonk_list()
     })
-    
+
+    //bonk回主頁
+    backButton1.addEventListener('click', () => {
+        bonk_ui.style.display = 'none'; 
+        gameUI.style.display = 'block'; 
+    })
+
     walletBtn.addEventListener('click',()=>{
         realWallet.click();
         gameOverlay.style.display = 'none';
@@ -68,21 +77,5 @@ export function setGamePage(){
             end_streching.style.display = "none"
         }
     })
-
-}
-
-async function Can_bonk_list(){
-    const resp = await fetch(
-        `http://localhost:3000/api/GetStretch`,{
-            method:'GET',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-        }
-    )
-    
-    var data = await resp.json()
-    data = data.recordset
-    console.log(data);
 
 }

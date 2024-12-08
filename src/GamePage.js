@@ -31,6 +31,11 @@ export function setGamePage(){
         Can_bonk_list()
     })
     
+    walletBtn.addEventListener('click',()=>{
+        realWallet.click();
+        gameOverlay.style.display = 'none';
+    })
+    
     //伸頭
     start_streching.addEventListener("click", async () =>{
         

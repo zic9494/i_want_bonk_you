@@ -11,7 +11,14 @@ export function setGamePage(){
     const gameOverlay = document.getElementById('wallet-overlay'); 
     const walletBtn = document.getElementById('connect-wallet-button')
     const realWallet = document.getElementById('connect_wallet');
-
+    const toProfile = document.getElementById('user-info-button');
+    const profile = document.getElementById('profile');
+    
+    toProfile.addEventListener('click',()=>{
+        profile.style.display = 'block';
+        gameUI.style.display = 'none';    
+    })
+    
     //跳到stretch
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none'; 
@@ -31,6 +38,7 @@ export function setGamePage(){
         Can_bonk_list()
     })
     
+    //透過遮罩按鈕連接錢包
     walletBtn.addEventListener('click',()=>{
         realWallet.click();
         gameOverlay.style.display = 'none';

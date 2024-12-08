@@ -1,10 +1,19 @@
 export function setUserInfo(){
+    const gameUI = document.getElementById('game_ui');
     const bioDisplay = document.getElementById('user-bio-display');
     const bioEdit = document.getElementById('user-bio-edit');
     const editBioButton = document.getElementById('edit-bio-button');
     const saveBioButton = document.getElementById('save-bio-button');
     const avatarImage = document.getElementById("user-avatar-image");
     const avatarInput = document.getElementById("avatar-upload-input");
+    const backButton = document.getElementById("user-back-button");
+    const profile = document.getElementById("profile");
+
+    backButton.addEventListener('click', () => {
+        profile.style.display = 'none'; 
+
+        gameUI.style.display = 'block'; 
+    })
 
     editBioButton.addEventListener('click',()=>{
         //自我介紹切換

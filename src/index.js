@@ -1,6 +1,6 @@
 // import { setCookie,  getCookie} from "./cookie.js";
 import { smoothScroll } from "./PageControl.js"
-import {connectWallet,Copy_Wallet,disconnectWallet} from "./wallet.js"
+import { setWallet } from "./Wallet.js";
 //import {addUser} from "../sql/fetch_test.js"
 import {setLoginAandSignUp} from "./LoginSignUp.js"
 import { setUserInfo } from "./UserInfo.js"
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
     setUserInfo();
     setGamePage();
-
+    setWallet();
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {
@@ -30,38 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    //送出錢包資料後
-    document.getElementById("connect_wallet").addEventListener("click", async (Key)=>{
-        var connected = await connectWallet()
-        if(connected != {}){
-            var Key = connected.publicKey.toString()
-            document.getElementById("connect_wallet").innerText = Key.slice(0,4)+"..."+Key.slice(Key.length-5, Key.length-1)
-            
-        }else{
-            if(!('phantom' in window)){
-                window.open('https://phantom.app/', '_blank')
-            }
-        }
-        gameOverlay.style.display = 'none';
-    });
-
-    document.getElementById("connect_wallet").addEventListener("mouseover", ()=>{
-        if (window.solana.publicKey != null){
-            document.getElementById("Wallet_Contrel").style.display = "block"
-        }
-    });
-
-    document.getElementById("Copy_Address").addEventListener("click", Copy_Wallet)
-    document.getElementById("Disconnect").addEventListener("click",()=>{
-        disconnectWallet()
-        document.getElementById("connect_wallet").innerText="connect"
-        document.getElementById("Wallet_Contrel").style.display = "block"
-    })
-
-    document.getElementById("Wallet_set").addEventListener("mouseleave",()=>{
-        document.getElementById("Wallet_Contrel").style.display = 'none'
-    });
-
+    
 
 })
 

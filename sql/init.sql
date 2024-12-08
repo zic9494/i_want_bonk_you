@@ -10,3 +10,10 @@ BEGIN
         Created_at DATETIME2 DEFAULT GETDATE()     
     )
 END
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Online_Users' AND xtype='U')
+BEGIN
+    CREATE TABLE Online_Users(
+        User_name VARCHAR(50) NOT NULL UNIQUE,
+        Stretch bool NOT NULL DEFAULT FALSE
+    )
+END

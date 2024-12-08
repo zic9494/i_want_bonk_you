@@ -1,39 +1,94 @@
 /* === 主容器樣式 === */
 .game-ui {
     background: #fff9eb; /* 柔和米色背景 */
-    padding: 40px; /* 增加間距讓內容更大氣 */
+    padding: 40px;
+    padding-top: 30px;
     border-radius: 30px;
-    width: 500px; /* 增加寬度 */
+    width: 600px;
     text-align: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     font-family: 'Comic Sans MS', sans-serif;
-    display: none;
+    position: relative; /* 用於定位 "?" 按鈕 */
 }
 
-/* 標題樣式 */
+/* === 功能按鈕區域樣式 === */
+.top-actions {
+    display: flex; /* 彈性佈局 */
+    justify-content: left; /* 居中排列 */
+    gap: 20px; /* 按鈕間距 */
+    margin-bottom: 6%; /* 與下方內容的間距 */
+}
+
+.info-btn {
+    background: #007bff; /* 黃色背景 */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.info-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.friends-btn {
+    background: #007bff; /* 藍色背景 */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.friends-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.leaderboard-btn {
+    background: #007bff; /* 綠色背景 */
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.leaderboard-btn:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+/* === 遊戲圖標與餘額 === */
 .game-header {
-    margin-bottom: 30px;
-}
-
-.game-header p {
-    font-size: 24px; /* 放大文字大小 */
-    color: #444;
-    margin: 10px 0;
-}
-
-.game-header span {
-    font-weight: bold;
-    color: #ff7b72; /* 橘紅色文字 */
-    font-size: 28px; /* 放大金額字體 */
-}
-
-/* 遊戲圖標 */
-.game-icon {
-    width: 100px; /* 增加圖標大小 */
     margin-bottom: 20px;
 }
 
-/* === 按鈕容器 === */
+.game-header p {
+    font-size: 18px;
+    color: #555;
+}
+
+.game-header .balance {
+    font-weight: bold;
+    color: #ff7b72;
+    font-size: 24px;
+}
+
+.game-icon {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+/* === 遊戲按鈕 === */
 .game-actions {
     display: flex;
     justify-content: space-between;
@@ -41,10 +96,9 @@
     margin-top: 20px;
 }
 
-/* 按鈕基礎樣式 */
 .action-button {
-    padding: 20px; /* 增加按鈕內部間距 */
-    font-size: 24px; /* 放大按鈕文字 */
+    padding: 15px;
+    font-size: 18px;
     font-weight: bold;
     color: white;
     border: none;
@@ -52,31 +106,49 @@
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-    flex: 1; /* 讓按鈕平分空間 */
+    flex: 1;
 }
 
-/* BONK 按鈕樣式 */
 .bonk-btn {
-    background: #ff5252; /* 紅色背景 */
-    border: 3px solid #ff7b72; /* 外邊框 */
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: #ff5252;
+    border: 3px solid #ff7b72;
 }
 
 .bonk-btn:hover {
     background: #ff7961;
-    transform: scale(1.05); /* 懸停時放大 */
-    box-shadow: 0 10px 20px rgba(255, 82, 82, 0.4);
+    transform: scale(1.05);
 }
 
-/* Stretch 按鈕樣式 */
 .stretch-btn {
-    background: #4caf50; /* 綠色背景 */
+    background: #4caf50;
     border: 3px solid #66bb6a;
-    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .stretch-btn:hover {
     background: #66bb6a;
-    transform: scale(1.05); /* 懸停時放大 */
-    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.4);
+    transform: scale(1.05);
+}
+
+
+/* === How to Play 按鈕 === */
+.help-btn {
+    position: absolute; /* 固定位置 */
+    top: 20px; /* 距離底部 */
+    right: 20px; /* 距離右側 */
+    background: #ffcc00;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* 圓形按鈕 */
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.help-btn:hover {
+    background: #e6b800;
+    transform: scale(1.1);
 }

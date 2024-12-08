@@ -71,19 +71,33 @@
         <section id="Game_Page" class="content">
             <label id="MSG_Connect">Before Play The Game<br>Please Connect Wallet</label>
             <div id='game_ui' class="game-ui">
+                <!-- 功能按鈕區域 -->
+                <div class="top-actions">
+                    <button id="user-info-button" class="info-btn">User Info</button>
+                    <button id="friends-button" class="friends-btn">Friends</button>
+                    <button id="leaderboard-button" class="leaderboard-btn">Leaderboard</button>
+                </div>
+            
+                <!-- 遊戲圖標和餘額 -->
                 <div class="game-header">
-                    <img src="./images/icon.png" alt="Game Icon" class="game-icon">
-                    <p>Your BONK Balance: <span id="bonk-balance">1000</span> BONK</p>
+                    <img src="./images/icon.png" alt="Hammer Icon" class="game-icon">
+                    <p>Your BONK Balance: <span id="bonk-balance" class="balance">1000</span> BONK</p>
                 </div>
+            
+                <!-- 按鈕區域 -->
                 <div class="game-actions">
-                    <button id="bonk-button" class="action-button bonk-btn">
-                        BONK!
-                    </button>
-                    <button id="stretch-button" class="action-button stretch-btn">
-                        Stretch!
-                    </button>
+                    <button id="stretch-button" class="action-button bonk-btn">BONK!</button>
+                    <button class="action-button stretch-btn">Stretch!</button>
                 </div>
+            
+                <!-- How to Play 按鈕 -->
+                 <div class="how-to-play-div">
+                    <button id="how-to-play-button" class="help-btn">?</button>
+                 </div>
+                
             </div>
+
+
             <!-- Stretch UI -->
             <div id="stretch_ui" style="display: none;">
                 <div class="stretch-container">

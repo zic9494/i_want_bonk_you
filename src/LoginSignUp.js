@@ -11,7 +11,8 @@ export function setLoginAandSignUp(){ //登入註冊畫面
     const loginBtn = document.getElementById('Login-btn');
     const profile = document.getElementById('profile');
     const logoutBtn = document.getElementById('Logout-btn');
-    const connect_wallet = document.getElementById('connect_wallet')
+    const connect_wallet = document.getElementById('Wallet_set')
+    const connect_wallet2 = document.getElementById('connect_wallet')
     const game = document.getElementById('game_ui')
     //保持使用者是登入狀態
     const local_user = localStorage.getItem('user_name');

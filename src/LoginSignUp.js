@@ -11,12 +11,13 @@ export function setLoginAandSignUp(){ //登入註冊畫面
     const loginBtn = document.getElementById('Login-btn');
     const profile = document.getElementById('profile');
     const logoutBtn = document.getElementById('Logout-btn');
+    const connect_wallet = document.getElementById('connect_wallet')
     
     //保持使用者是登入狀態
     const local_user = localStorage.getItem('user_name');
     console.log(local_user);
     if(local_user!=null){
-
+        connect_wallet.style.display = "block"
         const local_bio = localStorage.getItem('bio');
         const local_photo = localStorage.getItem('photoBase64');
         profile.style.display = 'block';
@@ -31,7 +32,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
         }
     } else {
         // 用戶未登入
-        
+        connect_wallet.style.display = "none"
         profile.style.display = 'none';
         loginBtn.style.display = 'block';
     }
@@ -123,6 +124,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
             });
             hideLoading();
             if(response.ok){    //登入成功
+                connect_wallet.style.display = "block"
                 const data = await response.json();
                 alert(data.message);
                 await call_UserInfo(user_name);
@@ -144,6 +146,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
 
     //處理登出邏輯
     logoutBtn.addEventListener('click',()=>{
+        connect_wallet.style.display = "none"
         localStorage.clear();
         window.location.reload();
         document.getElementById('Logout-btn').style.display = 'none';

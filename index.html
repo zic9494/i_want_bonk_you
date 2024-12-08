@@ -23,7 +23,7 @@
         <a href="#Home_Page"><img src="./images/icon_white_rat.png" alt="HomeBtn" style="width: 30px;height: auto;"></a>
         <a href="#User_Info">User info</a>
         <a id="Login-btn">Login/SignUp</a>
-        <a id="Logout-btn" style="display:none;cursor: pointer;">Logout</a>
+        <a id="Logout-btn" style="display:none;cursor: pointer;">Log out</a>
     </div>
     <div id="Font_Page" class="Font_Page">    
         <section id="Home_Page" class="Home_page content Guide_To_User_Info">
@@ -34,7 +34,7 @@
 
         <section id="User_Info" class="User_Info content">
             <div id ="Wallet_set">
-                <button id="connect_wallet">connect</button>
+                <button id="connect_wallet">connect wallet</button>
                 <div id="Wallet_Contrel" class="list-container">
                     <ul>
                         <li id="Copy_Address" style="cursor: pointer;">Copy address</li>
@@ -172,7 +172,7 @@
                     <label for="password-login">Password:</label>
                     <input type="password" id="passwordLogin" name="password" required oninvalid="this.setCustomValidity('Please enter your password')">
                     
-                    <button type="submit">Login</button>
+                    <button type="submit" id="LoginSubmit">Login</button>
                     <p>Don't have an account? <a href="#" id="show-signup">Sign Up</a></p>
                 </form>
             </div>

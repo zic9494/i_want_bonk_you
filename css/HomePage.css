@@ -66,6 +66,7 @@ section{
     text-align: left;
 }
 #connect_wallet {
+    display: NONE;
     position: absolute;
     right: 100px;
     top: 10px;
@@ -80,8 +81,8 @@ section{
     background-color: black;
     border: 1px solid #ddd;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    top: 54px;
-    right: 150px;
+    top: 50px;
+    right: 102px;
     z-index: 999;
 }
 .list-container ul{

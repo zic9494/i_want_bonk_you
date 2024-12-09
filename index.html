@@ -14,6 +14,7 @@
     <link href="./css/FriendList.css" rel="stylesheet">
     <link href="./css/LeaderBoard.css" rel="stylesheet">
     <link href="./css/GamePage.css" rel="stylesheet">
+    <link href="./css/deposit.css" rel="stylesheet" >
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js" defer></script>
@@ -200,7 +201,43 @@
                 </div>
             </div>
             
-                
+            <div id="deposit-container" class="deposit hidden">
+                <!-- 遊戲內餘額 -->
+                <div class="balance-container">
+                    <div class="balance-item">
+                        <img src="./images/sol.png" alt="SOL Icon" class="balance-icon">
+                        <span id="sol-balance">0 SOL</span>
+                    </div>
+                    <div class="balance-item">
+                        <img src="./images/bonk.png" alt="BONK Icon" class="balance-icon">
+                        <span id="bonk-balance">0 BONK</span>
+                    </div>
+                </div>
+            
+                <!-- 標題 -->
+                <h2>Deposit</h2>
+            
+                <!-- 選擇存款貨幣 -->
+                <div class="currency-switch">
+                    <button id="deposit-sol-btn" class="currency-btn active">SOL</button>
+                    <button id="deposit-bonk-btn" class="currency-btn">BONK</button>
+                </div>
+            
+                <!-- 滑動條和金額輸入 -->
+                <div class="deposit-slider-container">
+                    <label for="deposit-slider" class="slider-label">Amount to Deposit:</label>
+                    <input type="range" id="deposit-slider" min="0" max="0" value="0">
+                    <div class="slider-value">
+                        <span id="deposit-amount">0</span> <span id="currency-label">SOL</span>
+                    </div>
+                </div>
+            
+                <!-- 確認按鈕 -->
+                <button id="confirm-deposit-btn" class="confirm-btn">Deposit</button>
+                <!-- 返回按鈕 -->
+                <button id="back-to-game-deposit" class="back-btn">Back</button>
+            </div>
+            
             
             
             

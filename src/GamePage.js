@@ -23,6 +23,9 @@ export function setGamePage(){
     const BonkPage = document.getElementById("bonk_page")
     const Target = document.getElementById("Target")
     const Bonk = document.getElementById("Bonk")
+    const deposit = document.getElementById('deposit-container');
+    const depositBtn = document.getElementById('deposit-button');
+
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -38,7 +41,13 @@ export function setGamePage(){
         profile.style.display = 'block';
         gameUI.style.display = 'none';    
     })
+
+    depositBtn.addEventListener('click',()=>{
+        deposit.style.display = 'block';
+        gameUI.style.display = 'none';
     
+    });
+        
     //跳到stretch
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none'; 

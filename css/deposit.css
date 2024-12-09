@@ -1,0 +1,128 @@
+/* === Deposit 主容器樣式 === */
+.deposit {
+    background: #fff9eb; /* 柔和米色背景 */
+    padding: 30px;
+    border-radius: 20px;
+    width: 500px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Comic Sans MS', sans-serif;
+    display: none;
+}
+
+/* 返回按鈕樣式 */
+.back-btn {
+    background-color: #007BFF;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+/* 標題樣式 */
+.deposit h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 貨幣切換按鈕樣式 */
+.currency-switch {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.currency-btn {
+    background-color: #ddd;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: black;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.currency-btn.active {
+    background-color: #007BFF;
+    color: white;
+}
+
+.currency-btn:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+/* 滑動條容器樣式 */
+.deposit-slider-container {
+    margin: 20px 0;
+}
+
+.slider-label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+    margin-bottom: 10px;
+}
+
+input[type="range"] {
+    width: 100%;
+    height: 6px;
+    background: #ddd;
+    border-radius: 5px;
+    appearance: none;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007BFF;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    background: #0056b3;
+}
+
+.slider-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* 確認按鈕樣式 */
+.confirm-btn {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirm-btn:hover {
+    background-color: #45a049;
+}

@@ -107,8 +107,23 @@ export async function Can_bonk_list(){
 export function start_bonk() {
     document.getElementById("bonk_ui").style.display = "none"
     document.getElementById("bonking_page").style.display = "block"
-    
+
+    const doges = document.getElementsByClassName("doges")
+    const position =[[70,100], [236, 300], [20, 400], [195, 7], [135, 600]]
+    const reward = shuffleArray([0, 0.1, 0.2, 0.3, 0.4])
+
+    Array.from(doges).forEach((element, index) => {
+        const onclick =()=>{
+            element.src = "./images/doge_clicked.png"
+            //
+        }
+        element.style.top = position[index][0] + "px"
+        element.style.left = position[index][1] + "px"
+        element.addEventListener("click", onclick, {once:true})
+    });
 }
+
+//獲取他人資料
 async function GetPeopleData(user_name){
     const resp = await fetch(
         `http://localhost:3000/api/users/info?user_name=${user_name}`,{
@@ -122,10 +137,12 @@ async function GetPeopleData(user_name){
     return data.recordset[0]
 }
 
+//產生亂數
 function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+//產生亂數陣列
 function generateUniqueRandomNumbers(min, max) {
     
     const uniqueNumbers = new Set();
@@ -136,4 +153,13 @@ function generateUniqueRandomNumbers(min, max) {
     }
 
     return Array.from(uniqueNumbers);
+}
+
+//隨機排列比例陣列
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }

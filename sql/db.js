@@ -263,15 +263,21 @@ app.post('/api/friends/confirm',async (req,res) => {
     }
 })
 
+//查詢好友列表
 app.get('/api/friends/query',async (req,res)=>{
     const user_name = req.query.user_name;
-    const querySQL = `SELECT From_user FROM Friendships 
-                    WHERE From_user = @user_name OR To_user = @user_name`;
+    const querySQL = `SELECT From_user,To_user FROM Friendships 
+                    WHERE ( From_user = @user_name OR To_user = @user_name) AND Status = 'confirmed'`;
     const query = await pool.request()
                     .input('user_name',sql.VarChar(50),user_name)
                     .query(querySQL);
+    console.log(query);
     res.status(200).json(query.recordset);
 });
+
+ 
+
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

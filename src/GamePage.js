@@ -18,12 +18,19 @@ export function setGamePage(){
     const profile = document.getElementById('profile');
     const toFriend = document.getElementById('friends-button');
     const friend = document.getElementById('friend');
+    const leaderBoard = document.getElementById("leaderboard-container");
+    const leaderBoardBtn = document.getElementById("leaderboard-button");
 
+    leaderBoardBtn.addEventListener('click',()=>{
+        leaderBoard.style.display = 'block';
+        gameUI.style.display = 'none';
+    })
+    //跳到FriendList
     toFriend.addEventListener('click',()=>{
         friend.style.display = 'block';
         gameUI.style.display = 'none';
     });
-    //跳到FriendList
+    //跳到UserInfo
     toProfile.addEventListener('click',()=>{
         profile.style.display = 'block';
         gameUI.style.display = 'none';    

@@ -7,6 +7,8 @@
     text-align: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     font-family: 'Comic Sans MS', sans-serif;
+    display: none;
+    color: #333;
 }
 
 /* 返回按鈕樣式 */
@@ -143,4 +145,26 @@
 
 .close-btn:hover {
     color: #f44336;
+}
+
+/* 表格容器，固定高度，啟用滾動條 */
+.leaderboard-table-wrapper {
+    max-height: 300px; /* 根據需要調整表格的最大高度 */
+    overflow-y: auto; /* 啟用垂直滾動條 */
+    border: 1px solid #ddd; /* 可選，添加邊框更清晰 */
+    margin-bottom: 20px; /* 與其他元素保持間距 */
+}
+
+/* 隱藏瀏覽器默認的滾動條樣式（可選） */
+.leaderboard-table-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+.leaderboard-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #333; /* 表頭背景色 */
+    z-index: 10;
 }

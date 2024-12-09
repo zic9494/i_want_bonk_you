@@ -18,7 +18,7 @@ BEGIN
         Bonked_times INT NOT NULL DEFAULT 0,
     )
 END
-IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Friendsships' AND xtype='U')
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Friendships' AND xtype='U')
 BEGIN
     CREATE TABLE Friendships(
         From_user VARCHAR(50) NOT NULL ,
@@ -31,5 +31,19 @@ BEGIN
         CHECK (Status in ('pending','confirmed')),
     );
 END
+
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Attacks' AND xtype='U')
+BEGIN
+    CREATE TABLE Attacks(
+        Attack_id INT IDENTITY(1,1) PRIMARY KEY, -- 唯一 ID
+        Attacker_user_name VARCHAR(50) NOT NULL, -- 攻擊者
+        Target_user_name VARCHAR(50) NOT NULL, -- 被攻擊者
+        Last_attack_time DATETIME2 DEFAULT GETDATE(), -- 最近一次攻擊的時間
+        FOREIGN KEY (Attacker_user_name) REFERENCES Users(User_name),
+        FOREIGN KEY (Target_user_name) REFERENCES Users(User_name)
+    );
+END
+
+
 
  

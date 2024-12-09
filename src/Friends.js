@@ -1,17 +1,9 @@
-// 數據初始化
-const friendsData = [
-    { avatar: "https://via.placeholder.com/50", nickname: "John Doe", bonkCount: 15, status: "Stretching" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Jane Smith", bonkCount: 8, status: "Idle" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Alice Green", bonkCount: 12, status: "Idle" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Bob Brown", bonkCount: 20, status: "Stretching" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Lucy Black", bonkCount: 5, status: "Idle" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Tom White", bonkCount: 9, status: "Idle" },
-];
 
-const invitesData = [
-    { avatar: "https://via.placeholder.com/50", nickname: "Chris Blue" },
-    { avatar: "https://via.placeholder.com/50", nickname: "Sophie Red" },
-];
+
+// 數據初始化
+let friendsData = [];
+
+let invitesData = [];
 
 // 分頁數據
 const itemsPerPage = 5; // 每頁顯示數量
@@ -34,8 +26,9 @@ const friend = document.getElementById("friend");
 
 
 
-export function setFriend(){
+export async function setFriend(){
     
+    //await getFriendData();
     // Tab 切換功能
     friendsTab.addEventListener("click", () => {
         currentTab = "friends";
@@ -80,7 +73,64 @@ export function setFriend(){
 
 
 }
+async function getFriendData(){
+    const user_name = localStorage.getItem('user_name');
+    const user_friends = new Set();
+    //拉好友清單
+    const friend_resp = await fetch(
+        `http://localhost:3000/api/friends/query?user_name=${user_name}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        }
+    );
+    friend_resp.forEach(record =>{
+        if(record.From_user==user_name){
+            user_friends.add(record.To_user);
+        }else if(record.To_user==user_name){
+            user_friends.add(record.From_user);
+        }
+    }); 
+    //伸頭狀態
+    const stretch_resp  = await fetch(
+        `http://localhost:3000/api/GetStretch`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        }
+    )
+    const stretchingUsers = await stretch_resp.json();
+    const stretchingSet = new Set(stretchingUsers.map(user => user.User_name)); //UserName提出來
 
+    const friend_details_list = Array.from(user_friends).map(async friend => {
+        const info_resp = await fetch(
+            `http://localhost:3000/api/users/info?user_name=${user_name}`,{
+                method:'GET',
+                headers: {
+                    'Content-Type' : 'application/json'
+                }
+            }
+        )
+        const user_info = await info_resp.json();
+        const attackResp = await fetch(
+            `http://localhost:3000/api/attacks/query?attack_user=${user_name}&target_user=${friend}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        );
+        let attack_count = attackResp.json();
+
+    })
+
+    
+    
+
+}
 // 加載數據並渲染
 function loadData(page, tab) {
     const data = tab === "friends" ? friendsData : invitesData;

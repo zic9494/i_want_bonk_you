@@ -77,7 +77,6 @@
                     <button id="deposit-button" class="leaderboard-btn">Deposit</button>
                 </div>
             
-               
                 <!-- 遊戲功能按鈕 -->
                 <div class="game-actions">
                     <button id='Bonk-button' class="action-button bonk-btn">BONK!</button>
@@ -163,7 +162,6 @@
 
             <!--Leaderboard-->
             <div id="leaderboard-container" class="leaderboard hidden">
-                
                 <!-- 標題 -->
                 <div class="leaderboard-header">
                     <h2>Leaderboard</h2>
@@ -171,19 +169,22 @@
                 </div>
             
                 <!-- 排行榜表格 -->
-                <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Avatar</th>
-                            <th>Nickname</th>
-                            <th>Bonk Earnings</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-tbody">
-                        <!-- 動態數據加載 -->
-                    </tbody>
-                </table>
+                 
+                <div class="leaderboard-table-wrapper">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Avatar</th>
+                                <th>Nickname</th>
+                                <th>Bonk Earnings</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-tbody">
+                            <!-- 動態數據加載 -->
+                        </tbody>
+                    </table>
+                </div>
                 <!-- 返回按鈕 -->
                 <button id="back-to-game-leaderboard" class="back-btn">Back</button>
             </div>

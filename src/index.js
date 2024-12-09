@@ -6,7 +6,7 @@ import {setLoginAandSignUp} from "./LoginSignUp.js"
 import { setUserInfo } from "./UserInfo.js"
 import { setGamePage } from "./GamePage.js"
 import { setFriend } from "./Friends.js";
-
+import { setLeaderBoard } from "./LeaderBoard.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     setLoginAandSignUp();
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setGamePage();
     setWallet();
     setFriend();
+    setLeaderBoard();
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

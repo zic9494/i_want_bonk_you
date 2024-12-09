@@ -27,8 +27,11 @@ const friend = document.getElementById("friend");
 
 
 export async function setFriend(){
-    
-    //await getFriendData();
+    //抓資料
+    friendsData = await getFriendData();
+    invitesData = await getInviteData();
+    console.log(friendsData);
+    console.log(invitesData);
     // Tab 切換功能
     friendsTab.addEventListener("click", () => {
         currentTab = "friends";
@@ -68,66 +71,133 @@ export async function setFriend(){
         friend.style.display = 'none';
     });
 
+
     //剛開始初始化
     loadData(currentPage, currentTab);
 
 
 }
+async function getInviteData() {
+    const user_name = localStorage.getItem('user_name');
+    try{
+        //抓好友邀請
+        const friend_resp = await fetch(
+            `http://localhost:3000/api/friends/queryRequest?user_name=${user_name}`,{
+                method:'GET',
+                headers: {
+                    'Content-Type' : 'application/json'
+                }
+            }
+        );
+        const request_resp_json = await friend_resp.json();
+        const requset_user = request_resp_json.map(item => item.From_user); //提取from_user
+
+        //map自定義
+        const requset_detail_list = requset_user.map(async request => {
+            const info_resp = await fetch(
+                `http://localhost:3000/api/users/info?user_name=${request}`,{
+                    method:'GET',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    }
+                }
+            )
+            const user_info_json = await info_resp.json();
+
+            const user_info = user_info_json.recordset[0];
+
+            return {
+                user_name: request,
+                nickname: user_info.Nick_name,
+                avatar: user_info.PhotoBase64 || "https://via.placeholder.com/50"
+            }
+        });
+
+        const requset_list = (await Promise.all(requset_detail_list));
+        return requset_list;
+
+    }catch(err){
+        console.error(err);
+    }
+}
 async function getFriendData(){
     const user_name = localStorage.getItem('user_name');
     const user_friends = new Set();
-    //拉好友清單
-    const friend_resp = await fetch(
-        `http://localhost:3000/api/friends/query?user_name=${user_name}`,{
-            method:'GET',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-        }
-    );
-    friend_resp.forEach(record =>{
-        if(record.From_user==user_name){
-            user_friends.add(record.To_user);
-        }else if(record.To_user==user_name){
-            user_friends.add(record.From_user);
-        }
-    }); 
-    //伸頭狀態
-    const stretch_resp  = await fetch(
-        `http://localhost:3000/api/GetStretch`,{
-            method:'GET',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-        }
-    )
-    const stretchingUsers = await stretch_resp.json();
-    const stretchingSet = new Set(stretchingUsers.map(user => user.User_name)); //UserName提出來
 
-    const friend_details_list = Array.from(user_friends).map(async friend => {
-        const info_resp = await fetch(
-            `http://localhost:3000/api/users/info?user_name=${user_name}`,{
+    try{
+        //拉好友清單
+        const friend_resp = await fetch(
+            `http://localhost:3000/api/friends/query?user_name=${user_name}`,{
+                method:'GET',
+                headers: {
+                    'Content-Type' : 'application/json'
+                }
+            }
+        );
+        const friend_records = await friend_resp.json();
+
+        friend_records.forEach(record =>{
+            if(record.From_user.trim()==user_name.trim()){
+                user_friends.add(record.To_user);
+                
+            }else if(record.To_user.trim()==user_name.trim()){
+                user_friends.add(record.From_user);
+            }
+        }); 
+
+        //拉伸頭狀態
+        const stretch_resp  = await fetch(
+            `http://localhost:3000/api/GetStretch`,{
                 method:'GET',
                 headers: {
                     'Content-Type' : 'application/json'
                 }
             }
         )
-        const user_info = await info_resp.json();
-        const attackResp = await fetch(
-            `http://localhost:3000/api/attacks/query?attack_user=${user_name}&target_user=${friend}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
+        const stretchingUsers = await stretch_resp.json();
+
+        const stretchingSet = new Set(stretchingUsers.recordset.map(user => user.User_name)); //UserName提出來
+       
+        //用map做自定義處理
+        const friend_details_list = Array.from(user_friends).map(async friend => {
+            const info_resp = await fetch(
+                `http://localhost:3000/api/users/info?user_name=${friend}`,{
+                    method:'GET',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    }
                 }
-            }
-        );
-        let attack_count = attackResp.json();
+            )
+            const user_info_json = await info_resp.json();
+            
+            console.log(friend);
+            const user_info = user_info_json.recordset[0];
+            
+            const attackResp = await fetch(
+                `http://localhost:3000/api/attacks/query?attack_user=${user_name}&target_user=${friend}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            let attack_count = await attackResp.json();
+            
+            return {
+                nickname: user_info.Nick_name,
+                avatar: user_info.PhotoBase64 || "https://via.placeholder.com/50",
+                status: stretchingSet.has(friend) ? "Stretching" : user_info.status || "Idle",
+                bonkCount: attack_count.attackCount
+            }; 
 
-    })
+        });
+        const friendList = (await Promise.all(friend_details_list));
+        return friendList;
+    }catch(err){
+        console.error(err);
 
-    
+    }
     
 
 }
@@ -153,7 +223,7 @@ function loadData(page, tab) {
                 <td>${item.nickname}</td>
                 <td>${item.bonkCount}</td>
                 <td><span class="status ${item.status === "Stretching" ? "status-green" : "status-red"}">${item.status}</span></td>
-                <td><button class="bonk-btn">BONK!</button></td>
+                <td><button class="bonk-btn" style=display:${item.status === "Stretching" ? "block" : "none"}>Bonk</button></td>
             `;
             tbody.appendChild(row);
         });
@@ -171,6 +241,13 @@ function loadData(page, tab) {
                     <button class="decline-btn">Decline</button>
                 </td>
             `;
+            //動態創建按鈕
+            const acceptBtn = row.querySelector(".accept-btn");
+            const declineBtn = row.querySelector(".decline-btn");
+
+            acceptBtn.addEventListener("click", () => handleAcceptInvite(item.user_name));
+            declineBtn.addEventListener("click", () => handleDeclineInvite(item.user_name));
+
             tbody.appendChild(row);
         });
     }
@@ -183,6 +260,64 @@ function updatePagination(page, totalItems) {
     currentPageSpan.textContent = page;
     prevPageBtn.disabled = page === 1;
     nextPageBtn.disabled = page === Math.ceil(totalItems / itemsPerPage);
+}
+
+async function handleAcceptInvite(from_user) {
+    const to_user = localStorage.getItem('user_name');
+    try{  
+        // 接受好友邀請
+        const response = await fetch('http://localhost:3000/api/friends/confirm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from_user: from_user,
+                to_user: to_user
+            })
+        });
+        invitesData = invitesData.filter(item => item.nickname !== from_user);
+        if(response.ok){
+            alert("Comfirm request successfully");
+        }else{
+            alert("Comfirm request error");
+        }
+        //刷新
+        loadData(currentPage, currentTab);
+    }catch(err){
+        console.error(err);
+    }
+}
+
+async function handleDeclineInvite(from_user) {
+    const to_user = localStorage.getItem('user_name');
+    try {
+        // 拒絕好友邀請
+        const response = await fetch('http://localhost:3000/api/friends/decline', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from_user: from_user,
+                to_user: to_user
+            })
+        });
+
+        // 更新邀請列表
+        invitesData = invitesData.filter(item => item.nickname !== from_user);
+
+        if (response.ok) {
+            alert("Declined friend request successfully");
+        } else {
+            alert("Error declining friend request");
+        }
+
+        // 刷新
+        loadData(currentPage, currentTab);
+    } catch (err) {
+        console.error(err);
+    }
 }
 
 //async function queryFriendList(params) {

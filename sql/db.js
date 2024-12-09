@@ -169,6 +169,7 @@ app.get('/api/GetStretch', async (req, res) =>{
     const data = await pool.request()
         .query(`SELECT * FROM Online_Users
             WHERE Stretched = 'true'`)
+    console.log(data);
     return res.status(200).json(data)
 })
 
@@ -263,10 +264,36 @@ app.post('/api/friends/confirm',async (req,res) => {
     }
 })
 
+//拒絕好友請求
+app.delete('/api/friends/decline',async (req,res) => {
+    try{
+        const from_user = req.body.from_user;
+        const to_user = req.body.to_user;
+
+        // 刪除好友邀請
+        const deleteSQL = `DELETE FROM Friendships 
+                           WHERE (From_user = @from_user AND To_user = @to_user AND Status = 'pending')
+                              OR (From_user = @to_user AND To_user = @from_user AND Status = 'pending')`;
+
+        const result = await pool.request()
+            .input('from_user', sql.VarChar(50), from_user)
+            .input('to_user', sql.VarChar(50), to_user)
+            .query(deleteSQL);
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ message: "No pending invitation found" });
+        }
+
+        res.status(200).json({ message: "Friend request declined successfully" });
+    }catch(err){
+        console.error(err);
+    }
+})
+
 //查詢好友列表
 app.get('/api/friends/query',async (req,res)=>{
     const user_name = req.query.user_name;
-    const querySQL = `SELECT From_user,To_user FROM Friendships 
+    console.log(user_name);
+    const querySQL = `SELECT From_user,To_user From Friendships 
                     WHERE ( From_user = @user_name OR To_user = @user_name) AND Status = 'confirmed'`;
     const query = await pool.request()
                     .input('user_name',sql.VarChar(50),user_name)
@@ -275,7 +302,37 @@ app.get('/api/friends/query',async (req,res)=>{
     res.status(200).json(query.recordset);
 });
 
- 
+
+//查詢好友邀請
+app.get('/api/friends/queryRequest',async (req,res)=>{
+    const user_name = req.query.user_name;
+    const querySQL = `SELECT From_user,To_user From Friendships 
+                    WHERE To_user = @user_name AND Status = 'pending'`;
+    const query = await pool.request()
+                    .input('user_name',sql.VarChar(50),user_name)
+                    .query(querySQL);
+    
+    res.status(200).json(query.recordset);
+});
+
+//查詢A對B攻擊次數
+app.get('/api/attacks/query', async (req,res)=>{
+    try{
+        const attack_user = req.query.attack_user;
+        const target_user = req.query.target_user;
+    
+        const querySQL = `SELECT COUNT(Attack_id) AS attackCount FROM Attacks 
+                    WHERE Attacker_user_name = @Attacker_user_name AND 
+                    Target_user_name = @Target_user_name`;
+        const query = await pool.request()
+                        .input('Attacker_user_name',sql.VarChar(50),attack_user)
+                        .input('Target_user_name',sql.VarChar(50),target_user)
+                        .query(querySQL);
+        res.status(200).json(query.recordset[0]);
+    }catch(err){
+        console.error(err);
+    }
+});
 
 
 

@@ -166,6 +166,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
 
 //取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
+    const user_name = req.query.user_name
     const commed =
     `
         SELECT A.User_name
@@ -173,7 +174,7 @@ app.get('/api/GetStretch', async (req, res) =>{
         LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
         WHERE A.Stretched = 'true' 
         AND (B.Last_attack_time < DATEADD(hour, -1, GETDATE()) OR B.Target_user_name IS NULL)
-        AND A.User_name != ${req.query.user_name}
+        AND A.User_name != '${user_name}'
     `
     const data = await pool.request()
         .query(commed)

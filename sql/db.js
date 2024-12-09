@@ -75,6 +75,7 @@ app.post('/api/users/signup',async (req,res) => {  //註冊的POST請求
         res.status(201).json({message: "User created successfully"});
         console.log('created successfully');
         
+        //Online_Users新增使用者
         await pool.request()
             .input('User_name', sql.Char(50), user_name)
             .query(
@@ -163,7 +164,18 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
         console.error(err);
     }   
 });
+//查詢遊戲狀態
+app.get('/api/status/query'){
+    const user_name = req.query.user_name;
+    const querySQL = `SELECT Stretched,SOL_balance,BONK_balance
+                    FROM Online_Users WHERE User_name = @User_name`;
 
+    const query = await pool.request()
+                        .input('User_name',sql.VarChar(50),user_name)
+                        .query(querySQL);
+    res.json(query.recordset[0]);
+                
+}
 //取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
     const user_name = req.query.user_name

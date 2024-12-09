@@ -7,6 +7,7 @@ BEGIN
         Nick_name VARCHAR(50) NOT NULL,     
         PhotoBase64 NVARCHAR(MAX) NULL,
         Bio VARCHAR(255) NULL,
+
         Created_at DATETIME2 DEFAULT GETDATE()     
     )
 END
@@ -16,6 +17,8 @@ BEGIN
         User_name VARCHAR(50) NOT NULL UNIQUE,
         Stretched BIT NOT NULL DEFAULT 0,
         Bonked_times INT NOT NULL DEFAULT 0,
+        SOL_balance INT NOT NULL DEFAULT 0,
+        BONK_balance INT NOT NULL DEFAULT 0,
     )
 END
 IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Friendships' AND xtype='U')

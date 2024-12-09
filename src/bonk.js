@@ -3,7 +3,7 @@ export async function Can_bonk_list(){
     var Innerhtml = `<label style="color: black;">Pick one to Bonk<br><br></label><div id="Can_bonk_list" >`
 
     const resp = await fetch(
-        `http://localhost:3000/api/GetStretch`,{
+        `http://localhost:3000/api/GetStretch?user_name=${localStorage.getItem('user_name')}`,{
             method:'GET',
             headers: {
                 'Content-Type' : 'application/json'
@@ -12,17 +12,18 @@ export async function Can_bonk_list(){
     )
     var data = await resp.json()
     data = data.recordset
-    var index=[0, 1, 2]
+    var index=[0, 1, 2] //被顯示的ID
     if (data.length>3){
         index = generateUniqueRandomNumbers(0, data.length - 1)
     }
-    var Name_list = []
+    var Name_list = [] //被攻擊者資料
     for (var i = 0; i<3;i++){
         Name_list.push(await GetPeopleData(data[index[i]].User_name))
+        //取回將顯示在畫面上的資料
         Innerhtml +=`
         <div class="user-avatar TargetUser" id="user-avatar-image${i}">
             <img src="${Name_list[i].PhotoBase64}" alt="User Avatar">
-            <h5>${data[index[i]].User_name}<br>Max get：12<br>Need：12</h5>
+            <h5>${data[index[i]].User_name} <input type="button" value="+"><br>Max get：12<br>Need：12</h5>
             <img id="selected${i}" src="./images/箭頭.png" class="arrow">
         </div>`
     }
@@ -30,6 +31,8 @@ export async function Can_bonk_list(){
     BonkList.innerHTML = Innerhtml
     var mousemoveList = []
     var mouseleaveList = []
+    
+    //增加監聽器，滑鼠滑過、滑離
     for (let i = 0; i < 3; i++) {
         let Id_name = "user-avatar-image" + i;
         let Selected = "selected" + i;
@@ -40,7 +43,6 @@ export async function Can_bonk_list(){
         let mouseleaveHandler = () => {
             document.getElementById(Selected).style.display = "none";
         };
-        console.log(mousemoveHandler);
     
         document.getElementById(Id_name).addEventListener("mousemove", mousemoveHandler);
         document.getElementById(Id_name).addEventListener("mouseleave", mouseleaveHandler);
@@ -48,6 +50,8 @@ export async function Can_bonk_list(){
         mousemoveList.push(mousemoveHandler)
         mouseleaveList.push(mouseleaveHandler)
     }
+
+    //確定後，取消監聽器
     for (let i = 0; i < 3; i++){
         var Id_name = "user-avatar-image" + i;
         let clickHonder = document.getElementById(Id_name).addEventListener("click",()=>{
@@ -57,7 +61,7 @@ export async function Can_bonk_list(){
             }
             console.log(Name_list);
             if (document.getElementById("Target").value=="-1"){
-                document.getElementById("Target").value = index[i]
+                document.getElementById("Target").value = data[index[i]].User_name
                 let btn = document.getElementById("Bonk")
                 btn.disabled = false
             }

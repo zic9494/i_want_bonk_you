@@ -1,4 +1,4 @@
-import { Can_bonk_list } from "./bonk.js";
+import { Can_bonk_list, start_bonk, StretchBack, StretchOut } from "./bonk.js";
 
 export function setGamePage(){
        
@@ -20,6 +20,9 @@ export function setGamePage(){
     const friend = document.getElementById('friend');
     const leaderBoard = document.getElementById("leaderboard-container");
     const leaderBoardBtn = document.getElementById("leaderboard-button");
+    const BonkPage = document.getElementById("bonk_page")
+    const Target = document.getElementById("Target")
+    const Bonk = document.getElementById("Bonk")
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -57,6 +60,8 @@ export function setGamePage(){
 
     //bonk回主頁
     backButton1.addEventListener('click', () => {
+        BonkPage.innerHTML = "laoding"
+        Target.value = "-1"
         bonk_ui.style.display = 'none'; 
         gameUI.style.display = 'block'; 
     })
@@ -68,36 +73,11 @@ export function setGamePage(){
     })
     
     //伸頭
-    start_streching.addEventListener("click", async () =>{
-        
-        const resp = await fetch(
-            `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=true`,{
-            method:'GET',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-            }
-        )
-        if (resp){
-            start_streching.style.display = "none"
-            end_streching.style.display = "block"
-        }
-    })
+    start_streching.addEventListener("click", StretchOut)
 
     //縮回來
-    end_streching.addEventListener("click", async()=>{
-        const resp = await fetch(
-            `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=`,{
-            method:'GET',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-            }
-        )
-        if (resp){
-            start_streching.style.display = "block"
-            end_streching.style.display = "none"
-        }
-    })
+    end_streching.addEventListener("click", StretchBack)
 
+    //確認目標，並開始敲頭
+    Bonk.addEventListener("click", start_bonk)
 }

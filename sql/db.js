@@ -165,7 +165,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
     }   
 });
 //查詢遊戲狀態
-app.get('/api/status/query'){
+app.get('/api/status/query',async (req, res)=>{
     const user_name = req.query.user_name;
     const querySQL = `SELECT Stretched,SOL_balance,BONK_balance
                     FROM Online_Users WHERE User_name = @User_name`;
@@ -173,9 +173,10 @@ app.get('/api/status/query'){
     const query = await pool.request()
                         .input('User_name',sql.VarChar(50),user_name)
                         .query(querySQL);
+
     res.json(query.recordset[0]);
                 
-}
+})
 //取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
     const user_name = req.query.user_name
@@ -327,23 +328,6 @@ app.get('/develop', async (req, res)=>{
 })
 
 
-//後門
-app.get('/develop', async (req, res)=>{
-    const commed =
-    `
-        SELECT A.User_name
-        FROM Online_Users AS A
-        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
-        WHERE A.Stretched = 'true' 
-        AND (B.Last_attack_time < DATEADD(hour, -1, GETDATE()) OR B.Target_user_name IS NULL);
-
-    `
-    const data = await pool.request()
-        .query(commed)
-    return res.status(200).json(data)
-})
-
-
 
 //查詢好友邀請
 app.get('/api/friends/queryRequest',async (req,res)=>{
@@ -375,6 +359,7 @@ app.get('/api/attacks/query', async (req,res)=>{
         console.error(err);
     }
 });
+
 
 
 

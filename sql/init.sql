@@ -48,5 +48,18 @@ BEGIN
 END
 
 
+IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Pda' AND xtype='U')
+BEGIN
+    CREATE TABLE Pda(
+        Wallet_address VARCHAR(50) PRIMARY KEY, 
+        Pda_addresss VARCHAR(50) NULL, 
+        Created_at DATETIME2 DEFAULT GETDATE() ,
+    );
+
+
+    
+END
+
+
 
  

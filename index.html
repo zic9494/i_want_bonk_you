@@ -202,6 +202,16 @@
             </div>
             
             <div id="deposit-container" class="deposit hidden">
+                <!-- 遊戲帳戶創建模態框 -->
+                <div id="create-account-modal" class="modal hidden">
+                    
+                    <div class="modal-content">
+                        <span id='closeBtn' class="close">&times;</span>
+                        <h3>No Deposit Account Found</h3>
+                        <p>Your wallet doesn't have a deposit account in this game. Please create one to proceed.</p>
+                        <button id="create-account-btn" class="create-account-btn">Create Account</button>
+                    </div>
+                </div>
                 <!-- 遊戲內餘額 -->
                 <div class="balance-container">
                     <div class="balance-item">
@@ -272,23 +282,14 @@
                     <div id="bonk_page" >
                         loading
                     </div>
-                    <button id="Bonk" class="stretch-button" disabled>Bonk</button>
                     <button id="back-button1" class="back-button">Back to Game</button>
+                    <button id="Bonk" class="stretch-button" disabled>Bonk</button>
                     <input id="Target" type="hidden" value="-1">
                 </div>
             </div>
 
             <div id="bonking_page" style="display: none;">
-                <div class="stretch-container">
-                    <p id="GameTitle">Start！！！</p>
-                    <div class="run_area">
-                    <img class="doges" src="./images/doge.png">
-                    <img class="doges" src="./images/doge.png">
-                    <img class="doges" src="./images/doge.png">
-                    <img class="doges" src="./images/doge.png">
-                    <img class="doges" src="./images/doge.png">
-                    </div>
-                </div>
+                <h3 id="GameTitle">Start！！！</h3>
             </div>
             
         </section>

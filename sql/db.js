@@ -165,7 +165,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
     }   
 });
 //查詢遊戲狀態
-app.get('/api/status/query'){
+app.get('/api/status/query', async(req,res)=>{
     const user_name = req.query.user_name;
     const querySQL = `SELECT Stretched,SOL_balance,BONK_balance
                     FROM Online_Users WHERE User_name = @User_name`;
@@ -174,8 +174,10 @@ app.get('/api/status/query'){
                         .input('User_name',sql.VarChar(50),user_name)
                         .query(querySQL);
     res.json(query.recordset[0]);
+});
+    
                 
-}
+
 //取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
     const user_name = req.query.user_name
@@ -373,6 +375,43 @@ app.get('/api/attacks/query', async (req,res)=>{
         res.status(200).json(query.recordset[0]);
     }catch(err){
         console.error(err);
+    }
+});
+
+//查詢用戶PDA
+app.get('/api/pda/query', async (req,res)=>{
+    try{
+        const wallet = req.query.wallet_address;
+        const querySQL = `SELECT Pda_address FROM PDA WHERE Wallet_address = @Wallet_address`;
+        const query = await pool.request()
+                        .input('Wallet_address',sql.VarChar(50),wallet)
+                        .query(querySQL);
+        if (!query.recordset.length){
+            return res.status(404).json({message:"Pda doesn't exist"});
+        }
+        res.status(200).json(query.recordset[0]);
+
+    }catch(err){
+        console.error(err);
+    }
+});
+
+// 新增用戶PDA
+app.post('/api/pda/add', async (req, res) => {
+    try {
+        const wallet_address = req.query.wallet_address;
+        const pda_address = req.query.pda_address;
+
+        const insertSQL = `INSERT INTO PDA (Wallet_address, Pda_address) VALUES (@Wallet_address, @Pda_address)`;
+        await pool.request()
+            .input('Wallet_address', sql.VarChar(50), wallet_address)
+            .input('Pda_address', sql.VarChar(50), pda_address)
+            .query(insertSQL);
+
+        res.status(200).json({ message: "PDA added successfully" });
+
+    } catch (err) {
+        console.error("Error adding PDA:", err);
     }
 });
 

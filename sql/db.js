@@ -177,6 +177,51 @@ app.get('/api/status/query',async (req, res)=>{
     res.json(query.recordset[0]);
                 
 })
+
+app.get('/api/update/bonked', async (req, res)=>{
+    const Attacker = req.query.attacker
+    const Bonked = req.query.bonked
+    let commed =
+    `
+        UPDATE Online_Users
+        SET Bonked_times = Bonked_times + 1
+        WHERE User_name = @bonked
+    `
+    await pool.request()
+        .input('bonked',sql.VarChar(50), Bonked)
+        .query(commed);
+    
+    commed = 
+    `
+        SELECT Attack_id FROM Attacks
+        WHERE Attacker_user_name = @attacker AND Target_user_name = @Bonked
+    `
+    let query = await pool.request()
+        .input('bonked',sql.VarChar(50), Bonked)
+        .input('attacker',sql.VarChar(50), Attacker)
+        .query(commed);
+    if (query.rowsAffected[0]==0){
+        commed = 
+        `
+            INSERT INTO Attacks(Attacker_user_name, Target_user_name)
+            VALUES(@attacker, @Bonked)
+        `
+    }else{
+        commed = 
+        `
+            UPDATE Attacks
+            SET Last_attack_time = GETDATE()
+            WHERE Attacker_user_name = @attacker AND Target_user_name = @Bonked
+        `
+    }
+    query = await pool.request()
+        .input('bonked',sql.VarChar(50), Bonked)
+        .input('attacker',sql.VarChar(50), Attacker)
+        .query(commed);
+    
+    res.status(201).json(query)
+})
+
 //取得伸頭
 app.get('/api/GetStretch', async (req, res) =>{
     const user_name = req.query.user_name
@@ -301,30 +346,25 @@ app.delete('/api/friends/decline',async (req,res) => {
 //查詢好友列表
 app.get('/api/friends/query',async (req,res)=>{
     const user_name = req.query.user_name;
-    console.log(user_name);
     const querySQL = `SELECT From_user,To_user From Friendships 
                     WHERE ( From_user = @user_name OR To_user = @user_name) AND Status = 'confirmed'`;
     const query = await pool.request()
                     .input('user_name',sql.VarChar(50),user_name)
                     .query(querySQL);
-    console.log(query);
     res.status(200).json(query.recordset);
 });
 
 //後門
 app.get('/develop', async (req, res)=>{
-    const commed =
+    const commed = 
     `
-        SELECT A.User_name
-        FROM Online_Users AS A
-        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
-        WHERE A.Stretched = 'true' 
-        AND (B.Last_attack_time < DATEADD(hour, -1, GETDATE()) OR B.Target_user_name IS NULL);
-
+        SELECT * FROM Attacks
     `
-    const data = await pool.request()
-        .query(commed)
-    return res.status(200).json(data)
+    let query = await pool.request()
+        .query(commed);
+    
+    return  res.status(201).json(query)
+    
 })
 
 

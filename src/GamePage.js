@@ -25,7 +25,8 @@ export function setGamePage(){
     const Bonk = document.getElementById("Bonk")
     const deposit = document.getElementById('deposit-container');
     const depositBtn = document.getElementById('deposit-button');
-
+    const BackToHome = document.getElementById("back_to_home")
+    const PlayAgain = document.getElementById("play_again")
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -89,4 +90,18 @@ export function setGamePage(){
 
     //確認目標，並開始敲頭
     Bonk.addEventListener("click", start_bonk)
+
+    BackToHome.addEventListener("click", ()=>{
+        document.getElementById("bonking_page").style.display = "none";
+        document.getElementsByClassName("run_area")[0].style.display = "block"
+        document.getElementById("finish_page").style.display = "none"       
+        gameUI.style.display = 'block'; 
+    })
+
+    PlayAgain.addEventListener("click", ()=>{
+        document.getElementById("bonking_page").style.display = "none";
+        document.getElementsByClassName("run_area")[0].style.display = "block"
+        document.getElementById("finish_page").style.display = "none"
+        bonkButton.click()
+    })
 }

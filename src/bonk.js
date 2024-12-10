@@ -107,19 +107,15 @@ export async function Can_bonk_list(){
 export function start_bonk() {
     document.getElementById("bonk_ui").style.display = "none"
     document.getElementById("bonking_page").style.display = "block"
-
+    
     const doges = document.getElementsByClassName("doges")
     const position =[[70,100], [236, 300], [20, 400], [195, 7], [135, 600]]
     const reward = shuffleArray([0, 0.1, 0.2, 0.3, 0.4])
-
+    localStorage.setItem("BonkCounter", 3) //次數限制
     Array.from(doges).forEach((element, index) => {
-        const onclick =()=>{
-            element.src = "./images/doge_clicked.png"
-            //
-        }
         element.style.top = position[index][0] + "px"
         element.style.left = position[index][1] + "px"
-        element.addEventListener("click", onclick, {once:true})
+        element.addEventListener("click", () => onclick(element), {once:true})
     });
 }
 
@@ -135,6 +131,51 @@ async function GetPeopleData(user_name){
     )
     var data = await resp.json()
     return data.recordset[0]
+}
+
+//更新受害者的資料
+async function Update_Bonked(bonked) {
+    const resp = await fetch(
+        `http://localhost:3000/api/update/bonked?attacker=${localStorage.getItem("user_name")}&bonked=${bonked}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        })
+    console.log(await resp.json());
+    document.getElementById("Target").value = "-1"
+    Array.from(document.getElementsByClassName("doges")).forEach((element) => {
+        element.src = "./images/doge.png";
+        element.click()
+    });
+    localStorage.setItem("BonkCounter", 3)
+}
+
+//狗狗圖片被點擊
+async function onclick(element) {
+    const Title = document.getElementById("GameTitle")
+    if (localStorage.getItem("BonkCounter")>0){
+
+        element.src = "./images/doge_clicked.png"
+        localStorage.setItem("BonkCounter", localStorage.getItem("BonkCounter")-1)
+        Title.innerHTML = "You got $12" 
+        var Times = "You have " + localStorage.getItem("BonkCounter") +" Times"
+        if(localStorage.getItem("BonkCounter") != 0)
+        window.setTimeout(()=>Title.innerHTML = Times, 500)
+
+    }else localStorage.setItem("BonkCounter", localStorage.getItem("BonkCounter")-1)
+    //清除剩餘的事件，但又不想觸發任何程式
+
+    if (localStorage.getItem("BonkCounter") == 0){
+        Title.innerText = "Finish"
+        
+        await Update_Bonked(document.getElementById("Target").value)
+        document.getElementById("bonk_page").innerHTML = "laoding"
+        document.getElementsByClassName("run_area")[0].style.display = "none"
+        document.getElementById("finish_page").style.display = "block"
+        document.getElementById("GameTitle").innerHTML = "Total earn : $36"
+        
+    }
 }
 
 //產生亂數

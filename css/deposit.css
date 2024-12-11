@@ -179,8 +179,8 @@
 }
 
 
-/* 滑動條和自訂金額整合容器 */
-.deposit-slider-container {
+/* 自訂金額輸入框樣式 */
+.custom-amount-container {
     margin-top: 20px;
     text-align: center;
 }

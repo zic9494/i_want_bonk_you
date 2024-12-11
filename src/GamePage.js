@@ -1,4 +1,5 @@
-import { Can_bonk_list, start_bonk, StretchBack, StretchOut } from "./bonk.js";
+import { Can_bonk_list, start_bonk} from "./bonk.js";
+
 
 export function setGamePage(){
        
@@ -9,8 +10,7 @@ export function setGamePage(){
     const backButton1 = document.getElementById('back-button1');
     const bonk_ui = document.getElementById('bonk_ui')
     const bonkButton = document.getElementById('Bonk-button')
-    const start_streching = document.getElementById('start-stretch-button')
-    const end_streching = document.getElementById('stop-stretch-button')
+
     const gameOverlay = document.getElementById('wallet-overlay'); 
     const walletBtn = document.getElementById('connect-wallet-button')
     const realWallet = document.getElementById('connect_wallet');
@@ -27,6 +27,7 @@ export function setGamePage(){
     const depositBtn = document.getElementById('deposit-button');
     const BackToHome = document.getElementById("back_to_home")
     const PlayAgain = document.getElementById("play_again")
+    
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -53,6 +54,7 @@ export function setGamePage(){
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none'; 
         stretchUI.style.display = 'block';
+        
     });
 
     //stretch回主頁
@@ -82,11 +84,7 @@ export function setGamePage(){
         gameOverlay.style.display = 'none';
     })
     
-    //伸頭
-    start_streching.addEventListener("click", StretchOut)
-
-    //縮回來
-    end_streching.addEventListener("click", StretchBack)
+   
 
     //確認目標，並開始敲頭
     Bonk.addEventListener("click", start_bonk)

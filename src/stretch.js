@@ -14,6 +14,12 @@ const closeSettingsModal = document.getElementById('close-settings-modal');
 
 export function setStretch(){
 
+
+    end_streching.addEventListener('click',()=>{
+        openSettingsButton.style.display = "inline-block";
+        end_streching.style.display = 'none';
+        neck.classList.remove('stretch');
+    })
       // 打開彈窗
     openSettingsButton.addEventListener('click', () => {
         stretchSettingsModal.style.display = 'flex';
@@ -43,27 +49,25 @@ export function setStretch(){
         const betValue = parseFloat(modalBetAmount.value || 0);
         if (betValue <= 0) {
             alert('Please enter a valid bet amount!');
+            
             return;
         }
-
-        // 開始動畫
-        neck.style.transition = 'height 2s ease-in-out';
-        neck.style.height = `${50 + betValue}px`;
-
+        neck.classList.add('stretch');
+        end_streching.style.display = "inline-block";
         stretchSettingsModal.style.display = 'none';
+        openSettingsButton.style.display = 'none';
     });
-     //伸頭
-     start_streching.addEventListener("click", StretchOut)
+     
 
      //縮回來
-     end_streching.addEventListener("click", StretchBack)
+     //end_streching.addEventListener("click", StretchBack)
 
 
 }
 
 async function StretchOut() {
     
-    neck.classList.add('stretch');
+    
 
 
     const resp = await fetch(
@@ -76,12 +80,12 @@ async function StretchOut() {
     )
     if (resp){
         start_streching.style.display = "none";
-        end_streching.style.display = "inline-block";
+       
     }
 }
 async function StretchBack() {
     
-    neck.classList.remove('stretch');
+    
 
     const resp = await fetch(
         `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=`,{
@@ -92,7 +96,7 @@ async function StretchBack() {
         }
     )
     if (resp){
-        start_streching.style.display = "inline-block" //選其他的會跑版
+         //選其他的會跑版
         end_streching.style.display = "none"
     }
 }

@@ -310,7 +310,11 @@ def transfer_bonk(signer: Signer, sender: TokenAccount, recipient: TokenAccount,
 
 @instruction
 def transfer_sol(signer: Signer, sender: UserPda, recipient: UserPda, admin: Admin, jackpot: Jackpot, amount: u64, option: bool):
-    if(signer.key() == admin.admin_address):
+    if(option == False):
+        jackpot.transfer_lamports(recipient, amount)   #這個轉帳是jackpot轉出
+        print('transfer successful')
+    
+    elif(signer.key() == admin.admin_address):
         sender.transfer_lamports(recipient, amount) #這個轉帳是USERPDA互相轉帳
         print('transfer successful')
 
@@ -322,9 +326,7 @@ def transfer_sol(signer: Signer, sender: UserPda, recipient: UserPda, admin: Adm
         signer.transfer_lamports(jackpot, amount)   #這個轉帳是轉入jackpot
         print('transfer successful')
     
-    else:
-        jackpot.transfer_lamports(signer, amount)   #這個轉帳是jackpot轉出
-        print('transfer successful')
+    
 
     
 

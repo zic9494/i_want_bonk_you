@@ -3,7 +3,6 @@ import { Connection,PublicKey,Keypair,Transaction
         TransactionInstruction, } from '@solana/web3.js';
 import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
-
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import { Buffer } from 'buffer';
 
@@ -57,10 +56,10 @@ export async function setDeposit(){
         [Buffer.from('token'),walletPK.toBuffer()],programId);
     //user的PDA
     const [sol_pda,bump] = await PublicKey.findProgramAddress(
-        [Buffer.from('user_sol'),walletPK.toBuffer()],programId);
+        [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
     //user的PDA的tokenAccount
     const [pdaTokenAccount,pdaTokenAccountBump] = await PublicKey.findProgramAddress(
-        [Buffer.from('user_bonk'),walletPK.toBuffer()],programId);
+        [Buffer.from('User_Bonk'),walletPK.toBuffer()],programId);
 
 
     //更新遊戲內餘額

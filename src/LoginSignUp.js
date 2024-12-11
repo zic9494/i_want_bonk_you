@@ -31,6 +31,7 @@ export function setLoginAandSignUp(){ //登入註冊畫面
         }
         if (local_photo) {
             document.getElementById('user-avatar-image').src = local_photo;
+            document.getElementById('stretch-player-avatar').src = local_photo;
         }
     } else {
         // 用戶未登入

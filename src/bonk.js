@@ -1,37 +1,4 @@
-export async function StretchOut() {
-    const start_streching = document.getElementById('start-stretch-button')
-    const end_streching = document.getElementById('stop-stretch-button')
-    
-    const resp = await fetch(
-        `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=true`,{
-        method:'GET',
-        headers: {
-            'Content-Type' : 'application/json'
-        }
-        }
-    )
-    if (resp){
-        start_streching.style.display = "none"
-        end_streching.style.display = "block"
-    }
-}
-export async function StretchBack() {
-    const start_streching = document.getElementById('start-stretch-button')
-    const end_streching = document.getElementById('stop-stretch-button')
 
-    const resp = await fetch(
-        `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=`,{
-        method:'GET',
-        headers: {
-            'Content-Type' : 'application/json'
-        }
-        }
-    )
-    if (resp){
-        start_streching.style.display = "block"
-        end_streching.style.display = "none"
-    }
-}
 export async function Can_bonk_list(){
     const BonkList = document.getElementById("bonk_page")
     var Innerhtml = `<label style="color: black;">Pick one to Bonk<br><br></label><div id="Can_bonk_list" >`

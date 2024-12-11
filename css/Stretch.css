@@ -5,6 +5,7 @@
     background: #fff9eb;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    color: #333;
 }
 
 .character {
@@ -14,21 +15,54 @@
     margin-bottom: 20px;
 }
 
+/* 頭像樣式 */
 .head {
-    width: 50px;
-    height: 50px;
-    background: #ffd700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin-bottom: -10px;
-    z-index: 2;
+    background-color: #ddd; /* 圓形背景，作為頭像的邊框 */
+    overflow: hidden; /* 確保頭像圖片不超出邊框 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+/* 頭像圖片 */
+.head img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 保持圖片比例，填充圓形 */
+}
+
 
 .neck {
     width: 20px;
-    height: 100px;
+    height: 30px;
     background: #ffa500;
     transition: height 0.3s ease;
+
 }
+
+
+
+/* 伸脖子動畫 */
+@keyframes stretch-neck {
+    0% {
+        height: 10px; /* 起始高度 */
+    }
+    50% {
+        height: 100px; /* 最大拉伸高度 */
+    }
+    100% {
+        height: 10px; /* 恢復原始高度 */
+    }
+}
+
+/* 播放脖子動畫時，同步頭部動畫 */
+.neck.stretch {
+    animation: stretch-neck 2s infinite ease-in-out;
+}
+
 
 .back-button {
     background: #007BFF;
@@ -82,6 +116,11 @@
     font-weight: bold;
     color: #4caf50; /* 綠色 */
 }
+#duration-display {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
 
 /* 按鈕樣式 */
 .stretch-button {
@@ -101,6 +140,8 @@
     transform: scale(1.05);
 }
 
+
+
 /* 停止按鈕樣式 */
 #stop-stretch-button {
     background: #ffa500;
@@ -108,4 +149,132 @@
 
 #stop-stretch-button:hover {
     background: #ff8c00;
+}
+
+/* === Stretch Settings Modal CSS === */
+
+/* 模态框背景 */
+#stretch-settings-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 半透明背景 */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+/* 模态框内容 */
+#stretch-settings-modal .modal-content {
+    background: #fff;
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+    position: relative;
+    font-family: 'Comic Sans MS', sans-serif;
+}
+
+/* 模态框标题 */
+#stretch-settings-modal h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 關閉按鈕樣式 */
+#stretch-settings-modal .close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#stretch-settings-modal .close:hover {
+    color: #ff5252;
+}
+
+/* 貨幣選擇按鈕 */
+#stretch-settings-modal .currency-switch {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 20px 0;
+}
+
+#stretch-settings-modal .currency-btn {
+    background: #f4f4f4;
+    color: #333;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#stretch-settings-modal .currency-btn.active {
+    background: #ff7b72;
+    color: #fff;
+    border-color: #ff5252;
+    font-weight: bold;
+}
+
+#stretch-settings-modal .currency-btn:hover {
+    background: #ff5252;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* 設置數字區域 */
+#stretch-settings-modal .settings {
+    margin-top: 20px;
+    text-align: center;
+}
+
+#stretch-settings-modal .settings label {
+    display: block;
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+#stretch-settings-modal .settings input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ffd5a5;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#stretch-settings-modal .settings input:focus {
+    border-color: #ff7b72;
+    box-shadow: 0 6px 15px rgba(255, 123, 114, 0.3);
+}
+
+/* 確認按鈕 */
+#stretch-settings-modal .confirm-btn {
+    background: #007BFF;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+#stretch-settings-modal .confirm-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
 }

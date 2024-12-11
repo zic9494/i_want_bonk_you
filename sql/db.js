@@ -248,16 +248,15 @@ app.get('/api/GetStretch', async (req, res) =>{
     const user_name = req.query.user_name
     const commed =
     `
-        SELECT A.User_name
+        SELECT DISTINCT A.User_name, A.Pulic_key
         FROM Online_Users AS A
-        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
+        RIGHT JOIN Attacks AS B ON A.User_name = B.Target_user_name
         WHERE A.Stretched = 'true' 
         AND (B.Last_attack_time < DATEADD(hour, -1, GETDATE()) OR B.Target_user_name IS NULL)
         AND A.User_name != '${user_name}'
     `
     const data = await pool.request()
-        .query(`SELECT * FROM Online_Users
-            WHERE Stretched = 'true'`)
+        .query(commed)
     return res.status(200).json(data)
 })
 

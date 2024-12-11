@@ -204,9 +204,6 @@ export async function setDeposit(){
         depositBonkBtn.classList.toggle('active', currency === 'BONK');
         updateSlider();
     }
-
-    
-
 }
 
 //轉Bonk

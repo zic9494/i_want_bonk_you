@@ -19,7 +19,8 @@ BEGIN
         Bonked_times INT NOT NULL DEFAULT 0,
         SOL_balance INT NOT NULL DEFAULT 0,
         BONK_balance INT NOT NULL DEFAULT 0,
-    );
+        Pulic_key VARCHAR(50),
+    )
 END
 IF NOT EXISTS (SELECT * FROM sys.sysobjects WHERE name='Friendships' AND xtype='U')
 BEGIN

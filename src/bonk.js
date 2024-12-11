@@ -63,6 +63,7 @@ export async function Can_bonk_list(){
             console.log(Name_list);
             if (document.getElementById("Target").value=="-1"){
                 document.getElementById("Target").value = data[index[i]].User_name
+                document.getElementById("TargetPK").value = data[index[i]].Pulic_key
                 let btn = document.getElementById("Bonk")
                 btn.disabled = false
             }

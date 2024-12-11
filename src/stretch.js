@@ -1,4 +1,13 @@
 
+import { Connection,PublicKey,Keypair,Transaction
+    ,SystemProgram,sendAndConfirmTransaction,
+    TransactionInstruction, } from '@solana/web3.js';
+import { createTransferInstruction } from '@solana/spl-token';
+import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
+import idl from '../idl/idl.json'; // 您的 IDL 檔案
+import { Buffer } from 'buffer';
+
+
 const end_streching = document.getElementById('stop-stretch-button')
 const stretchSettingsModal = document.getElementById('stretch-settings-modal');
 const confirmSettingsButton = document.getElementById('confirm-settings-button');

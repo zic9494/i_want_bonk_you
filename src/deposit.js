@@ -1,7 +1,7 @@
 import { Connection,PublicKey,Keypair,Transaction
         ,SystemProgram,sendAndConfirmTransaction,
         TransactionInstruction, } from '@solana/web3.js';
-
+import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
@@ -10,6 +10,8 @@ import { Buffer } from 'buffer';
 
 
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
+
+//調用合約會需要的參數
 const BONK_MINT = new PublicKey("DbuJVxtDKN5RCSKGBzU4JZUGqxUNCrJRnDYJd6RiLw4q");
 const tokenProgramId = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 const rentSysvarId = new PublicKey("SysvarRent111111111111111111111111111111111");
@@ -34,12 +36,15 @@ export async function setDeposit(){
     const depositSlider = document.getElementById('deposit-slider');
     const depositAmount = document.getElementById('deposit-amount');
     const currencyLabel = document.getElementById('currency-label');
+    const customAmountInput = document.getElementById('custom-amount');
     const confirmDepositBtn = document.getElementById('confirm-deposit-btn');
     const backToGameDeposit = document.getElementById('back-to-game-deposit');
     const gameUI = document.getElementById('game_ui');
     const createAccountModal = document.getElementById("create-account-modal");
     const createAccountBtn = document.getElementById("create-account-btn");
-    const closeBtn = document.getElementById('closeBtn');
+    const backToDeposit = document.getElementById('back-to-deposit');
+    const solBalanceText = document.querySelectorAll('.sol-balance'); 
+    const bonkBalanceText = document.querySelectorAll('.bonk-balance');  //抓遊戲內所有有餘額的地方
     
     const programId = new PublicKey('CrAydyeqPc5bozC2H3MgqwZXQ3ytEyDBujWLv2yWcfVw');
     let currentCurrency = 'SOL'; // 預設為 SOL
@@ -57,15 +62,139 @@ export async function setDeposit(){
     const [pdaTokenAccount,pdaTokenAccountBump] = await PublicKey.findProgramAddress(
         [Buffer.from('user_bonk'),walletPK.toBuffer()],programId);
 
+
+    //更新遊戲內餘額
+    await updateGameBalance();
+   
+    //抓取錢包餘額
     await getWalletBalances(walletPK);
+    
     updateSlider();
 
-    // 更新滑動條的最大值和顯示的金額
-    function updateSlider() {
-        depositSlider.max = walletBalances[currentCurrency];
+   
+
+    // 滑動條事件
+    depositSlider.addEventListener('input', () => {
+        const value = parseFloat(depositSlider.value);  //string(depositSlider.value) to float(value)
+        depositAmount.innerText = value.toFixed(currencyLabel.innerText === 'SOL' ? 4 : 0); //toFixed表示小數顯示位數
+        customAmountInput.value = value;
+    });
+
+    // 自訂數字框
+    customAmountInput.addEventListener('input', ()=>{
+        if(customAmountInput.value > walletBalances[currentCurrency]){
+            value = walletBalances[currentCurrency];
+            alert("The amount exceeds your available balance!")
+        }
+        const value = parseFloat(customAmountInput.value || 0); 
+        depositSlider.value = value;
+        depositSlider.innerText = value.toFixed(currencyLabel.innerText === 'SOL' ? 4 : 0);
+        depositAmount.innerText = value.toFixed(currentCurrency === 'SOL' ? 4 : 0);
+    });
+
+    // 切換貨幣按鈕事件
+    depositSolBtn.addEventListener('click', () => {
+        customAmountInput.setAttribute('step','0.0001');
+        switchCurrency('SOL');
+    });
+
+    depositBonkBtn.addEventListener('click', () => {
+        customAmountInput.setAttribute('step','1')
+        switchCurrency('BONK')
+    });
+
+    // 確認按鈕事件
+    confirmDepositBtn.addEventListener('click',async () => {
+        const amount = parseFloat(customAmountInput.value || 0);
+        if(amount===0){
+            alert("Please enter a valid number greater than 0");
+            return;
+        }
+        //確認是否存在PDA
+        const isPdaExist = await checkIsPdaExist(tokenAccountpda);
+        if(!isPdaExist){
+            createAccountModal.style.display = 'flex';
+        }else if(currentCurrency==='SOL'){
+            const isSuccess = await transferSol(wallet,sol_pda,amount);
+            if(isSuccess){
+                alert("Deposit successfully");
+            }else{
+                alert("fail to deposit. Please try again");
+            }
+        }else if(currentCurrency==='BONK'){
+            const isSuccess = await transferBonk(tokenAccountpda,pdaTokenAccount,wallet,amount);
+            if(isSuccess){
+                alert("Deposit successfully");
+            }else{
+                alert("fail to deposit. Please try again");
+            }
+        }
+        await updateGameBalance();
+        updateSlider();
+        
+    });
+
+    createAccountBtn.addEventListener('click',async ()=>{
+        
+        const program = new Program(idl, programId, provider);
+        const isInit = await initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,program,wallet);
+        createAccountModal.style.display = 'none';
+        if(isInit){
+            alert("Account created successfully");
+        }else{
+            alert("fail to create account. Please try again");
+        }
+    });
+
+    // 返回遊戲
+    backToGameDeposit.addEventListener('click', () => {
+        gameUI.style.display = 'block';
+        depositContainer.style.display = 'none';
+    });
+
+    //返回deposit
+    backToDeposit.addEventListener('click',()=>{
+        createAccountModal.style.display = 'none';
+    })
+
+    //更新遊戲內餘額
+    async function updateGameBalance() {
+        try {
+            const solPdaBalance = await connection.getBalance(sol_pda);
+            solBalanceText.forEach(sol_balance =>{
+                sol_balance.innerText = `${(solPdaBalance/ 1_000_000_000).toFixed(4)} SOL`;
+            });
+            console.log(`PDA SOL Balance: ${solPdaBalance / 1_000_000_000} SOL`);
+
+
+            const bonkPdaBalance = await connection.getBalance(pdaTokenAccount);
+
+            bonkBalanceText.forEach(bonk_balance =>{
+                bonk_balance.innerText = `${bonkPdaBalance} BONK`;
+            });
+            console.log(`BONK SOL Balance: ${bonkPdaBalance} BONK`);
+    
+            
+            
+            
+        } catch (err) {
+            console.error("Error fetching PDA SOL balance:", err);
+        }
+    }
+
+
+     // 更新滑動條的最大值和顯示的金額
+     function updateSlider() {
+        const maxBalance = walletBalances[currentCurrency];
+        depositSlider.max = maxBalance;
         depositSlider.value = 0;
+        customAmountInput.value = 0;
         depositAmount.innerText = depositSlider.value;  //讀取input的數字所以會隨者拉條變化
         currencyLabel.innerText = currentCurrency;
+
+        // 設置自訂金額輸入框的範圍提示
+        customAmountInput.setAttribute('max', maxBalance);
+        customAmountInput.setAttribute('min', '0');
     }
 
     // 切換幣種
@@ -76,47 +205,62 @@ export async function setDeposit(){
         updateSlider();
     }
 
-    // 滑動條事件
-    depositSlider.addEventListener('input', () => {
-        depositAmount.innerText = depositSlider.value;
-    });
+    
 
-    // 切換貨幣按鈕事件
-    depositSolBtn.addEventListener('click', () => switchCurrency('SOL'));
-    depositBonkBtn.addEventListener('click', () => switchCurrency('BONK'));
-
-    // 確認按鈕事件
-    confirmDepositBtn.addEventListener('click',async () => {
-        
-        
-        //確認是否存在PDA
-        const isPdaExist = await checkIsPdaExist(tokenAccountpda);
-        if(!isPdaExist){
-            createAccountModal.style.display = 'flex';
-        }
-        // 更新餘額
-        walletBalances[currentCurrency] += parseFloat(depositSlider.value);
-        updateSlider();
-    });
-
-    createAccountBtn.addEventListener('click',()=>{
-        
-        const program = new Program(idl, programId, provider);
-        initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,program,wallet);
-        createAccountModal.style.display = 'none';
-    })
-    // 返回按鈕事件
-    backToGameDeposit.addEventListener('click', () => {
-        gameUI.style.display = 'block';
-        depositContainer.style.display = 'none';
-    });
-
-    closeBtn.addEventListener('click',()=>{
-        createAccountModal.style.display = 'none';
-    })
 }
 
+//轉Bonk
+async function transferBonk(fromTokenAccount,toTokenAccount,wallet,amount) {
+    try{
+        const ix = createTransferInstruction(
+            tokenProgramId,
+            fromTokenAccount,
+            toTokenAccount,
+            wallet.publicKey,
+            amount,
+        )
+        //打包交易
+        const transaction = new Transaction().add(ix);
+        transaction.feePayer = wallet.publicKey;
+        transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
 
+        // 透過錢包簽名
+        const signature = await window.solana.signAndSendTransaction(transaction);
+
+        await connection.confirmTransaction(signature, "confirmed");
+        console.log("Transaction confirmed with signature:", signature);
+        return true;
+
+    }catch(err){
+        console.error(err);
+    }
+}
+
+async function transferSol(wallet,sol_pda,amount) {
+    try{
+        //純轉sol的transaction
+        const ix = SystemProgram.transfer({
+            fromPubkey: wallet.publicKey,
+            toPubkey: sol_pda,
+            lamports: amount * 1_000_000_000,
+        });
+
+        const transaction = new Transaction().add(ix);
+
+        transaction.feePayer = wallet.publicKey;
+        transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
+
+        const signature = await window.solana.signAndSendTransaction(transaction);
+
+        await connection.confirmTransaction(signature, "confirmed");
+        console.log("Transaction confirmed with signature:", signature);
+        return true;
+    }catch(err){
+        console.error(err);
+        return false;
+    }
+
+}
 
 async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,program,wallet) {
     try{
@@ -174,15 +318,13 @@ async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,prog
 
         await connection.confirmTransaction(signature, "confirmed");
         console.log("Transaction confirmed with signature:", signature);
-
+        return true;
 
     }catch(err){
         console.error(err);
+        return false;
     }
 }
-
-
-
 
 async function getWalletBalances(walletPublicKey) {
     const solBalance = await connection.getBalance(walletPublicKey) / 1_000_000_000;

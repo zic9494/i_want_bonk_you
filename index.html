@@ -58,11 +58,11 @@
                 <div class="balance-container">
                     <div class="balance-item">
                         <img src="your-sol-icon.png" alt="SOL Icon" class="balance-icon">
-                        <span id="sol-balance">2.345 SOL</span>
+                        <span id="sol-balance" class="sol-balance">0 SOL</span>
                     </div>
                     <div class="balance-item">
                         <img src="your-bonk-icon.png" alt="BONK Icon" class="balance-icon">
-                        <span id="bonk-balance">1000 BONK</span>
+                        <span id="bonk-balance" class="bonk-balance">0 BONK</span>
                     </div>
                 </div>
                 <!-- 遊戲圖標 -->
@@ -210,17 +210,18 @@
                         <h3>No Deposit Account Found</h3>
                         <p>Your wallet doesn't have a deposit account in this game. Please create one to proceed.</p>
                         <button id="create-account-btn" class="create-account-btn">Create Account</button>
+                        <button id="back-to-deposit" class="back-btn">Back</button>
                     </div>
                 </div>
                 <!-- 遊戲內餘額 -->
                 <div class="balance-container">
                     <div class="balance-item">
                         <img src="./images/sol.png" alt="SOL Icon" class="balance-icon">
-                        <span id="sol-balance">0 SOL</span>
+                        <span id="sol-balance" class="sol-balance">0 SOL</span>
                     </div>
                     <div class="balance-item">
                         <img src="./images/bonk.png" alt="BONK Icon" class="balance-icon">
-                        <span id="bonk-balance">0 BONK</span>
+                        <span id="bonk-balance"  class="bonk-balance">0 BONK</span>
                     </div>
                 </div>
             
@@ -235,12 +236,16 @@
             
                 <!-- 滑動條和金額輸入 -->
                 <div class="deposit-slider-container">
-                    <label for="deposit-slider" class="slider-label">Amount to Deposit:</label>
-                    <input type="range" id="deposit-slider" min="0" max="0" value="0">
+                    <label for="deposit-slider" class="slider-label">
+                        Amount to Deposit:
+                        <input type="number" id="custom-amount" min="0" step="0.0001" value="0" class="custom-input">
+                    </label>
+                    <input type="range" id="deposit-slider" min="0" max="0" value="0" step="0.0001">
                     <div class="slider-value">
                         <span id="deposit-amount">0</span> <span id="currency-label">SOL</span>
                     </div>
                 </div>
+            
             
                 <!-- 確認按鈕 -->
                 <button id="confirm-deposit-btn" class="confirm-btn">Deposit</button>

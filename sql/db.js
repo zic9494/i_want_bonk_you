@@ -178,7 +178,7 @@ app.get('/api/status/query',async (req, res)=>{
 });
     
                 
-})
+
 
 app.get('/api/update/bonked', async (req, res)=>{
     const Attacker = req.query.attacker

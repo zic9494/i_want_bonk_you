@@ -12,10 +12,10 @@ import { Buffer } from 'buffer';
 const connection = new Connection('https://api.devnet.solana.com', 'confirmed');
 
 //調用合約會需要的參數
-const BONK_MINT = new PublicKey("DbuJVxtDKN5RCSKGBzU4JZUGqxUNCrJRnDYJd6RiLw4q");
+const BONK_MINT = new PublicKey("GGmKGGs29t8k3WEpFJkWrsLLymHzbC8CSEAXyjUfGcEM");
 const tokenProgramId = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 const rentSysvarId = new PublicKey("SysvarRent111111111111111111111111111111111");
-const counter = new PublicKey("B52bgYHBYczERra5job3bdbiLHSLWsWc7Eci1px4Mipy");
+const counter = new PublicKey("3ms6Hz7JkPm6NFGFdwkXgnAMXitMQHKrJjytvSXLomTJ");
 
 const provider = new AnchorProvider(connection, {
     publicKey: null,
@@ -46,7 +46,7 @@ export async function setDeposit(){
     const solBalanceText = document.querySelectorAll('.sol-balance'); 
     const bonkBalanceText = document.querySelectorAll('.bonk-balance');  //抓遊戲內所有有餘額的地方
     
-    const programId = new PublicKey('CrAydyeqPc5bozC2H3MgqwZXQ3ytEyDBujWLv2yWcfVw');
+    const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
     let currentCurrency = 'SOL'; // 預設為 SOL
 
     const wallet = await window.solana.connect();
@@ -167,12 +167,12 @@ export async function setDeposit(){
             console.log(`PDA SOL Balance: ${solPdaBalance / 1_000_000_000} SOL`);
 
 
-            const bonkPdaBalance = await connection.getBalance(pdaTokenAccount);
-
+            const bonkPdaBalance = await connection.getTokenAccountBalance(pdaTokenAccount);
+            console.log(bonkPdaBalance.value.uiAmount);
             bonkBalanceText.forEach(bonk_balance =>{
-                bonk_balance.innerText = `${bonkPdaBalance} BONK`;
+                bonk_balance.innerText = `${bonkPdaBalance.value.uiAmount} BONK`;
             });
-            console.log(`BONK SOL Balance: ${bonkPdaBalance} BONK`);
+            console.log(`BONK SOL Balance: ${bonkPdaBalance.value.uiAmount} BONK`);
     
             
             
@@ -210,11 +210,11 @@ export async function setDeposit(){
 async function transferBonk(fromTokenAccount,toTokenAccount,wallet,amount) {
     try{
         const ix = createTransferInstruction(
-            tokenProgramId,
             fromTokenAccount,
             toTokenAccount,
             wallet.publicKey,
             amount,
+            tokenProgramId
         )
         //打包交易
         const transaction = new Transaction().add(ix);

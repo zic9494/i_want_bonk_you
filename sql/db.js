@@ -164,6 +164,25 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
         console.error(err);
     }   
 });
+
+app.get('/api/user/pulickey', async(req, res)=>{
+    const public_key = req.query.public_key
+    const user_name = req.query.user_name
+    const commed =
+    `
+        UPDATE Online_Users
+        SET Pulic_key = @pulic_key
+        WHERE User_name = @user_name
+    `
+    const query = await pool.request()
+                    .input('pulic_key', sql.VarChar(50), public_key)
+                    .input("user_name", sql.VarChar(50), user_name)
+                    .query(commed)
+    
+    res.status(200).json(query)
+
+})
+
 //查詢遊戲狀態
 app.get('/api/status/query',async (req, res)=>{
     const user_name = req.query.user_name;
@@ -179,7 +198,7 @@ app.get('/api/status/query',async (req, res)=>{
     
                 
 
-
+//更新受害者資料
 app.get('/api/update/bonked', async (req, res)=>{
     const Attacker = req.query.attacker
     const Bonked = req.query.bonked
@@ -358,13 +377,12 @@ app.get('/api/friends/query',async (req,res)=>{
 
 //後門
 app.get('/develop', async (req, res)=>{
-    const commed = 
+    let commed = 
     `
-        SELECT * FROM Attacks
+        SELECT * FROM Online_Users
     `
     let query = await pool.request()
         .query(commed);
-    
     return  res.status(201).json(query)
     
 })

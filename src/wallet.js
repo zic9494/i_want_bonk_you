@@ -67,6 +67,7 @@ export async function setWallet(){
             connectWalletBtn.innerText = Key.slice(0,4)+"..."+Key.slice(Key.length-5, Key.length-1)
             gameOverlay.style.display = 'none';
             localStorage.setItem('isConnectWallet',true);
+            await UpdateKey(Key)
         }else{
             if(!('phantom' in window)){
                 window.open('https://phantom.app/', '_blank')
@@ -100,4 +101,12 @@ export async function setWallet(){
 }
 
 
-
+async function UpdateKey(key) {
+    resp = await fetch(
+        `http://localhost:3000/api/user/pulickey?public_key=${key}&user_name=${localStorage.getItem("user_name")}`,{
+        method:'GET',
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+    })
+}

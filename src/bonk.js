@@ -1,3 +1,5 @@
+import { Transaction,SystemProgram } from '@solana/web3.js';
+import { provider ,connection } from './deposit.js';
 
 export async function Can_bonk_list(){
     const BonkList = document.getElementById("bonk_page")
@@ -72,10 +74,11 @@ export async function Can_bonk_list(){
     
 }
 
-export function start_bonk() {
+export async function start_bonk() {
     document.getElementById("bonk_ui").style.display = "none"
     document.getElementById("bonking_page").style.display = "block"
     
+    await AdmissionFee()
     const doges = document.getElementsByClassName("doges")
     const position =[[70,100], [236, 300], [20, 400], [195, 7], [135, 600]]
     const reward = shuffleArray([0, 0.1, 0.2, 0.3, 0.4])
@@ -171,4 +174,27 @@ function shuffleArray(array) {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
+}
+
+async function AdmissionFee() {
+    const fromPublicKey = provider.publicKey; // 小寫的 p 為公鑰
+    const toPublicKey = new solanaWeb3.PublicKey("Cwmzm9fLDjBftKQsMkbwEw7Ti9TNvaZUwc7xWZheCo23");
+
+    const amount = 10; // 這裡的數值需要確認是以 lamports 為單位 (1 SOL = 1,000,000,000 lamports)
+
+    const transaction = new Transaction().add(
+        SystemProgram.transfer({
+            fromPubkey: fromPublicKey, // 確認拼寫為 fromPubkey
+            toPubkey: toPublicKey,
+            lamports: amount,
+        })
+    );
+
+    // 簽署並發送交易
+    const { signature } = await provider.signAndSendTransaction(transaction);
+
+    // 確認交易
+    const confirmedSignature = await connection.confirmTransaction(signature);
+    console.log('轉帳已確認，交易簽名:', confirmedSignature);
+
 }

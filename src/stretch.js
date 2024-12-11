@@ -2,7 +2,6 @@
 import { Connection,PublicKey,Keypair,Transaction
     ,SystemProgram,sendAndConfirmTransaction,
     TransactionInstruction, } from '@solana/web3.js';
-import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import BN from 'bn.js';
@@ -31,15 +30,18 @@ const openSettingsButton = document.getElementById('open-settings-button');
 const closeSettingsModal = document.getElementById('close-settings-modal');
 
 export async function setStretch(){
-    const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
-    [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
-
-    const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
-        [Buffer.from('admin')],programId);
+    
+    
 
     const wallet = await window.solana.connect();  //可優化
     const walletPK = wallet.publicKey;
     const program = new Program(idl, programId, provider);
+    const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
+    
+    const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('admin')],programId);
+    
     end_streching.addEventListener('click',async ()=>{
         const isSuccess = await endStretch(admin_pda)
         

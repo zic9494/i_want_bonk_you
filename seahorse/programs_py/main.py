@@ -58,6 +58,7 @@ def init_admin(owner: Signer, admin: Empty[Admin]):
     admin.bump = bump
     admin.admin_address = owner.key()
     
+    
     print(f"Admin initialized successfully! Address: {admin.admin_address}, Bump: {admin.bump}")
 
 # 創建一個新代幣 (TokenMint)

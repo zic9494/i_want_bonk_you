@@ -1,5 +1,14 @@
-import { Transaction,SystemProgram } from '@solana/web3.js';
+import { Transaction,SystemProgram,PublicKey } from '@solana/web3.js';
 import { provider ,connection } from './deposit.js';
+import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
+import idl from '../idl/idl.json'; // 您的 IDL 檔案
+import BN from 'bn.js';
+import { deserialize , Schema } from "borsh";
+import { Buffer } from 'buffer';
+
+const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
+const clockSysvar = new PublicKey('SysvarC1ock11111111111111111111111111111111'); 
+
 
 export async function Can_bonk_list(){
     const BonkList = document.getElementById("bonk_page")
@@ -75,19 +84,37 @@ export async function Can_bonk_list(){
 }
 
 export async function start_bonk() {
-    document.getElementById("bonk_ui").style.display = "none"
-    document.getElementById("bonking_page").style.display = "block"
+    const program = new Program(idl, programId, provider);
+
+    //抓取BONK目標PK及name
+    const target_user = document.getElementById("Target").value;
+    console.log("t",document.getElementById("TargetPK").value);
+    const target_user_pk = new PublicKey(document.getElementById("TargetPK").value);
+    const [target_pda,sol_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('user_solana'),target_user_pk.toBuffer()],programId);
+    const userPdaAccount = await program.account.userPda.fetch(target_pda); //用userPda類別去查
+    console.log(userPdaAccount);
+    console.log(userPdaAccount.stretchBetAmount,userPdaAccount.stopLoss);
+    const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100);
+    console.log(Admission_fee);
+    const isSuccess = await AdmissionFee(program,Admission_fee,userPdaAccount.stretchBetToken);
+    if(isSuccess){
+        alert("Bonk Successfully");
+        document.getElementById("bonk_ui").style.display = "none"
+        document.getElementById("bonking_page").style.display = "block"
+        const doges = document.getElementsByClassName("doges")
+        const position =[[70,100], [236, 300], [20, 400], [195, 7], [135, 600]]
+        const reward = shuffleArray([0, 0.1, 0.2, 0.3, 0.4])
+        localStorage.setItem("BonkCounter", 3) //次數限制
+        Array.from(doges).forEach((element, index) => {
+            element.style.top = position[index][0] + "px"
+            element.style.left = position[index][1] + "px"
+            element.addEventListener("click", () => onclick(element), {once:true})
+        });
+    }else{
+        alert("Fail to Bonk. Please try again");
+    }
     
-    await AdmissionFee()
-    const doges = document.getElementsByClassName("doges")
-    const position =[[70,100], [236, 300], [20, 400], [195, 7], [135, 600]]
-    const reward = shuffleArray([0, 0.1, 0.2, 0.3, 0.4])
-    localStorage.setItem("BonkCounter", 3) //次數限制
-    Array.from(doges).forEach((element, index) => {
-        element.style.top = position[index][0] + "px"
-        element.style.left = position[index][1] + "px"
-        element.addEventListener("click", () => onclick(element), {once:true})
-    });
 }
 
 //獲取他人資料
@@ -176,25 +203,39 @@ function shuffleArray(array) {
     return array;
 }
 
-async function AdmissionFee() {
-    const fromPublicKey = provider.publicKey; // 小寫的 p 為公鑰
-    const toPublicKey = new solanaWeb3.PublicKey("Cwmzm9fLDjBftKQsMkbwEw7Ti9TNvaZUwc7xWZheCo23");
 
-    const amount = 10; // 這裡的數值需要確認是以 lamports 為單位 (1 SOL = 1,000,000,000 lamports)
 
-    const transaction = new Transaction().add(
-        SystemProgram.transfer({
-            fromPubkey: fromPublicKey, // 確認拼寫為 fromPubkey
-            toPubkey: toPublicKey,
-            lamports: amount,
-        })
-    );
+async function AdmissionFee(program,AdmissionFee,token) {
+    try{
+        const wallet = await window.solana.connect();  //可優化
+        const walletPK = wallet.publicKey;
+        
 
-    // 簽署並發送交易
-    const { signature } = await provider.signAndSendTransaction(transaction);
+        const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
 
-    // 確認交易
-    const confirmedSignature = await connection.confirmTransaction(signature);
-    console.log('轉帳已確認，交易簽名:', confirmedSignature);
+
+
+        const ix = await program.methods
+                .bonkStart(new BN(AdmissionFee), token) //傳u64要記得轉成BN不然會出錯
+                .accounts({
+                    signer: walletPK, 
+                    user: sol_pda,           
+                    clock: clockSysvar       
+                })
+                .instruction();
+
+        const transaction = new Transaction().add(ix);
+        transaction.feePayer = walletPK;
+        transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
+
+        const signature = await window.solana.signAndSendTransaction(transaction);
+
+        await connection.confirmTransaction(signature, "confirmed");
+        console.log("Transaction confirmed with signature:", signature);
+        return true;
+    }catch(err){
+        return false;
+    }
 
 }

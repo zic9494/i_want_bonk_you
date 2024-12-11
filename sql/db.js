@@ -165,6 +165,7 @@ app.post('/api/users/info',async (req,res) => { //更新info的POST請求
     }   
 });
 
+//設置用戶pk
 app.get('/api/user/pulickey', async(req, res)=>{
     const public_key = req.query.public_key
     const user_name = req.query.user_name
@@ -182,6 +183,21 @@ app.get('/api/user/pulickey', async(req, res)=>{
     res.status(200).json(query)
 
 })
+//查詢用戶pk
+app.get('/api/user/pulickey/query', async(req, res)=>{
+    const user_name = req.query.user_name
+    const commed =
+    `
+        SELECT Pulic_key FROM Online_Users
+        WHERE User_name = @user_name
+    `
+    const query = await pool.request()
+                    .input("user_name", sql.VarChar(50), user_name)
+                    .query(commed)
+    
+    res.status(200).json(query)
+
+});
 
 //查詢遊戲狀態
 app.get('/api/status/query',async (req, res)=>{

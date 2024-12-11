@@ -5,7 +5,6 @@ import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import { Buffer } from 'buffer';
-import exp from 'constants';
 
 
 
@@ -64,7 +63,7 @@ export async function setDeposit(){
     //user的PDA的tokenAccount
     const [pdaTokenAccount,pdaTokenAccountBump] = await PublicKey.findProgramAddress(
         [Buffer.from('User_Bonk'),walletPK.toBuffer()],programId);
-
+        
 
     //更新遊戲內餘額
     await updateGameBalance();
@@ -265,7 +264,7 @@ async function transferSol(wallet,sol_pda,amount) {
 async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,program,wallet) {
     try{
         const ix = await program.methods
-            .addNewTokenaccount() // 無參數的情況
+            .addNewTokenaccount()  
             .accounts({
                 signer: wallet.publicKey,
                 tokenAccount: tokenAccountpda,

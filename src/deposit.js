@@ -50,7 +50,7 @@ export async function setDeposit(){
     
     const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
     let currentCurrency = 'SOL'; // 預設為 SOL
-
+    
     const wallet = await window.solana.connect();
     const walletPK = wallet.publicKey;
     provider.wallet.publicKey = walletPK;

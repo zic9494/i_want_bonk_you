@@ -387,6 +387,7 @@ app.get('/api/friends/query',async (req,res)=>{
     const query = await pool.request()
                     .input('user_name',sql.VarChar(50),user_name)
                     .query(querySQL);
+    
     res.status(200).json(query.recordset);
 });
 

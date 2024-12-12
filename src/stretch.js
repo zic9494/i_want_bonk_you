@@ -45,6 +45,7 @@ export async function setStretch(){
     
     end_streching.addEventListener('click',async ()=>{
         const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program);
+
         if(isSuccess){
             alert("Stretched back Success");
             let IntervalID = parseInt(localStorage.getItem("IntervalID"))
@@ -52,7 +53,7 @@ export async function setStretch(){
             openSettingsButton.style.display = "inline-block";
             end_streching.style.display = 'none';
             neck.classList.remove('stretch');
-            StretchBack()
+            await StretchBack()
             window.setTimeout(()=>{ 
                 DuringTimetext.innerText = "Stretch Duration: 0 seconds"
                 let DuringTime = 0
@@ -96,13 +97,15 @@ export async function setStretch(){
         }
 
         const isSuccess = await startStretch(walletPK,sol_pda,program,modalCurrencyLabel.innerText,modalBetAmount.value,10);
+
         if(isSuccess){
+        
             alert("Stretch Successfully");
             neck.classList.add('stretch');
             end_streching.style.display = "inline-block";
             stretchSettingsModal.style.display = 'none';
             openSettingsButton.style.display = 'none';
-            StretchOut()
+            await StretchOut();
             localStorage.setItem("DuringTime", 0)
             let IntervalID = window.setInterval(()=>{
                 let DuringTime = parseInt(localStorage.getItem("DuringTime"))
@@ -190,6 +193,7 @@ async function endStretch(adminPda,admin,userPda,program) {
 }
 
 async function StretchOut() {
+    
     const resp = await fetch(
         `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=true`,{
         method:'GET',

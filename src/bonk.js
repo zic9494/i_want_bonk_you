@@ -14,7 +14,7 @@ const base58SecretKey = "ng4LZxjMi8wfwii2YGMApVfQDQGw3M2knKu83qqcoukK2bp53AtKe6K
 export async function Can_bonk_list(){
     const BonkList = document.getElementById("bonk_page")
     var Innerhtml = `<label style="color: black;">Pick one to Bonk<br><br></label><div id="Can_bonk_list" >`
-
+    
     const resp = await fetch(
         `http://localhost:3000/api/GetStretch?user_name=${localStorage.getItem('user_name')}`,{
             method:'GET',
@@ -25,6 +25,7 @@ export async function Can_bonk_list(){
     )
     var data = await resp.json()
     data = data.recordset
+    console.log("d",data);
     var index=[0, 1, 2] //被顯示的ID
     if (data.length>3){
         index = generateUniqueRandomNumbers(0, data.length - 1)

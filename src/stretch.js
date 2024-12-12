@@ -26,6 +26,7 @@ const modalBonkBtn = document.getElementById('modal-bonk-btn');
 const modalCurrencyLabel = document.getElementById('modal-currency-label');
 const modalBetAmount = document.getElementById('modal-bet-amount');
 const neck = document.getElementById('neck');
+const DuringTimetext = document.getElementById('duration-display')
 let selectedCurrency = 'BONK';
 
 const openSettingsButton = document.getElementById('open-settings-button');
@@ -46,15 +47,24 @@ export async function setStretch(){
         const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program);
         if(isSuccess){
             alert("Stretched back Success");
+            let IntervalID = parseInt(localStorage.getItem("IntervalID"))
+            clearInterval(IntervalID)
             openSettingsButton.style.display = "inline-block";
             end_streching.style.display = 'none';
             neck.classList.remove('stretch');
+            StretchBack()
+            window.setTimeout(()=>{ 
+                DuringTimetext.innerText = "Stretch Duration: 0 seconds"
+                let DuringTime = 0
+                localStorage.setItem("DuringTime", DuringTime)
+            }, 500)
         }else{
             alert("Fail to stretched back ");
         }
     });
     // 打開彈窗
     openSettingsButton.addEventListener('click', () => {
+        modalSolBtn.click()
         stretchSettingsModal.style.display = 'flex';
     });
 
@@ -92,6 +102,15 @@ export async function setStretch(){
             end_streching.style.display = "inline-block";
             stretchSettingsModal.style.display = 'none';
             openSettingsButton.style.display = 'none';
+            StretchOut()
+            localStorage.setItem("DuringTime", 0)
+            let IntervalID = window.setInterval(()=>{
+                let DuringTime = parseInt(localStorage.getItem("DuringTime"))
+                DuringTime += 1
+                DuringTimetext.innerText = "Stretch Duration: "+DuringTime+" seconds"
+                localStorage.setItem("DuringTime", DuringTime)
+            }, 1000)
+            localStorage.setItem("IntervalID", IntervalID)
         }else{
             alert("fail to stretch. Please try again");
             stretchSettingsModal.style.display = 'none';

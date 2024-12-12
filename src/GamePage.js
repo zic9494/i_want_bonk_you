@@ -27,7 +27,10 @@ export function setGamePage(){
     const depositBtn = document.getElementById('deposit-button');
     const BackToHome = document.getElementById("back_to_home")
     const PlayAgain = document.getElementById("play_again")
+    const DuringTimetext = document.getElementById('duration-display')
     
+    const openSettingsButton = document.getElementById('open-settings-button');
+    const end_streching = document.getElementById('stop-stretch-button')
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -52,9 +55,21 @@ export function setGamePage(){
         
     //跳到stretch
     stretchButton.addEventListener('click', () => {
-        gameUI.style.display = 'none'; 
-        stretchUI.style.display = 'block';
-        
+        gameUI.style.display = 'none';
+        stretchUI.style.display = 'block'; 
+        if (localStorage.getItem("DuringTime")!=0 &  localStorage.getItem("DuringTime")!=null){
+            openSettingsButton.style.display = "none"
+            end_streching.style.display = "block"
+            document.getElementById("duration-display").innerText = "Stretch Duration: "+ localStorage.getItem("DuringTime") +" seconds"
+            let temp = localStorage.getItem("DuringTime")
+            let DuringTime = parseInt(temp, 10)
+            let IntervalID = window.setInterval(()=>{
+                DuringTime += 1
+                DuringTimetext.innerText = "Stretch Duration: "+ DuringTime +" seconds"
+                localStorage.setItem("DuringTime", DuringTime)
+            }, 1000)
+            localStorage.setItem("IntervalID", IntervalID)
+        }
     });
 
     //stretch回主頁

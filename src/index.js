@@ -8,7 +8,7 @@ import { setGamePage } from "./GamePage.js"
 import { setFriend } from "./Friends.js";
 import { setLeaderBoard } from "./LeaderBoard.js";
 import { setDeposit } from "./deposit.js";
-import { setStretch } from "./Stretch.js";
+import { setStretch } from "./stretch.js";
 
 
 document.addEventListener('DOMContentLoaded', () => {

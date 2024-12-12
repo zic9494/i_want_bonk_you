@@ -1,14 +1,15 @@
 
 import { Connection,PublicKey,Keypair,Transaction
     ,SystemProgram,sendAndConfirmTransaction,
-    TransactionInstruction } from '@solana/web3.js';
+    TransactionInstruction,SYSVAR_CLOCK_PUBKEY } from '@solana/web3.js';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import BN from 'bn.js';
 import { Buffer } from 'buffer';
 import { connection, provider } from './deposit.js';
-import programKey from '../idl/program-keypair.json';
+import bs58 from 'bs58';
 
+const base58SecretKey = "ng4LZxjMi8wfwii2YGMApVfQDQGw3M2knKu83qqcoukK2bp53AtKe6KZ2K2DSh4Xn9uzV9ZHJywFrMMojRztHvi";
 //調用合約會需要的參數
 const BONK_MINT = new PublicKey("GGmKGGs29t8k3WEpFJkWrsLLymHzbC8CSEAXyjUfGcEM");
 const tokenProgramId = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
@@ -141,8 +142,11 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
 }
 
 async function endStretch(adminPda,admin,userPda,program) {
-
-    const tx = await program.methods
+  try{
+    console.log(admin.publicKey.toBase58());
+    console.log(admin);
+    console.log(userPda);
+    const ix = await program.methods
     .stretchEnd() // 指令名
     .accounts({
         signer: admin.publicKey, 
@@ -156,11 +160,15 @@ async function endStretch(adminPda,admin,userPda,program) {
     transaction.feePayer = admin.publicKey;
     transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
 
-    const signature = await window.solana.signAndSendTransaction(transaction);
+     // 發送並確認交易
+     const signature = await sendAndConfirmTransaction(connection, transaction, [admin]);
+     console.log('交易已確認，簽名:', signature);
 
-    await connection.confirmTransaction(signature, "confirmed");
-    console.log("Transaction confirmed with signature:", signature);
     return true;
+  }catch(err){
+    console.error(err);
+    
+  }
 }
 
 async function StretchOut() {
@@ -186,7 +194,10 @@ async function StretchBack() {
 
 function loadKeypairFromJson() {
     try {
-        const secretKey = Uint8Array.from(programKey); // 轉換為 Uint8Array
+
+        const secretKey = bs58.decode(base58SecretKey);
+
+        // 使用 Keypair.fromSecretKey 導入密鑰對
         const keypair = Keypair.fromSecretKey(secretKey);
         console.log('Keypair 載入成功:', keypair.publicKey.toBase58());
         return keypair;

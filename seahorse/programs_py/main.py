@@ -96,7 +96,7 @@ def admin_token_account(signer: Signer, admin_account: Empty[TokenAccount], mint
                           )
 
     pda_pubkey, bump = Pubkey.find_program_address(['admin_token'])
-
+    
     amount = 3 * 1_000_000
     signer.transfer_lamports(admin_token_account, amount)
 

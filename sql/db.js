@@ -266,7 +266,7 @@ app.get('/api/GetStretch', async (req, res) =>{
     `
         SELECT DISTINCT A.User_name, A.Pulic_key
         FROM Online_Users AS A
-        RIGHT JOIN Attacks AS B ON A.User_name = B.Target_user_name
+        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
         WHERE A.Stretched = 'true' 
         AND (B.Last_attack_time < DATEADD(hour, -1, GETDATE()) OR B.Target_user_name IS NULL)
         AND A.User_name != '${user_name}'
@@ -395,7 +395,9 @@ app.get('/api/friends/query',async (req,res)=>{
 app.get('/develop', async (req, res)=>{
     let commed = 
     `
-        SELECT * FROM Online_Users
+        SELECT DISTINCT A.User_name, A.Pulic_key
+        FROM Online_Users AS A
+        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
     `
     let query = await pool.request()
         .query(commed);

@@ -57,6 +57,7 @@ export async function setWallet(){
         var Key = connected.publicKey.toString()
         connectWalletBtn.innerText = Key.slice(0,4)+"..."+Key.slice(Key.length-5, Key.length-1)
         gameOverlay.style.display = 'none';
+        UpdateKey(Key)
     }
     
     //送出錢包資料後

@@ -1,12 +1,14 @@
 
 import { Connection,PublicKey,Keypair,Transaction
     ,SystemProgram,sendAndConfirmTransaction,
-    TransactionInstruction, } from '@solana/web3.js';
+    TransactionInstruction,Keypair } from '@solana/web3.js';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import BN from 'bn.js';
 import { Buffer } from 'buffer';
 import { connection, provider } from './deposit.js';
+
+import fs from path;
 
 //調用合約會需要的參數
 const BONK_MINT = new PublicKey("GGmKGGs29t8k3WEpFJkWrsLLymHzbC8CSEAXyjUfGcEM");
@@ -30,9 +32,7 @@ const openSettingsButton = document.getElementById('open-settings-button');
 const closeSettingsModal = document.getElementById('close-settings-modal');
 
 export async function setStretch(){
-    
-    
-
+    const adminKeypair = loadKeypairFromFile('../idl/program-keypair.json');
     const wallet = await window.solana.connect();  //可優化
     const walletPK = wallet.publicKey;
     const program = new Program(idl, programId, provider);
@@ -43,11 +43,16 @@ export async function setStretch(){
         [Buffer.from('admin')],programId);
     
     end_streching.addEventListener('click',async ()=>{
-        const isSuccess = await endStretch(admin_pda)
+        const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program);
+        if(isSuccess){
+            alert("stretched back Success");
+            openSettingsButton.style.display = "inline-block";
+            end_streching.style.display = 'none';
+            neck.classList.remove('stretch');
+        }else{
+            
+        }
         
-        openSettingsButton.style.display = "inline-block";
-        end_streching.style.display = 'none';
-        neck.classList.remove('stretch');
     })
     // 打開彈窗
     openSettingsButton.addEventListener('click', () => {
@@ -136,24 +141,31 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
     }
 }
 
-async function endStretch(walletPK,program) {
-    //沒有admin 待補
+async function endStretch(adminPda,admin,userPda,program) {
+
     const tx = await program.methods
     .stretchEnd() // 指令名
     .accounts({
-        signer: walletPublicKey, 
+        signer: admin.publicKey, 
         user: userPda,           
         clock: clockSysvar,      
         admin: adminPda          
     })
-    .rpc(); // 發送交易
+    .instruction() // 發送交易
+    const transaction = new Transaction().add(ix);
+
+    transaction.feePayer = admin.publicKey;
+    transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
+
+    const signature = await window.solana.signAndSendTransaction(transaction);
+
+    await connection.confirmTransaction(signature, "confirmed");
+    console.log("Transaction confirmed with signature:", signature);
+    return true;
+        
 }
 
 async function StretchOut() {
-    
-    
-
-
     const resp = await fetch(
         `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=true`,{
         method:'GET',
@@ -162,15 +174,8 @@ async function StretchOut() {
         }
         }
     )
-    if (resp){
-        start_streching.style.display = "none";
-    
-    }
 }
 async function StretchBack() {
-    
-    
-
     const resp = await fetch(
         `http://localhost:3000/api/ChangeStretch?user_name=${localStorage.getItem("user_name")}&action=`,{
         method:'GET',
@@ -179,8 +184,20 @@ async function StretchBack() {
         }
         }
     )
-    if (resp){
-        //選其他的會跑版
-        end_streching.style.display = "none"
+}
+
+// 載入 keypair 檔案的函數
+async function loadKeypairFromFile(filePath) {
+    try {
+        // 讀取 JSON 檔案
+        const secretKeyString = fs.readFileSync(filePath, 'utf8');
+        const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
+        
+        // 從 secret key 建立 keypair
+        const keypair = web3.Keypair.fromSecretKey(secretKey);
+        return keypair;
+    } catch (error) {
+        console.error('載入 keypair 時發生錯誤:', error);
+        throw error;
     }
 }

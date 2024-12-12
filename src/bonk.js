@@ -8,7 +8,7 @@ import bs58 from 'bs58';
 
 const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
 const clockSysvar = new PublicKey('SysvarC1ock11111111111111111111111111111111');
-
+const tokenProgramId = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 const base58SecretKey = "ng4LZxjMi8wfwii2YGMApVfQDQGw3M2knKu83qqcoukK2bp53AtKe6KZ2K2DSh4Xn9uzV9ZHJywFrMMojRztHvi";
 
 export async function Can_bonk_list(){
@@ -137,7 +137,7 @@ export async function start_bonk() {
     const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100);
     console.log(Admission_fee);
     
-    const isSuccess = await StartBonk(program,Admission_fee,userPdaAccount.stretchBetToken);
+    const isSuccess = await StartBonk(program,Admission_fee,userPdaAccount.stretchBetToken,adminKeypair);
     if(isSuccess){
         alert("Bonk Successfully");
         document.getElementById("bonk_ui").style.display = "none"
@@ -270,7 +270,6 @@ async function fetchUserPublicKey(userName) {
                 'Content-Type': 'application/json',
             },
         });
-
         // 檢查響應狀態
         if (response.ok) {
             const result = await response.json();
@@ -289,14 +288,20 @@ async function fetchUserPublicKey(userName) {
 }
 
 
-async function StartBonk(program,AdmissionFee,token) {
+async function StartBonk(program,AdmissionFee,token,admin) {
     try{
         const wallet = await window.solana.connect();  //可優化
         const walletPK = wallet.publicKey;
         
+        const [jackpot_pda,jackpot_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('jackpot'),admin.publicKey.toBuffer()],programId);
         
         const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
+
+        const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
+                [Buffer.from('admin')],programId);
+
 
         const ix = await program.methods
                 .bonkStart(new BN(AdmissionFee), token) //傳u64要記得轉成BN不然會出錯
@@ -307,10 +312,30 @@ async function StartBonk(program,AdmissionFee,token) {
                 })
                 .instruction();
 
-        const transaction = new Transaction().add(ix);
+        const ix2 = await program.methods
+            .transferSol(new BN(AdmissionFee), false)    
+            .accounts({
+                signer: walletPK,
+                sender: sol_pda,
+                recipient: jackpot_pda,
+                admin: admin_pda,
+                jackpot: jackpot_pda,
+            })
+            .instruction();
+
+        const transaction = new Transaction().add(ix).add(ix2);
         transaction.feePayer = walletPK;
         transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
 
+        // 模擬交易
+        console.log("Simulating transaction...");
+        const simulateResult = await connection.simulateTransaction(transaction);
+        if (simulateResult.value.err) {
+            console.error("Simulation failed:", simulateResult.value.err);
+            console.error(simulateResult.value.logs);
+            return false;
+        }
+        console.log("Simulation successful:", simulateResult);
         const signature = await window.solana.signAndSendTransaction(transaction);
 
         await connection.confirmTransaction(signature, "confirmed");
@@ -318,6 +343,7 @@ async function StartBonk(program,AdmissionFee,token) {
         return true;
 
     }catch(err){
+        console.error(err);
         return false;
     }
 
@@ -334,7 +360,7 @@ async function EndBonk(program,admin) {
         )
         const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('admin')],programId);
-
+        
         const ix = await program.methods
                 .bonkEnd()
                 .accounts({
@@ -344,6 +370,8 @@ async function EndBonk(program,admin) {
                     admin: admin_pda,
                 })
                 .instruction()
+
+        
         
         const transaction = new Transaction().add(ix)
         transaction.feePayer = admin.publicKey;
@@ -376,6 +404,8 @@ async function EndStretch(program,admin,target_pda) {
             })
             .instruction() // 發送交易
 
+        
+
         const transaction = new Transaction().add(ix);
         transaction.feePayer = admin.publicKey;
         transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
@@ -406,46 +436,6 @@ function loadKeypairFromJson() {
     } catch (error) {
         console.error('載入 Keypair 時發生錯誤:', error);
         throw error;
-    }
-}
-
-//付入場費
-async function transferToJackpot(program,amount){
-    try{
-        const wallet = await window.solana.connect()
-        const walletPK = wallet.publicKey
-
-        const [sol_pda, sol_pumb] = await PublicKey.findProgramAddress(
-            [Buffer.from('user_solana'), walletPK.toBuffer()], programId
-        )
-
-        const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
-            [Buffer.from('admin')],programId);
-
-         ix = await program.methods
-                .transferSol(new BN(amount), option)
-                .accounts({
-                    signer: signerPk,
-                    sender: senderPdaAddress,
-                    recipient: recipientPdaAddress,
-                    admin: adminPdaAddress,
-                    jackpot: jackpotPdaAddress,
-                })
-                .instruction();
-        
-        const transaction = new Transaction().add(ix)
-        transaction.feePayer = admin.publicKey;
-        transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
-                
-        // 發送並確認交易
-        const signature = await sendAndConfirmTransaction(connection, transaction, [admin]);
-        console.log('交易已確認，簽名:', signature);
-
-        return true;
-    }catch(err){
-        console.log("err", err);
-
-        return false
     }
 }
 

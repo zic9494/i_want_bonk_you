@@ -174,11 +174,7 @@ export async function setDeposit(){
             bonkBalanceText.forEach(bonk_balance =>{
                 bonk_balance.innerText = `${bonkPdaBalance.value.uiAmount} BONK`;
             });
-            console.log(`BONK SOL Balance: ${bonkPdaBalance.value.uiAmount} BONK`);
-    
-            
-            
-            
+            console.log(`BONK SOL Balance: ${bonkPdaBalance.value.uiAmount} BONK`); 
         } catch (err) {
             console.error("Error fetching PDA SOL balance:", err);
         }
@@ -258,7 +254,6 @@ async function transferSol(wallet,sol_pda,amount) {
         console.error(err);
         return false;
     }
-
 }
 
 async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,program,wallet) {
@@ -286,7 +281,6 @@ async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,prog
                 rent: rentSysvarId,
             })
             .instruction();
-
 
         const ix3 = await program.methods
             .initializeUserTokenPda() 

@@ -7,8 +7,7 @@ import { deserialize , Schema } from "borsh";
 import { Buffer } from 'buffer';
 
 const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
-const clockSysvar = new PublicKey('SysvarC1ock11111111111111111111111111111111'); 
-
+const clockSysvar = new PublicKey('SysvarC1ock11111111111111111111111111111111');
 
 export async function Can_bonk_list(){
     const BonkList = document.getElementById("bonk_page")
@@ -97,6 +96,9 @@ export async function start_bonk() {
     console.log(userPdaAccount.stretchBetAmount,userPdaAccount.stopLoss);
     const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100);
     console.log(Admission_fee);
+    
+    // EndBonk(program)
+    
     const isSuccess = await AdmissionFee(program,Admission_fee,userPdaAccount.stretchBetToken);
     if(isSuccess){
         alert("Bonk Successfully");
@@ -172,6 +174,8 @@ async function onclick(element) {
         document.getElementsByClassName("run_area")[0].style.display = "none"
         document.getElementById("finish_page").style.display = "block"
         document.getElementById("GameTitle").innerHTML = "Total earn : $36"
+    const program = new Program(idl, programId, provider);
+        await EndBonk(program)
         
     }
 }
@@ -238,4 +242,39 @@ async function AdmissionFee(program,AdmissionFee,token) {
         return false;
     }
 
+}
+
+async function EndBonk(program) {
+    try{
+        const wallet = await window.solana.connect()
+        const walletPK = wallet.publicKey
+        const adminPK = new PublicKey("Ft7kkzSfKS4SsaKftWBnRVrEmuuDBYep3kDaSM3YTeVg")
+
+        const [sol_pda, sol_pumb] = await PublicKey.findProgramAddress(
+            [Buffer.from('user_solana'), walletPK.toBuffer()], programId
+        )
+
+        const ix = await program.methods
+                .bonkEnd()
+                .accounts({
+                    signer: walletPK,
+                    user:sol_pda,
+                    clock: clockSysvar,
+                    admin: adminPK,
+                })
+                .instruction()
+        
+        const transection = new Transaction().add(ix)
+        transection.feePayer = walletPK
+        transection.recentBlockhash = ((await connection.getLatestBlockhash("confirmed"))).blockhash
+
+        const signature = await window.solana.signAndSendTransaction(transection)
+        await connection.confirmTransaction(signature, "confirmed")
+        console.log("Transaction confirmed with signature:", signature);
+        return true
+    }catch(err){
+        console.log("err", err);
+
+        return false
+    }
 }

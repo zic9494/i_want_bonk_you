@@ -42,8 +42,8 @@ export async function Can_bonk_list(){
         const userPdaAccount = await program.account.userPda.fetch(target_pda); //用userPda類別去查
         const token = userPdaAccount.stretchBetToken;
         
-        let maxGet = userPdaAccount.stretchBetAmount.toNumber(); // 下注金額
-        let need = maxGet * (userPdaAccount.stopLoss / 100); 
+        let maxGet = userPdaAccount.stretchBetAmount.toNumber() * (userPdaAccount.stopLoss / 100); // 下注金額
+        let need = maxGet * 0.25; 
         if (token === "SOL") {
             maxGet = (maxGet / 1_000_000_000).toFixed(4); // 保留 2 位小數
             need = (need / 1_000_000_000).toFixed(4); // 保留 2 位小數
@@ -134,7 +134,7 @@ export async function start_bonk() {
 
     console.log(userPdaAccount);
     console.log(userPdaAccount.stretchBetAmount,userPdaAccount.stopLoss);
-    const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100);
+    const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100) * (0.25);
     console.log(Admission_fee);
     
     const isSuccess = await StartBonk(program,Admission_fee,userPdaAccount.stretchBetToken,adminKeypair);
@@ -153,7 +153,7 @@ export async function start_bonk() {
            // 添加事件監聽器，確保 onclick 支持 async
             element.addEventListener(
                 "click",
-                async () => await onclick(element, reward, index, target_pda, program,adminKeypair),
+                async () => await onclick(element, reward, index, target_pda, program,adminKeypair,Admission_fee),
                 { once: true }
             );
         });
@@ -196,16 +196,17 @@ async function Update_Bonked(bonked) {
 }
 
 //狗狗圖片被點擊
-async function onclick(element,reward,index,target_pda,program,adminKeypair) {
+async function onclick(element,reward,index,target_pda,program,adminKeypair,Admission_fee ) {
     const Title = document.getElementById("GameTitle")
     if (localStorage.getItem("BonkCounter")>0){
         element.src = "./images/doge_clicked.png"
         localStorage.setItem("BonkCounter", localStorage.getItem("BonkCounter")-1)
         if(reward[index]==1){
             console.log("1000000000000000000");
+            
             localStorage.setItem("Winner",1);
             //結束對方伸頭狀態
-            EndStretch(program,adminKeypair,target_pda);
+            EndStretch(program,adminKeypair,target_pda,Admission_fee*4);
         }else{
             Title.innerHTML = "You Loss" 
             localStorage.setItem("Winner",0);
@@ -287,7 +288,22 @@ async function fetchUserPublicKey(userName) {
     }
 }
 
-
+async function rewardTransfer(program,amount,admin) {
+    try{
+        const wallet = await window.solana.connect();  //可優化
+        const walletPK = wallet.publicKey;
+        const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('admin')],programId);
+        const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
+        const [jackpot_pda,jackpot_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('jackpot'),admin.publicKey.toBuffer()],programId);
+        
+       
+    }catch(err){
+        console.error(err);
+    }
+}
 async function StartBonk(program,AdmissionFee,token,admin) {
     try{
         const wallet = await window.solana.connect();  //可優化
@@ -298,6 +314,7 @@ async function StartBonk(program,AdmissionFee,token,admin) {
         
         const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
+        
 
         const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
                 [Buffer.from('admin')],programId);
@@ -317,7 +334,7 @@ async function StartBonk(program,AdmissionFee,token,admin) {
             .accounts({
                 signer: walletPK,
                 sender: sol_pda,
-                recipient: jackpot_pda,
+                recipient: new PublicKey("3gyZiqbqVLqi96y6cRU6zd17hHefVLL8gCp7QKfQMaYJ"),
                 admin: admin_pda,
                 jackpot: jackpot_pda,
             })
@@ -370,9 +387,7 @@ async function EndBonk(program,admin) {
                     admin: admin_pda,
                 })
                 .instruction()
-
-        
-        
+    
         const transaction = new Transaction().add(ix)
         transaction.feePayer = admin.publicKey;
         transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
@@ -389,11 +404,21 @@ async function EndBonk(program,admin) {
 }
 
 //如果敲到結束對方伸頭狀態
-async function EndStretch(program,admin,target_pda) {
+async function EndStretch(program,admin,target_pda,amount) {
     try{
+        const wallet = await window.solana.connect()
+        const walletPK = wallet.publicKey
+
+        const [sol_pda, sol_pumb] = await PublicKey.findProgramAddress(
+            [Buffer.from('user_solana'), walletPK.toBuffer()], programId
+        )
+        const [jackpot_pda,jackpot_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('jackpot'),admin.publicKey.toBuffer()],programId);
+
         const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('admin')],programId);
 
+        
         const ix = await program.methods
             .stretchEnd() // 指令名
             .accounts({
@@ -403,13 +428,25 @@ async function EndStretch(program,admin,target_pda) {
                 admin: admin_pda          
             })
             .instruction() // 發送交易
+        
+        const ix2 = await program.methods
+            .transferSol(new BN(amount), true)    
+            .accounts({
+                signer: admin.publicKey,
+                sender: target_pda,
+                recipient: sol_pda,
+                admin: admin_pda,
+                jackpot: jackpot_pda,
+            })
+            .instruction();
 
         
 
-        const transaction = new Transaction().add(ix);
+        const transaction = new Transaction().add(ix).add(ix2);
         transaction.feePayer = admin.publicKey;
         transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
-                
+            
+            
         // 發送並確認交易
         const signature = await sendAndConfirmTransaction(connection, transaction, [admin]);
         console.log('交易已確認，簽名:', signature);

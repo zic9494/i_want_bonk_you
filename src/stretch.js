@@ -1,14 +1,14 @@
 
 import { Connection,PublicKey,Keypair,Transaction
     ,SystemProgram,sendAndConfirmTransaction,
-    TransactionInstruction,Keypair } from '@solana/web3.js';
+    TransactionInstruction } from '@solana/web3.js';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import BN from 'bn.js';
 import { Buffer } from 'buffer';
 import { connection, provider } from './deposit.js';
 
-import fs from path;
+
 
 //調用合約會需要的參數
 const BONK_MINT = new PublicKey("GGmKGGs29t8k3WEpFJkWrsLLymHzbC8CSEAXyjUfGcEM");
@@ -45,15 +45,14 @@ export async function setStretch(){
     end_streching.addEventListener('click',async ()=>{
         const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program);
         if(isSuccess){
-            alert("stretched back Success");
+            alert("Stretched back Success");
             openSettingsButton.style.display = "inline-block";
             end_streching.style.display = 'none';
             neck.classList.remove('stretch');
         }else{
-            
+            alert("Fail to stretched back ");
         }
-        
-    })
+    });
     // 打開彈窗
     openSettingsButton.addEventListener('click', () => {
         stretchSettingsModal.style.display = 'flex';
@@ -113,7 +112,6 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
         if(token==='SOL'){
             amount *= 1_000_000_000;
         }
-        
         
         const ix = await program.methods
             .stretchStart(new BN(amount),stopLoss,token) // 無參數的情況
@@ -194,7 +192,7 @@ async function loadKeypairFromFile(filePath) {
         const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
         
         // 從 secret key 建立 keypair
-        const keypair = web3.Keypair.fromSecretKey(secretKey);
+        const keypair = Keypair.fromSecretKey(secretKey);
         return keypair;
     } catch (error) {
         console.error('載入 keypair 時發生錯誤:', error);

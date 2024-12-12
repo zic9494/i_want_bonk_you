@@ -85,8 +85,7 @@ export async function setStretch(){
             return;
         }
 
-        const isSuccess = true;
-        //const isSuccess = await startStretch(walletPK,sol_pda,program,modalCurrencyLabel.innerText,modalBetAmount.value,10);
+        const isSuccess = await startStretch(walletPK,sol_pda,program,modalCurrencyLabel.innerText,modalBetAmount.value,10);
         if(isSuccess){
             alert("Stretch Successfully");
             neck.classList.add('stretch');

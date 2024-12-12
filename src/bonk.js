@@ -179,13 +179,21 @@ async function GetPeopleData(user_name){
 
 //更新受害者的資料
 async function Update_Bonked(bonked) {
-    const resp = await fetch(
+    let resp = await fetch(
         `http://localhost:3000/api/update/bonked?attacker=${localStorage.getItem("user_name")}&bonked=${bonked}`,{
             method:'GET',
             headers: {
                 'Content-Type' : 'application/json'
             }
         })
+    resp = await fetch(
+        `http://localhost:3000/api/ChangeStretch?user_name=${bonked}&action=`,{
+        method:'GET',
+        headers: {
+            'Content-Type' : 'application/json'
+        }
+        }
+    )
     console.log(await resp.json());
     document.getElementById("Target").value = "-1"
     Array.from(document.getElementsByClassName("doges")).forEach((element) => {
@@ -413,7 +421,7 @@ async function EndStretch(program,admin,target_pda) {
         // 發送並確認交易
         const signature = await sendAndConfirmTransaction(connection, transaction, [admin]);
         console.log('交易已確認，簽名:', signature);
-
+        
         return true;
     }catch(err){
         console.log("err", err);

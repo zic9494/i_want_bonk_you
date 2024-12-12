@@ -395,9 +395,7 @@ app.get('/api/friends/query',async (req,res)=>{
 app.get('/develop', async (req, res)=>{
     let commed = 
     `
-        SELECT DISTINCT A.User_name, A.Pulic_key
-        FROM Online_Users AS A
-        LEFT JOIN Attacks AS B ON A.User_name = B.Target_user_name
+        SELECT * FROM Attacks
     `
     let query = await pool.request()
         .query(commed);

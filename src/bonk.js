@@ -32,20 +32,27 @@ export async function Can_bonk_list(){
     }
     var Name_list = [] //被攻擊者資料
     for (var i = 0; i<3;i++){
+        if(data[index[i]]==null)continue;
         const program = new Program(idl, programId, provider);
         Name_list.push(await GetPeopleData(data[index[i]].User_name))
-        const target_pk = fetchUserPublicKey(data[index[i]].User_name);
+        const target_pk = new PublicKey(await fetchUserPublicKey(data[index[i]].User_name));
+        
         const [target_pda,sol_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('user_solana'),target_pk.toBuffer()],programId);
         const userPdaAccount = await program.account.userPda.fetch(target_pda); //用userPda類別去查
+        const token = userPdaAccount.stretchBetToken;
         
-        const maxGet = userPdaAccount.stretchBetAmount.toNumber(); // 下注金額
-        const need = maxGet * (userPdaAccount.stopLoss / 100); 
+        let maxGet = userPdaAccount.stretchBetAmount.toNumber(); // 下注金額
+        let need = maxGet * (userPdaAccount.stopLoss / 100); 
+        if (token === "SOL") {
+            maxGet = (maxGet / 1_000_000_000).toFixed(4); // 保留 2 位小數
+            need = (need / 1_000_000_000).toFixed(4); // 保留 2 位小數
+        }
         //取回將顯示在畫面上的資料
         Innerhtml +=`
         <div class="user-avatar TargetUser" id="user-avatar-image${i}">
             <img src="${Name_list[i].PhotoBase64}" alt="User Avatar">
-            <h5>${data[index[i]].User_name} <input type="button" value="+"><br>Max get：${maxGet}<br>Need：${need}</h5>
+            <h5>${data[index[i]].User_name} <input type="button" value="+"><br>Max Reward：${maxGet}${token}<br>Need：${need}${token}</h5>
             <img id="selected${i}" src="./images/箭頭.png" class="arrow">
         </div>`
     }
@@ -55,30 +62,51 @@ export async function Can_bonk_list(){
     var mousemoveList = []
     var mouseleaveList = []
     
-    //增加監聽器，滑鼠滑過、滑離
-    for (let i = 0; i < 3; i++) {
-        let Id_name = "user-avatar-image" + i;
-        let Selected = "selected" + i;
-    
-        let mousemoveHandler = () => {
-            document.getElementById(Selected).style.display = "block";
-        };
-        let mouseleaveHandler = () => {
-            document.getElementById(Selected).style.display = "none";
-        };
-    
-        document.getElementById(Id_name).addEventListener("mousemove", mousemoveHandler);
-        document.getElementById(Id_name).addEventListener("mouseleave", mouseleaveHandler);
+    // 增加監聽器，滑鼠滑過、滑離
+for (let i = 0; i < 3; i++) {
+    let Id_name = "user-avatar-image" + i;
+    let Selected = "selected" + i;
 
-        mousemoveList.push(mousemoveHandler)
-        mouseleaveList.push(mouseleaveHandler)
+    // 獲取目標元素
+    const element = document.getElementById(Id_name);
+
+    // 如果元素不存在，跳過該次迴圈
+    if (!element) {
+        console.warn(`Element with ID "${Id_name}" not found. Skipping...`);
+        continue;
     }
+
+    // 定義滑鼠事件處理器
+    let mousemoveHandler = () => {
+        const selectedElement = document.getElementById(Selected);
+        if (selectedElement) selectedElement.style.display = "block";
+    };
+
+    let mouseleaveHandler = () => {
+        const selectedElement = document.getElementById(Selected);
+        if (selectedElement) selectedElement.style.display = "none";
+    };
+
+    // 為元素添加滑鼠事件監聽器
+    element.addEventListener("mousemove", mousemoveHandler);
+    element.addEventListener("mouseleave", mouseleaveHandler);
+
+    // 將處理器存入列表
+    mousemoveList.push(mousemoveHandler);
+    mouseleaveList.push(mouseleaveHandler);
+}
+
 
     //確定後，取消監聽器
     for (let i = 0; i < 3; i++){
         var Id_name = "user-avatar-image" + i;
-        let clickHonder = document.getElementById(Id_name).addEventListener("click",()=>{
+        const element = document.getElementById(Id_name);
+        if(!element)continue;
+        let clickHonder = element.addEventListener("click",()=>{
             for (let j=0 ; j<3 ; j++){
+                if (!mousemoveList[j] || !mouseleaveList[j]) {
+                    continue; // 如果為空，跳過當前迴圈
+                }
                 document.getElementById("user-avatar-image" + j).removeEventListener("mousemove", mousemoveList[j])
                 document.getElementById("user-avatar-image" + j).removeEventListener("mouseleave", mouseleaveList[j])
             }
@@ -245,7 +273,7 @@ async function fetchUserPublicKey(userName) {
 
         // 檢查響應狀態
         if (response.ok) {
-            const result = await response.json(); 
+            const result = await response.json();
             return result.recordset[0].Pulic_key;
             
         } else {

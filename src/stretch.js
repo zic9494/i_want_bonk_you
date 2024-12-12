@@ -7,8 +7,7 @@ import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import BN from 'bn.js';
 import { Buffer } from 'buffer';
 import { connection, provider } from './deposit.js';
-
-
+import programKey from '../idl/program-keypair.json';
 
 //調用合約會需要的參數
 const BONK_MINT = new PublicKey("GGmKGGs29t8k3WEpFJkWrsLLymHzbC8CSEAXyjUfGcEM");
@@ -32,7 +31,7 @@ const openSettingsButton = document.getElementById('open-settings-button');
 const closeSettingsModal = document.getElementById('close-settings-modal');
 
 export async function setStretch(){
-    const adminKeypair = loadKeypairFromFile('../idl/program-keypair.json');
+    const adminKeypair = loadKeypairFromJson();
     const wallet = await window.solana.connect();  //可優化
     const walletPK = wallet.publicKey;
     const program = new Program(idl, programId, provider);
@@ -84,7 +83,9 @@ export async function setStretch(){
             alert('Please enter a valid bet amount!');  
             return;
         }
-        const isSuccess = await startStretch(walletPK,sol_pda,program,modalCurrencyLabel.innerText,modalBetAmount.value,10);
+
+        const isSuccess = true;
+        //const isSuccess = await startStretch(walletPK,sol_pda,program,modalCurrencyLabel.innerText,modalBetAmount.value,10);
         if(isSuccess){
             alert("Stretch Successfully");
             neck.classList.add('stretch');
@@ -160,7 +161,6 @@ async function endStretch(adminPda,admin,userPda,program) {
     await connection.confirmTransaction(signature, "confirmed");
     console.log("Transaction confirmed with signature:", signature);
     return true;
-        
 }
 
 async function StretchOut() {
@@ -184,18 +184,15 @@ async function StretchBack() {
     )
 }
 
-// 載入 keypair 檔案的函數
-async function loadKeypairFromFile(filePath) {
+function loadKeypairFromJson() {
     try {
-        // 讀取 JSON 檔案
-        const secretKeyString = fs.readFileSync(filePath, 'utf8');
-        const secretKey = Uint8Array.from(JSON.parse(secretKeyString));
-        
-        // 從 secret key 建立 keypair
+        const secretKey = Uint8Array.from(programKey); // 轉換為 Uint8Array
         const keypair = Keypair.fromSecretKey(secretKey);
+        console.log('Keypair 載入成功:', keypair.publicKey.toBase58());
         return keypair;
     } catch (error) {
-        console.error('載入 keypair 時發生錯誤:', error);
+        console.error('載入 Keypair 時發生錯誤:', error);
         throw error;
     }
 }
+

@@ -54,9 +54,9 @@ export async function Can_bonk_list(){
         }
         //取回將顯示在畫面上的資料
         Innerhtml +=`
-        <div class="user-avatar TargetUser" id="user-avatar-image${i}">
+        <div class="user-avatar TargetUser" id="user-avatar-image${i}" data-user-name="${data[index[i]].User_name}">
             <img src="${Name_list[i].PhotoBase64}" alt="User Avatar">
-            <h5>${data[index[i]].User_name} <input type="button" value="+"><br>Max Reward：${maxGet}${token}<br>Need：${need}${token}</h5>
+            <h5>${data[index[i]].User_name} <br>Max Reward：${maxGet}${token}<br>Need：${need}${token}</h5>
             <img id="selected${i}" src="./images/箭頭.png" class="arrow">
         </div>`
     }
@@ -244,8 +244,6 @@ async function onclick(element,reward,index,target_pda,program,adminKeypair,Admi
         }else{
             document.getElementById("GameTitle").innerHTML = "You Loss";
         }
-        
-        
     }
 }
 

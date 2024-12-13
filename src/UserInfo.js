@@ -8,11 +8,41 @@ export function setUserInfo(){
     const avatarInput = document.getElementById("avatar-upload-input");
     const backButton = document.getElementById("user-back-button");
     const profile = document.getElementById("profile");
+    const sendRequestButton = document.getElementById('add-detail-button');
+
+    if(backButton.innerText!=='Close'){
+        sendRequestButton.style.display = 'none';
+    }
 
     backButton.addEventListener('click', () => {
-        profile.style.display = 'none'; 
+        if(backButton.innerText!=='Close'){
+            profile.style.display = 'none'; 
+            gameUI.style.display = 'block'; 
+        }
+        
+    })
 
-        gameUI.style.display = 'block'; 
+    sendRequestButton.addEventListener('click',async ()=>{
+        const from_user = localStorage.getItem('user_name');
+        const to_user = profile.dataset.username;
+        const response = await fetch('http://localhost:3000/api/friends/send',{
+            method:'POST',
+            headers: {
+                'Content-Type' : 'application/json'
+            },
+            body: JSON.stringify({
+                from_user,
+                to_user
+            })
+        });
+        if(response.ok){
+            alert("Send friend request successfully");
+            sendRequestButton.style.display = 'none';
+        }else if(response.status===401){
+            alert("Already sended request");
+        }else{
+            alert("Fail to send request")
+        }
     })
 
     editBioButton.addEventListener('click',()=>{

@@ -24,7 +24,7 @@ const headerBonk = document.getElementById("table-header-bonk");
 const headerStatus = document.getElementById("table-header-status");
 const gameUI = document.getElementById("game_ui");
 const friend = document.getElementById("friend");
-const sendRequestButton = document.getElementById('add-detail-button');
+
 
 
 
@@ -85,6 +85,8 @@ export async function setFriend(){
             openUserInfo(userID); // 調用跳轉函數
         });
     });
+
+
 
 
 }
@@ -196,6 +198,7 @@ async function getFriendData(){
             let attack_count = await attackResp.json();
             
             return {
+                user_name:friend,
                 nickname: user_info.Nick_name,
                 avatar: user_info.PhotoBase64 || "https://via.placeholder.com/50",
                 status: stretchingSet.has(friend) ? "Stretching" : user_info.status || "Idle",
@@ -236,6 +239,12 @@ function loadData(page, tab) {
                 <td><span class="status ${item.status === "Stretching" ? "status-green" : "status-red"}">${item.status}</span></td>
                 <td><button class="bonk-btn" style=display:${item.status === "Stretching" ? "block" : "none"}>Bonk</button></td>
             `;
+
+            const avatar = row.querySelector(".friend-avatar");
+
+            avatar.addEventListener("click", () => {
+                openUserInfo(item.user_name);
+            });
             tbody.appendChild(row);
         });
     } else if (tab === "invites") {
@@ -255,9 +264,17 @@ function loadData(page, tab) {
             //動態創建按鈕
             const acceptBtn = row.querySelector(".accept-btn");
             const declineBtn = row.querySelector(".decline-btn");
+            const avatar = row.querySelector(".friend-avatar");
+
+            console.log(avatar);
 
             acceptBtn.addEventListener("click", () => handleAcceptInvite(item.user_name));
             declineBtn.addEventListener("click", () => handleDeclineInvite(item.user_name));
+
+            //跳轉到userInfo
+            avatar.addEventListener("click", () => {
+                openUserInfo(item.user_name);
+            });
 
             tbody.appendChild(row);
         });
@@ -272,6 +289,40 @@ function updatePagination(page, totalItems) {
     prevPageBtn.disabled = page === 1;
     nextPageBtn.disabled = page === Math.ceil(totalItems / itemsPerPage);
 }
+
+async function openUserInfo(userName) {
+    if (!userName) return;
+    
+    await fetchUserProfile(userName);
+    // 顯示 Profile 容器
+    console.log("sS");
+    const close = document.getElementById("user-back-button");
+    const editBtn = document.getElementById('edit-bio-button');
+    const profileContainer = document.getElementById("profile");
+
+    close.innerText = 'Close';
+    editBtn.style.display = 'none'
+    profileContainer.style.display = 'block';
+    friend.style.display = 'none';
+    profileContainer.dataset.username = userName;
+    
+    function handleClose() {
+        handleCloseEvent(close, profileContainer,editBtn);
+        close.removeEventListener('click', handleClose); // 移除防止干擾到其他
+    }
+
+
+    close.addEventListener('click', handleClose);
+    
+}
+
+function handleCloseEvent(close, profileContainer,editBtn) {
+    friend.style.display = 'block';
+    profileContainer.style.display = 'none';
+    close.innerText = 'Back to Game';
+    editBtn.style.display = 'block';
+}
+
 
 async function handleAcceptInvite(from_user) {
     const to_user = localStorage.getItem('user_name');
@@ -295,6 +346,7 @@ async function handleAcceptInvite(from_user) {
         }
         //刷新
         loadData(currentPage, currentTab);
+        location.reload(); 
     }catch(err){
         console.error(err);
     }
@@ -331,15 +383,27 @@ async function handleDeclineInvite(from_user) {
     }
 }
 
-function openUserInfo(userID) {
-    if (!userID) return;
+async function fetchUserProfile(user_name) {
+    try {
+        const response = await fetch(`
+            http://localhost:3000/api/users/info?user_name=${encodeURIComponent(user_name)}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        const userInfo = await response.json();
+        const data = userInfo.recordset[0];
 
-    // 設置數據（可以使用 localStorage 或 URL 參數）
-    localStorage.setItem('viewedUserID', userID);
-
-    // 跳轉到 USER_INFO 頁面
-    window.location.href = '/user_info.html'; // 假設 USER_INFO 頁面為 user_info.html
+        // 更新 Profile 中的內容
+        document.getElementById("user-avatar-image").src = data.PhotoBase64 || "https://via.placeholder.com/150";
+        document.getElementById("user-nickname").textContent = data.Nick_name || "Unknown";
+        document.getElementById("user-bio-display").textContent = data.Bio || "This user has not set a bio.";
+    } catch (err) {
+        console.error("Error fetching user profile:", err);
+    }
 }
+
 
 //async function queryFriendList(params) {
     

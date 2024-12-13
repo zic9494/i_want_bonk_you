@@ -21,6 +21,8 @@ async function findUSEPDA() {
 }
 
 
+
+
 export function setGamePage(){
        
     const gameUI = document.getElementById('game_ui');
@@ -30,7 +32,7 @@ export function setGamePage(){
     const backButton1 = document.getElementById('back-button1');
     const bonk_ui = document.getElementById('bonk_ui')
     const bonkButton = document.getElementById('Bonk-button')
-
+    const BonkList = document.getElementById("bonk_page")
     const gameOverlay = document.getElementById('wallet-overlay'); 
     const walletBtn = document.getElementById('connect-wallet-button')
     const realWallet = document.getElementById('connect_wallet');
@@ -51,6 +53,32 @@ export function setGamePage(){
     const openSettingsButton = document.getElementById('open-settings-button');
     const end_streching = document.getElementById('stop-stretch-button')
 
+    //從userInfo返回上一頁
+    document.getElementById("user-back-button").addEventListener("click", () => {
+        // 隱藏 Profile 容器
+        const profileContainer = document.getElementById("profile");
+        profileContainer.style.display = "none";
+    
+        // 返回上一頁
+        if (previousPage) {
+            document.getElementById(previousPage).style.display = "block";
+            previousPage = null; // 清空記錄
+        }
+    });
+
+    //從userInfo返回上一頁
+    document.getElementById("user-back-button").addEventListener("click", () => {
+        // 隱藏 Profile 容器
+        const profileContainer = document.getElementById("profile");
+        profileContainer.style.display = "none";
+    
+        // 返回上一頁
+        if (previousPage) {
+            document.getElementById(previousPage).style.display = "block";
+            previousPage = null; // 清空記錄
+        }
+    });
+
     const pda = findUSEPDA()
 
     //跳到FriendList
@@ -60,6 +88,7 @@ export function setGamePage(){
     });
     //跳到UserInfo
     toProfile.addEventListener('click',()=>{
+        profile.dataset.username = localStorage.getItem('user_name')
         profile.style.display = 'block';
         gameUI.style.display = 'none';    
     })
@@ -69,6 +98,16 @@ export function setGamePage(){
         gameUI.style.display = 'none';
     
     });
+
+    BonkList.addEventListener("click", (event) => {
+        const avatar = event.target.closest(".user-avatar");
+        if (avatar) {
+            const userName = avatar.getAttribute("data-user-name");
+            console.log(userName);
+            openProfile(userName);
+        }
+    });
+    
 
         
     //跳到stretch
@@ -137,3 +176,66 @@ export function setGamePage(){
         bonkButton.click()
     })
 }
+
+
+async function openProfile(userName) {
+    if (!userName) return;
+
+
+    await fetchUserProfile(userName);
+    // 顯示 Profile 容器
+    console.log("sS");
+    const close = document.getElementById("user-back-button");
+    const editBtn = document.getElementById('edit-bio-button');
+    const profileContainer = document.getElementById("profile");
+    const previousPage = document.getElementById("bonk_ui");
+    const sendRequestButton = document.getElementById('add-detail-button');
+    close.innerText = 'Close';
+    editBtn.style.display = 'none'
+    profileContainer.style.display = 'block';
+    previousPage.style.display = 'none';
+    profileContainer.dataset.username = userName;
+    sendRequestButton.style.display = 'none'
+    function handleClose() {
+        handleCloseEvent(close, profileContainer, previousPage,editBtn,sendRequestButton);
+        close.removeEventListener('click', handleClose); // 移除防止干擾到其他
+        
+    }
+    
+
+    close.addEventListener('click', handleClose);
+    
+}
+
+function handleCloseEvent(close, profileContainer, previousPage,sendRequestButton) {
+    previousPage.style.display = 'block';
+    profileContainer.style.display = 'none';
+    close.innerText = 'Back to Game';
+    editBtn.style.display = 'block';
+    sendRequestButton.style.display = 'none';
+    
+}
+
+
+async function fetchUserProfile(user_name) {
+    try {
+        const response = await fetch(`
+            http://localhost:3000/api/users/info?user_name=${encodeURIComponent(user_name)}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        const userInfo = await response.json();
+        const data = userInfo.recordset[0];
+
+        // 更新 Profile 中的內容
+        document.getElementById("user-avatar-image").src = data.PhotoBase64 || "https://via.placeholder.com/150";
+        document.getElementById("user-nickname").textContent = data.Nick_name || "Unknown";
+        document.getElementById("user-bio-display").textContent = data.Bio || "This user has not set a bio.";
+    } catch (err) {
+        console.error("Error fetching user profile:", err);
+    }
+}
+
+

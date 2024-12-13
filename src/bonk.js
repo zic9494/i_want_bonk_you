@@ -523,6 +523,6 @@ async function Earn() {
     const [target_pda, sol_bump] = await PublicKey.findProgramAddress(
         [Buffer.from('user_solana'), Target_pk.toBuffer()], programId)
     const userPdaAccount = await program.account.userPda.fetch(target_pda)
-    return userPdaAccount.stretchBetAmount * 0.1
+    return userPdaAccount.stretchBetAmount * (10 ** -10)
 
 }

@@ -1,4 +1,24 @@
 import { Can_bonk_list, start_bonk} from "./bonk.js";
+import { Transaction,SystemProgram,PublicKey,Keypair,sendAndConfirmTransaction } from '@solana/web3.js';
+import { provider ,connection } from './deposit.js';
+import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
+import idl from '../idl/idl.json'; // 您的 IDL 檔案
+import { Buffer } from 'buffer';
+import bs58 from 'bs58';
+
+async function findUSEPDA() {
+    const wallet = await window.solana.connect();
+    const publicKey = wallet.publicKey;
+    const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
+    const program = new Program(idl, programId, provider);
+    const [target_pda,sol_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('user_solana'),publicKey.toBuffer()],programId);
+    const userPdaAccount = await program.account.userPda.fetch(target_pda);
+
+    console.log(userPdaAccount);
+
+    return userPdaAccount;
+}
 
 
 export function setGamePage(){
@@ -28,9 +48,12 @@ export function setGamePage(){
     const BackToHome = document.getElementById("back_to_home")
     const PlayAgain = document.getElementById("play_again")
     const DuringTimetext = document.getElementById('duration-display')
+
     
     const openSettingsButton = document.getElementById('open-settings-button');
     const end_streching = document.getElementById('stop-stretch-button')
+
+    const pda = findUSEPDA()
 
     leaderBoardBtn.addEventListener('click',()=>{
         leaderBoard.style.display = 'block';
@@ -52,12 +75,14 @@ export function setGamePage(){
         gameUI.style.display = 'none';
     
     });
+
         
     //跳到stretch
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none';
         stretchUI.style.display = 'block'; 
-        if (localStorage.getItem("DuringTime")!=0 &  localStorage.getItem("DuringTime")!=null){
+
+        if (pda.stretchState){
             openSettingsButton.style.display = "none"
             end_streching.style.display = "block"
             document.getElementById("duration-display").innerText = "Stretch Duration: "+ localStorage.getItem("DuringTime") +" seconds"

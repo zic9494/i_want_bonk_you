@@ -56,7 +56,8 @@ export function setGamePage(){
     //跳到stretch
     stretchButton.addEventListener('click', () => {
         gameUI.style.display = 'none';
-        stretchUI.style.display = 'block'; 
+        stretchUI.style.display = 'block';
+
         if (localStorage.getItem("DuringTime")!=0 &  localStorage.getItem("DuringTime")!=null){
             openSettingsButton.style.display = "none"
             end_streching.style.display = "block"

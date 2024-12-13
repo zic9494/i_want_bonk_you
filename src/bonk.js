@@ -24,6 +24,7 @@ export async function Can_bonk_list(){
         }
     )
     var data = await resp.json()
+    console.log(data);
     data = data.recordset
     console.log("d",data);
     var index=[0, 1, 2] //被顯示的ID
@@ -233,7 +234,7 @@ async function onclick(element,reward,index,target_pda,program,adminKeypair,Admi
         Title.innerText = "Finish"
         
         await Update_Bonked(document.getElementById("Target").value)
-        document.getElementById("bonk_page").innerHTML = "laoding"
+        document.getElementById("bonk_page").innerHTML = "loading";
         document.getElementsByClassName("run_area")[0].style.display = "none"
         document.getElementById("finish_page").style.display = "block"
         if(localStorage.getItem("Winner")==1){

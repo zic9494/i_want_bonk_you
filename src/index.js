@@ -9,6 +9,7 @@ import { setFriend } from "./Friends.js";
 import { setLeaderBoard } from "./LeaderBoard.js";
 import { setDeposit } from "./deposit.js";
 import { setStretch } from "./stretch.js";
+import { setWithdaw } from "./Withdraw.js";
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setLeaderBoard();
     setDeposit();
     setStretch();
+    setWithdaw()
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

@@ -81,10 +81,7 @@ export function setGamePage(){
 
     const pda = findUSEPDA()
 
-    leaderBoardBtn.addEventListener('click',()=>{
-        leaderBoard.style.display = 'block';
-        gameUI.style.display = 'none';
-    })
+   
     //跳到FriendList
     toFriend.addEventListener('click',()=>{
         friend.style.display = 'block';

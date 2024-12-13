@@ -236,7 +236,7 @@ function loadData(page, tab) {
                 <td>${item.nickname}</td>
                 <td>${item.bonkCount}</td>
                 <td><span class="status ${item.status === "Stretching" ? "status-green" : "status-red"}">${item.status}</span></td>
-                <td><button class="bonk-btn" style=display:${item.status === "Stretching" ? "block" : "none"}>Bonk</button></td>
+        
             `;
 
             const avatar = row.querySelector(".friend-avatar");
@@ -294,11 +294,11 @@ async function openUserInfo(userName) {
     
     await fetchUserProfile(userName);
     // 顯示 Profile 容器
-    console.log("sS");
+
     const close = document.getElementById("user-back-button");
     const editBtn = document.getElementById('edit-bio-button');
     const profileContainer = document.getElementById("profile");
-
+    sendRequestButton.style.display = 'none';
     close.innerText = 'Close';
     editBtn.style.display = 'none'
     profileContainer.style.display = 'block';

@@ -35,7 +35,6 @@ export function setUserInfo(){
         });
         if(response.ok){
             alert("Send friend request successfully");
-            sendRequestButton.style.display = 'none';
         }else if(response.status===401){
             alert("Already sended request");
         }else{

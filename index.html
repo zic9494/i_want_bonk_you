@@ -119,8 +119,11 @@
                         <button id="save-bio-button" style="display: none;">Save</button>
                     </div>
                 </div>
-                <button id="user-back-button" class="back-button">Back to Game</button>
-                <button id="add-detail-button">Send friend requset</button>
+                <div class="button-container">
+                    <button id="user-back-button" class="back-button">Back to Game</button>
+                    <button id="add-detail-button">Send friend requset</button>
+                </div>
+                
             </div>
             <!--Friend-->
             <div id="friend"class="friends-container">
@@ -141,7 +144,6 @@
                                 <th>Nickname</th>
                                 <th id="table-header-bonk">BONK Count</th>
                                 <th id="table-header-status">Status</th>
-                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody id="friends-invites-tbody">
@@ -158,7 +160,18 @@
                 </div>
                  <!-- 返回按鈕 -->
                  <button id="friend-back-to-game" class="friend-back-btn">Back</button>
+                 <!-- BONK Detail Modal -->
+                <div id="bonk-detail-modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h3>Bonk Details</h3>
+                        <p><strong>Max Reward:</strong> <span id="modal-max-reward"></span></p>
+                        <p><strong>Need:</strong> <span id="modal-need"></span></p>
+                        <button class="confirm-btn">Confirm</button>
+                    </div>
+                </div>
             </div>
+            
 
             
             <div id="deposit-container" class="deposit hidden">

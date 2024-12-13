@@ -201,8 +201,7 @@
     font-weight: bold;
 }
 
-
-/* BONK Detail Modal */
+/* === BONK Detail Modal 样式 === */
 #bonk-detail-modal {
     position: fixed;
     top: 0;
@@ -217,20 +216,22 @@
 }
 
 #bonk-detail-modal .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
+    background: #fff9eb; /* 柔和米色背景 */
+    padding: 20px 30px;
+    border-radius: 20px; /* 圆角 */
     width: 400px;
     text-align: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 阴影效果 */
-    position: relative;
     font-family: 'Comic Sans MS', sans-serif;
+    position: relative;
+    color: #333; /* 文字颜色 */
 }
 
 #bonk-detail-modal h3 {
     font-size: 24px;
     color: #333;
     margin-bottom: 20px;
+    font-weight: bold;
 }
 
 #bonk-detail-modal p {
@@ -239,7 +240,7 @@
     margin: 10px 0;
 }
 
-/* 關閉按鈕樣式 */
+/* 关闭按钮样式 */
 #bonk-detail-modal .close {
     position: absolute;
     top: 10px;
@@ -254,7 +255,7 @@
     color: #ff5252;
 }
 
-/* 確認按鈕 */
+/* 确认按钮样式 */
 #bonk-detail-modal .confirm-btn {
     background: #007BFF;
     color: white;
@@ -262,11 +263,12 @@
     border: none;
     border-radius: 10px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 #bonk-detail-modal .confirm-btn:hover {
     background-color: #0056b3;
-    transform: scale(1.05);
+    transform: scale(1.05); /* 悬停时放大 */
 }

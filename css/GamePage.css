@@ -43,4 +43,11 @@
 }
 
 
+.button-container {
+    display: flex;
+    flex-wrap: wrap; /* 按钮换行 */
+    justify-content: center;
+    gap: 10px;
+}
+
 

@@ -190,7 +190,7 @@ async function openProfile1(userName) {
     const sendRequestButton = document.getElementById('add-detail-button');
     close.innerText = 'Close';
     sendRequestButton.style.display = 'block';
-    
+    profileContainer.dataset.username  = userName;
     editBtn.style.display = 'none'
     profileContainer.style.display = 'block';
     previousPage.style.display = 'none';

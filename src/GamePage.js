@@ -81,7 +81,6 @@ export function setGamePage(){
 
     const pda = findUSEPDA()
 
-   
     //跳到FriendList
     toFriend.addEventListener('click',()=>{
         friend.style.display = 'block';

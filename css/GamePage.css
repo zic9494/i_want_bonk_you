@@ -13,7 +13,9 @@
     align-items: center;
     justify-content: center;
 }
-
+.TargetUser h5{
+    font-size: 15px;
+}
 .BonkPerparPage{
     height: 460px;
 }

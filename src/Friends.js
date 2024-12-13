@@ -24,7 +24,7 @@ const headerBonk = document.getElementById("table-header-bonk");
 const headerStatus = document.getElementById("table-header-status");
 const gameUI = document.getElementById("game_ui");
 const friend = document.getElementById("friend");
-
+const sendRequestButton = document.getElementById('add-detail-button');
 
 
 
@@ -73,7 +73,6 @@ export async function setFriend(){
         gameUI.style.display = 'block';
         friend.style.display = 'none';
     });
-
 
     //剛開始初始化
     loadData(currentPage, currentTab);

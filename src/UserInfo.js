@@ -9,10 +9,8 @@ export function setUserInfo(){
     const backButton = document.getElementById("user-back-button");
     const profile = document.getElementById("profile");
     const sendRequestButton = document.getElementById('add-detail-button');
+    
 
-    if(backButton.innerText!=='Close'){
-        sendRequestButton.style.display = 'none';
-    }
 
     backButton.addEventListener('click', () => {
         if(backButton.innerText!=='Close'){

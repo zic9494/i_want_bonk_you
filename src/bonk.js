@@ -42,7 +42,7 @@ export async function Can_bonk_list(){
             [Buffer.from('user_solana'),target_pk.toBuffer()],programId);
         const userPdaAccount = await program.account.userPda.fetch(target_pda); //用userPda類別去查
         const token = userPdaAccount.stretchBetToken;
-        
+
         let maxGet = userPdaAccount.stretchBetAmount.toNumber() * (userPdaAccount.stopLoss / 100); // 下注金額
         let need = maxGet * 0.25; 
         if (token === "SOL") {
@@ -52,11 +52,12 @@ export async function Can_bonk_list(){
             maxGet = (maxGet / 100_000).toFixed(0);
             need = (need / 10_000).toFixed(0);
         }
+
         //取回將顯示在畫面上的資料
         Innerhtml +=`
-        <div class="user-avatar TargetUser" id="user-avatar-image${i}" data-user-name="${data[index[i]].User_name}">
-            <img src="${Name_list[i].PhotoBase64}" alt="User Avatar">
-            <h5>${data[index[i]].User_name} <br>Max Reward：${maxGet}${token}<br>Need：${need}${token}</h5>
+        <div class="user-avatar TargetUser" id="user-avatar-image${i}" >
+            <img id="avatar-image${i}" src="${Name_list[i].PhotoBase64}" alt="User Avatar" data-username="${data[index[i]].User_name}">
+            <h5>${Name_list[i].Nick_name} <br>Max Reward：${maxGet}${token}<br>Need：${need}${token}</h5>
             <img id="selected${i}" src="./images/箭頭.png" class="arrow">
         </div>`
     }
@@ -114,7 +115,7 @@ for (let i = 0; i < 3; i++) {
                 document.getElementById("user-avatar-image" + j).removeEventListener("mousemove", mousemoveList[j])
                 document.getElementById("user-avatar-image" + j).removeEventListener("mouseleave", mouseleaveList[j])
             }
-            console.log(Name_list);
+
             if (document.getElementById("Target").value=="-1"){
                 document.getElementById("Target").value = data[index[i]].User_name
                 document.getElementById("TargetPK").value = data[index[i]].Pulic_key

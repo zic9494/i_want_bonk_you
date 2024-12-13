@@ -48,36 +48,17 @@ export function setGamePage(){
     const BackToHome = document.getElementById("back_to_home")
     const PlayAgain = document.getElementById("play_again")
     const DuringTimetext = document.getElementById('duration-display')
-
+    const sendRequestButton = document.getElementById('add-detail-button');
     
     const openSettingsButton = document.getElementById('open-settings-button');
     const end_streching = document.getElementById('stop-stretch-button')
+    const profile_name = document.getElementById('user-nickname');
+    const profile_bio = document.getElementById('user-bio-display');
+    const profile_photo = document.getElementById('user-avatar-image');  
 
-    //從userInfo返回上一頁
-    document.getElementById("user-back-button").addEventListener("click", () => {
-        // 隱藏 Profile 容器
-        const profileContainer = document.getElementById("profile");
-        profileContainer.style.display = "none";
-    
-        // 返回上一頁
-        if (previousPage) {
-            document.getElementById(previousPage).style.display = "block";
-            previousPage = null; // 清空記錄
-        }
-    });
+   
 
-    //從userInfo返回上一頁
-    document.getElementById("user-back-button").addEventListener("click", () => {
-        // 隱藏 Profile 容器
-        const profileContainer = document.getElementById("profile");
-        profileContainer.style.display = "none";
-    
-        // 返回上一頁
-        if (previousPage) {
-            document.getElementById(previousPage).style.display = "block";
-            previousPage = null; // 清空記錄
-        }
-    });
+
 
     const pda = findUSEPDA()
 
@@ -88,10 +69,27 @@ export function setGamePage(){
         gameUI.style.display = 'none';
     });
     //跳到UserInfo
-    toProfile.addEventListener('click',()=>{
-        profile.dataset.username = localStorage.getItem('user_name')
-        profile.style.display = 'block';
-        gameUI.style.display = 'none';    
+    toProfile.addEventListener('click',async ()=>{
+        
+        const response = await fetch(`
+            http://localhost:3000/api/users/info?user_name=${encodeURIComponent(localStorage.getItem('user_name'))}`,{
+            method:'GET',
+            headers: {
+                'Content-Type' : 'application/json'
+            }
+        });
+        if(response.ok){
+            const res = await response.json();
+            const data = res.recordset[0];
+            profile.dataset.username = localStorage.getItem('user_name')
+            profile.style.display = 'block';
+            gameUI.style.display = 'none'; 
+            sendRequestButton.style.display = 'none';
+            profile_name.innerText = data.Nick_name;
+            if (data.Bio!=null) profile_bio.innerText = data.Bio; //空就不回傳
+            if (data.PhotoBase64!=null) profile_photo.src = data.PhotoBase64;
+        }
+        
     })
 
     depositBtn.addEventListener('click',()=>{
@@ -101,11 +99,13 @@ export function setGamePage(){
     });
 
     BonkList.addEventListener("click", (event) => {
-        const avatar = event.target.closest(".user-avatar");
-        if (avatar) {
-            const userName = avatar.getAttribute("data-user-name");
+        console.log("SSS");
+
+        if (event.target.tagName === "IMG" && event.target.hasAttribute("data-username")) {
+            const userName = event.target.getAttribute("data-username");
             console.log(userName);
-            openProfile(userName);
+
+            openProfile1(userName);
         }
     });
     
@@ -179,26 +179,25 @@ export function setGamePage(){
 }
 
 
-async function openProfile(userName) {
+async function openProfile1(userName) {
     if (!userName) return;
 
-
-    await fetchUserProfile(userName);
+    await fetchUserProfile1(userName);
     // 顯示 Profile 容器
-    console.log("sS");
     const close = document.getElementById("user-back-button");
     const editBtn = document.getElementById('edit-bio-button');
     const profileContainer = document.getElementById("profile");
     const previousPage = document.getElementById("bonk_ui");
     const sendRequestButton = document.getElementById('add-detail-button');
     close.innerText = 'Close';
+    sendRequestButton.style.display = 'block';
+    
     editBtn.style.display = 'none'
     profileContainer.style.display = 'block';
     previousPage.style.display = 'none';
-    profileContainer.dataset.username = userName;
-    sendRequestButton.style.display = 'none'
+
     function handleClose() {
-        handleCloseEvent(close, profileContainer, previousPage,editBtn,sendRequestButton);
+        handleCloseEvent(close, profileContainer, previousPage,editBtn);
         close.removeEventListener('click', handleClose); // 移除防止干擾到其他
         
     }
@@ -208,17 +207,16 @@ async function openProfile(userName) {
     
 }
 
-function handleCloseEvent(close, profileContainer, previousPage,sendRequestButton) {
+function handleCloseEvent(close, profileContainer, previousPage,editBtn) {
     previousPage.style.display = 'block';
     profileContainer.style.display = 'none';
     close.innerText = 'Back to Game';
     editBtn.style.display = 'block';
-    sendRequestButton.style.display = 'none';
-    
+
 }
 
 
-async function fetchUserProfile(user_name) {
+async function fetchUserProfile1(user_name) {
     try {
         const response = await fetch(`
             http://localhost:3000/api/users/info?user_name=${encodeURIComponent(user_name)}`,{
@@ -229,7 +227,6 @@ async function fetchUserProfile(user_name) {
         });
         const userInfo = await response.json();
         const data = userInfo.recordset[0];
-
         // 更新 Profile 中的內容
         document.getElementById("user-avatar-image").src = data.PhotoBase64 || "https://via.placeholder.com/150";
         document.getElementById("user-nickname").textContent = data.Nick_name || "Unknown";

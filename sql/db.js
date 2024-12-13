@@ -124,6 +124,7 @@ app.get('/api/users/info',async (req,res)=>{  //登入回傳使用者資訊的GE
                         .query(checkSQL);
     //檢查用戶是否存在
     if (!query.recordset.length){
+
         return res.status(404).json({message: "Not found User"})          
     }
 

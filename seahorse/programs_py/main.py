@@ -287,9 +287,7 @@ def transfer_bonk(signer: Signer, sender: TokenAccount, recipient: TokenAccount,
                 amount = amount,
                 signer = ['jackpot', signer, bump]
             )
-           
         else:  
-
             bump = user.sol_bump    #這個轉帳是USERPDA轉出，簽署者是FT7K，sender是userpda的TokenAccount
             owner = user.owner      #UserPda要輸入sender的擁有著
 

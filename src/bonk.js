@@ -235,12 +235,13 @@ async function onclick(element,reward,index,target_pda,program,adminKeypair,Admi
     if (localStorage.getItem("BonkCounter") == 0){
         Title.innerText = "Finish"
         
+        let earn = await Earn()
         await Update_Bonked(document.getElementById("Target").value)
         document.getElementById("bonk_page").innerHTML = "loading";
         document.getElementsByClassName("run_area")[0].style.display = "none"
         document.getElementById("finish_page").style.display = "block"
         if(localStorage.getItem("Winner")==1){
-            document.getElementById("GameTitle").innerHTML = "Total earn : $36";
+            document.getElementById("GameTitle").innerHTML = "Total earn : " + earn + "SOL";
         }else{
             document.getElementById("GameTitle").innerHTML = "You Loss";
         }
@@ -514,3 +515,14 @@ function loadKeypairFromJson() {
     }
 }
 
+async function Earn() {
+    const Target = document.getElementById("Target").value
+    const program = new Program(idl, programId, provider)
+    const Target_pk = new PublicKey(await fetchUserPublicKey(Target))
+
+    const [target_pda, sol_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('user_solana'), Target_pk.toBuffer()], programId)
+    const userPdaAccount = await program.account.userPda.fetch(target_pda)
+    return userPdaAccount.stretchBetAmount * 0.1
+
+}

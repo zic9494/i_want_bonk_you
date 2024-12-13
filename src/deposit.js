@@ -3,7 +3,7 @@ import { Connection,PublicKey,Keypair,Transaction
         TransactionInstruction, } from '@solana/web3.js';
 import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
-
+import BN from 'bn.js';
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import { Buffer } from 'buffer';
 
@@ -164,20 +164,31 @@ export async function setDeposit(){
     //更新遊戲內餘額
     async function updateGameBalance() {
         try {
+            
+
             const userPdaAccount = await program.account.userPda.fetch(sol_pda); //用userPda類別去查
-            const solPdaBalance = (await connection.getBalance(sol_pda))-userPdaAccount.stretchBetAmount;   //扣掉伸頭押進去的錢
+            const minus = userPdaAccount.stretchBetAmount;
+            const token = userPdaAccount.stretchBetToken;
+            
+            var solPdaBalance = (await connection.getBalance(sol_pda));   //扣掉伸頭押進去的錢
+            if(token==='SOL')solPdaBalance - minus;
+
             solBalanceText.forEach(sol_balance =>{
                 sol_balance.innerText = `${(solPdaBalance/ 1_000_000_000).toFixed(4)} SOL`;
             });
             console.log(`PDA SOL Balance: ${solPdaBalance / 1_000_000_000} SOL`);
 
 
-            const bonkPdaBalance = (await connection.getTokenAccountBalance(pdaTokenAccount)) - userPdaAccount.stretchBetAmount; //未測試
-            console.log(bonkPdaBalance.value.uiAmount);
+            const bonkPdaBalance = await connection.getTokenAccountBalance(pdaTokenAccount); //未測試
+            console.log("bbbb",bonkPdaBalance.value.uiAmount);
+            var bonkBalance = bonkPdaBalance.value.uiAmount
+            console.log("WW",bonkBalance,userPdaAccount.stretchBetAmount/10_000)
+;
+            if(token==='BONK')bonkBalance = bonkBalance - (userPdaAccount.stretchBetAmount/10_000);
             bonkBalanceText.forEach(bonk_balance =>{
-                bonk_balance.innerText = `${bonkPdaBalance.value.uiAmount} BONK`;
+                bonk_balance.innerText = `${(bonkBalance).toFixed(0) } BONK`;
             });
-            console.log(`BONK SOL Balance: ${bonkPdaBalance.value.uiAmount} BONK`); 
+            console.log(`BONK  Balance: ${bonkBalance} BONK`); 
         } catch (err) {
             console.error("Error fetching PDA SOL balance:", err);
         }
@@ -214,7 +225,7 @@ async function transferBonk(fromTokenAccount,toTokenAccount,wallet,amount) {
             fromTokenAccount,
             toTokenAccount,
             wallet.publicKey,
-            amount,
+            new BN(amount * 100_000),
             tokenProgramId
         )
         //打包交易

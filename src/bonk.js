@@ -24,6 +24,7 @@ export async function Can_bonk_list(){
         }
     )
     var data = await resp.json()
+    console.log(data);
     data = data.recordset
     console.log("d",data);
     var index=[0, 1, 2] //被顯示的ID
@@ -45,8 +46,11 @@ export async function Can_bonk_list(){
         let maxGet = userPdaAccount.stretchBetAmount.toNumber() * (userPdaAccount.stopLoss / 100); // 下注金額
         let need = maxGet * 0.25; 
         if (token === "SOL") {
-            maxGet = (maxGet / 1_000_000_000).toFixed(4); // 保留 2 位小數
-            need = (need / 1_000_000_000).toFixed(4); // 保留 2 位小數
+            maxGet = (maxGet / 1_000_000_000).toFixed(4); 
+            need = (need / 1_000_000_000).toFixed(4); 
+        }else{
+            maxGet = (maxGet / 100_000).toFixed(0);
+            need = (need / 10_000).toFixed(0);
         }
         //取回將顯示在畫面上的資料
         Innerhtml +=`
@@ -135,7 +139,7 @@ export async function start_bonk() {
     const userPdaAccount = await program.account.userPda.fetch(target_pda); //用userPda類別去查
 
     console.log(userPdaAccount);
-    console.log(userPdaAccount.stretchBetAmount,userPdaAccount.stopLoss);
+    console.log(userPdaAccount.stretchBetAmount/1,userPdaAccount.stopLoss);
     const Admission_fee = userPdaAccount.stretchBetAmount * (userPdaAccount.stopLoss / 100) * (0.25);
     console.log(Admission_fee);
     
@@ -155,7 +159,7 @@ export async function start_bonk() {
            // 添加事件監聽器，確保 onclick 支持 async
             element.addEventListener(
                 "click",
-                async () => await onclick(element, reward, index, target_pda, program,adminKeypair,Admission_fee),
+                async () => await onclick(element, reward, index, target_pda, program,adminKeypair,Admission_fee,userPdaAccount.stretchBetToken,target_user_pk),
                 { once: true }
             );
         });
@@ -206,7 +210,7 @@ async function Update_Bonked(bonked) {
 }
 
 //狗狗圖片被點擊
-async function onclick(element,reward,index,target_pda,program,adminKeypair,Admission_fee ) {
+async function onclick(element,reward,index,target_pda,program,adminKeypair,Admission_fee,token,target_user_pk ) {
     const Title = document.getElementById("GameTitle")
     if (localStorage.getItem("BonkCounter")>0){
         element.src = "./images/doge_clicked.png"
@@ -216,7 +220,7 @@ async function onclick(element,reward,index,target_pda,program,adminKeypair,Admi
             
             localStorage.setItem("Winner",1);
             //結束對方伸頭狀態
-            EndStretch(program,adminKeypair,target_pda,Admission_fee*4);
+            EndStretch(program,adminKeypair,target_pda,Admission_fee*4,token,target_user_pk);
         }else{
             Title.innerHTML = "You Loss" 
             localStorage.setItem("Winner",0);
@@ -232,7 +236,7 @@ async function onclick(element,reward,index,target_pda,program,adminKeypair,Admi
         Title.innerText = "Finish"
         
         await Update_Bonked(document.getElementById("Target").value)
-        document.getElementById("bonk_page").innerHTML = "laoding"
+        document.getElementById("bonk_page").innerHTML = "loading";
         document.getElementsByClassName("run_area")[0].style.display = "none"
         document.getElementById("finish_page").style.display = "block"
         if(localStorage.getItem("Winner")==1){
@@ -298,22 +302,6 @@ async function fetchUserPublicKey(userName) {
     }
 }
 
-async function rewardTransfer(program,amount,admin) {
-    try{
-        const wallet = await window.solana.connect();  //可優化
-        const walletPK = wallet.publicKey;
-        const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
-            [Buffer.from('admin')],programId);
-        const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
-            [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
-        const [jackpot_pda,jackpot_bump] = await PublicKey.findProgramAddress(
-            [Buffer.from('jackpot'),admin.publicKey.toBuffer()],programId);
-        
-       
-    }catch(err){
-        console.error(err);
-    }
-}
 async function StartBonk(program,AdmissionFee,token,admin) {
     try{
         const wallet = await window.solana.connect();  //可優化
@@ -325,10 +313,15 @@ async function StartBonk(program,AdmissionFee,token,admin) {
         const [sol_pda,sol_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('user_solana'),walletPK.toBuffer()],programId);
         
-
+        const [jackpotTokenAccount, jackpotTokenAccount_bump] = await PublicKey.findProgramAddress(
+                [Buffer.from('jackpot_Bonk'), admin.publicKey.toBuffer()],
+                programId);
         const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
                 [Buffer.from('admin')],programId);
 
+        const [tokenAccountpda,tokenAccountpda_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('User_Bonk'),walletPK.toBuffer()],programId);
+        
 
         const ix = await program.methods
                 .bonkStart(new BN(AdmissionFee), token) //傳u64要記得轉成BN不然會出錯
@@ -338,8 +331,9 @@ async function StartBonk(program,AdmissionFee,token,admin) {
                     clock: clockSysvar       
                 })
                 .instruction();
-
-        const ix2 = await program.methods
+        let ix2 = null;
+        if(token==='SOL'){
+            ix2 = await program.methods
             .transferSol(new BN(AdmissionFee), false)    
             .accounts({
                 signer: walletPK,
@@ -349,6 +343,20 @@ async function StartBonk(program,AdmissionFee,token,admin) {
                 jackpot: jackpot_pda,
             })
             .instruction();
+        }else{
+            ix2 = await program.methods
+                .transferBonk(new BN(AdmissionFee)) 
+                .accounts({
+                signer: walletPK,
+                sender: tokenAccountpda,           // Jackpot PDA 作為發送者
+                recipient: jackpotTokenAccount,           
+                user: sol_pda,               
+                admin: admin_pda,
+                jackpot: jackpot_pda            //
+                })
+                .instruction();
+        }
+        
 
         const transaction = new Transaction().add(ix).add(ix2);
         transaction.feePayer = walletPK;
@@ -414,11 +422,14 @@ async function EndBonk(program,admin) {
 }
 
 //如果敲到結束對方伸頭狀態
-async function EndStretch(program,admin,target_pda,amount) {
+async function EndStretch(program,admin,target_pda,amount,token,target_user_pk) {
     try{
         const wallet = await window.solana.connect()
         const walletPK = wallet.publicKey
 
+        const [tokenAccountpda, tokenAccountpda_bump] = await PublicKey.findProgramAddress(
+            [Buffer.from('User_Bonk'), walletPK.toBuffer()], programId
+        )
         const [sol_pda, sol_pumb] = await PublicKey.findProgramAddress(
             [Buffer.from('user_solana'), walletPK.toBuffer()], programId
         )
@@ -427,6 +438,10 @@ async function EndStretch(program,admin,target_pda,amount) {
 
         const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
             [Buffer.from('admin')],programId);
+        
+        const [TargetPdaTokenAccount,pdaTokenAccountBump] = await PublicKey.findProgramAddress(
+            [Buffer.from('User_Bonk'),target_user_pk.toBuffer()],programId);
+            
 
         
         const ix = await program.methods
@@ -438,17 +453,32 @@ async function EndStretch(program,admin,target_pda,amount) {
                 admin: admin_pda          
             })
             .instruction() // 發送交易
-        
-        const ix2 = await program.methods
-            .transferSol(new BN(amount), true)    
-            .accounts({
+        console.log(amount);
+        let ix2 = null;
+        if(token==='SOL'){
+            ix2 = await program.methods
+                .transferSol(new BN(amount), true)    
+                .accounts({
+                    signer: admin.publicKey,
+                    sender: target_pda,
+                    recipient: sol_pda,
+                    admin: admin_pda,
+                    jackpot: jackpot_pda,
+                })
+                .instruction();
+        }else{
+            ix2 = await program.methods
+                .transferBonk(new BN(amount)) 
+                .accounts({
                 signer: admin.publicKey,
-                sender: target_pda,
-                recipient: sol_pda,
+                sender: TargetPdaTokenAccount,           // Jackpot PDA 作為發送者
+                recipient: tokenAccountpda,           
+                user: target_pda,               
                 admin: admin_pda,
-                jackpot: jackpot_pda,
-            })
-            .instruction();
+                jackpot: jackpot_pda           
+                })
+                .instruction();
+        }
 
         
 

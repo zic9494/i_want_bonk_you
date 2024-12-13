@@ -6,9 +6,9 @@ import {setLoginAandSignUp} from "./LoginSignUp.js"
 import { setUserInfo } from "./UserInfo.js"
 import { setGamePage } from "./GamePage.js"
 import { setFriend } from "./Friends.js";
-import { setLeaderBoard } from "./LeaderBoard.js";
 import { setDeposit } from "./deposit.js";
 import { setStretch } from "./stretch.js";
+import { setWithdaw } from "./Withdraw.js";
 
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -17,9 +17,10 @@ document.addEventListener('DOMContentLoaded', () => {
     setGamePage();
     setWallet();
     setFriend();
-    setLeaderBoard();
+
     setDeposit();
     setStretch();
+    setWithdaw()
     //導覽列的動畫
     const navbarAnchors = document.querySelectorAll('.navbar a');
     navbarAnchors.forEach(anchor => {

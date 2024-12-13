@@ -38,8 +38,6 @@ export function setGamePage(){
     const profile = document.getElementById('profile');
     const toFriend = document.getElementById('friends-button');
     const friend = document.getElementById('friend');
-    const leaderBoard = document.getElementById("leaderboard-container");
-    const leaderBoardBtn = document.getElementById("leaderboard-button");
     const BonkPage = document.getElementById("bonk_page")
     const Target = document.getElementById("Target")
     const Bonk = document.getElementById("Bonk")

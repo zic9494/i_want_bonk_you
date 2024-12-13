@@ -1,4 +1,4 @@
-import { Keypair,Transaction,SystemProgram,PublicKey } from '@solana/web3.js';
+import { Keypair, Transaction, SystemProgram, PublicKey, sendAndConfirmTransaction} from '@solana/web3.js';
 import { provider ,connection } from './deposit.js';
 import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
@@ -33,6 +33,25 @@ function loadKeypairFromJson() {
     }
 }
 
+//抓取錢包餘額
+async function getWalletBalances(walletPublicKey) {
+
+    const solBalance = await connection.getBalance(walletPublicKey) / 1_000_000_000;
+
+    const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPublicKey,{
+        mint:mintPublicKey //filter
+    });
+
+    let bonkBalance = 0;
+    if(tokenAccounts.value.length>0){
+        bonkBalance = tokenAccounts.value[0].account.data.parsed.info.tokenAmount.uiAmount;
+    }
+    walletBalances.Bonk = bonkBalance;
+    walletBalances.SOL = solBalance;
+    console.log(solBalance,bonkBalance);
+} 
+
+
 // 初始化
 const adminKeypair = loadKeypairFromJson();
 const adminPubKey = adminKeypair.publicKey;
@@ -40,14 +59,19 @@ console.log('Admin Public Key:', adminPubKey.toBase58());
 
 const program = new Program(idl, programId, provider);
 
+const walletBalances = {
+    SOL: 0,  
+    Bonk: 0
+};
 
 export async function withdraw(type, amount) {
     try {
-        const walletPK = adminPubKey; // 使用 admin 的公鑰作為測試輸入
+        const wallet = await window.solana.connect();
+        const walletPK = wallet.publicKey;
 
         // 計算 User PDA
         const [userPda, userBump] = await PublicKey.findProgramAddress(
-            [Buffer.from('solana'), walletPK.toBuffer()],
+            [Buffer.from('user_solana'), walletPK.toBuffer()],
             programId
         );
 
@@ -56,6 +80,7 @@ export async function withdraw(type, amount) {
         let transaction;
 
         if (type === 'SOL') {
+            amount = amount * 1000000000;
             // 提取 SOL 的交易指令
             const ix = await program.methods
                 .withdrawSol(new BN(amount))
@@ -68,11 +93,11 @@ export async function withdraw(type, amount) {
 
             transaction = new Transaction().add(ix);
         } 
-
-            // 查找用戶的代幣帳戶
+        else{
+             // 查找用戶的代幣帳戶
             const userTokenAccount = await connection.getParsedTokenAccountsByOwner(walletPK,{
                     mint:mintPublicKey //filter
-                });
+            });
                 
                 
             console.log("User Token Account (Admin Test):", userTokenAccount.value[0].pubkey.toBase58());
@@ -83,6 +108,8 @@ export async function withdraw(type, amount) {
                 programId
             );
             console.log("PDA Token Account (Admin Test):", userTokenAccount.value[0].pubkey.toBase58());
+
+            amount = amount * 100000;
 
             // 提取代幣的交易指令
             const ix = await program.methods
@@ -97,8 +124,9 @@ export async function withdraw(type, amount) {
                 })
                 .instruction();
 
-            transaction = new Transaction().add(ix);
-
+                transaction = new Transaction().add(ix);
+        }
+            
             // 發送交易
             transaction.feePayer = walletPK;
             transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
@@ -118,6 +146,11 @@ export async function withdraw(type, amount) {
 //事件監聽
 export async function setWithdaw() {
     customWithdrawInput.value = 0
+    const wallet = await window.solana.connect();
+    const walletPK = wallet.publicKey;
+
+    //抓取錢包餘額
+    await getWalletBalances(walletPK);
 
     
     document.getElementById("confirm-btn").addEventListener("click", async function () {
@@ -143,9 +176,9 @@ export async function setWithdaw() {
     })
 
     withdrawSlider.addEventListener("input", ()=>{
+        const type = document.getElementById("withdrawType").value;
         let Value = withdrawSlider.value
-        customWithdrawInput.value = Value
-        console.log(Value);
+        customWithdrawInput.value = ((Value / 100) * walletBalances[type]).toFixed(5);
     })
 
     solBtn.addEventListener("click", ()=>{

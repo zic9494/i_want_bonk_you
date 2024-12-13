@@ -310,7 +310,7 @@ app.post('/api/friends/send',async (req,res) => {
                 .query(checkSQL);
         if(query.recordset.length>0){
             const currentStatus = query.recordset[0].Status;
-            res.json({message:`The relationship is currently ${currentStatus}`});
+            res.status(401).json({message:`The relationship is currently ${currentStatus}`});
         }else{
             const insertSQL = `INSERT INTO Friendships(From_user,To_user,Status)
                                 VALUES (@from_user, @to_user, 'pending')`;

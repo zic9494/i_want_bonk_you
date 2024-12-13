@@ -42,9 +42,33 @@ export async function setStretch(){
     
     const [admin_pda,admin_bump] = await PublicKey.findProgramAddress(
         [Buffer.from('admin')],programId);
+
+    const [tokenAccountpda,tokenAccountBump] = await PublicKey.findProgramAddress(
+        [Buffer.from('token'),walletPK.toBuffer()],programId);
     
     end_streching.addEventListener('click',async ()=>{
-        const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program);
+
+
+        const userPdaAccount = await program.account.userPda.fetch(sol_pda); //用userPda類別去查
+        const startTime = userPdaAccount.interestStartTime;
+        const token = userPdaAccount.stretchBetToken;
+        const nowTime = Math.floor(Date.now() / 1000)
+            
+        const betAmount = userPdaAccount.stretchBetAmount.toNumber(); // 單位：Lamports (如果是 SOL，需先轉換)
+
+        const hourlyRate = 0.05;
+
+        // 計算已經過的小時數
+        const elapsedTimeInSeconds = nowTime - startTime; // 經過的秒數
+        const elapsedHours = Math.floor(elapsedTimeInSeconds / (60 * 5)); // 經過的小時數（向下取整）
+        
+        const reward = betAmount * hourlyRate * elapsedHours;
+
+        console.log("下注金額:", betAmount);
+        console.log("經過小時數:", elapsedHours);
+        console.log("獎勵:", reward / 1_000_000_000, "SOL"); 
+
+        const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program,reward,token,adminKeypair,tokenAccountpda);
 
         if(isSuccess){
             alert("Stretched back Success");
@@ -59,6 +83,9 @@ export async function setStretch(){
                 let DuringTime = 0
                 localStorage.setItem("DuringTime", DuringTime)
             }, 500)
+            alert(`You got${reward} ${token}`)
+
+
         }else{
             alert("Fail to stretched back ");
         }
@@ -90,8 +117,10 @@ export async function setStretch(){
 
     // 確認設置
     confirmSettingsButton.addEventListener('click', async () => {
+        const sol_balance = connection.getBalance(walletPK) / 1_000_000_000;
+
         const betValue = parseFloat(modalBetAmount.value || 0);
-        if (betValue <= 0) {
+        if (betValue <= 0 && betValue>=sol_balance && modalCurrencyLabel.innerText=='SOL') {
             alert('Please enter a valid bet amount!');  
             return;
         }
@@ -131,6 +160,7 @@ export async function setStretch(){
 async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
     try{
         //user的PDA
+        
         console.log(walletPK,program,token,amount,stopLoss);
         if(token==='SOL'){
             amount *= 1_000_000_000;
@@ -162,36 +192,88 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
     }
 }
 
-async function endStretch(adminPda,admin,userPda,program) {
-  try{
-    console.log(admin.publicKey.toBase58());
-    console.log(admin);
-    console.log(userPda);
-    const ix = await program.methods
-    .stretchEnd() // 指令名
-    .accounts({
-        signer: admin.publicKey, 
-        user: userPda,           
-        clock: clockSysvar,      
-        admin: adminPda          
-    })
-    .instruction() // 發送交易
-    const transaction = new Transaction().add(ix);
+async function endStretch(adminPda, adminKeypair, userPda, program, reward, token,tokenAccountpda) {
+    try {
+      // 計算 Jackpot PDA
+      const [jackpot_pda, jackpot_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('jackpot'), adminKeypair.publicKey.toBuffer()],
+        programId
+      );
+  
+      console.log(adminKeypair.publicKey.toBase58());
+      console.log(adminKeypair);
+      console.log(userPda);
+  
+      // StretchEnd 指令
+      const ix = await program.methods
+        .stretchEnd() // 指令名
+        .accounts({
+          signer: adminKeypair.publicKey, // 簽名者
+          user: userPda,                 // 用戶 PDA
+          clock: clockSysvar,            // 系統時鐘
+          admin: adminPda                // 管理員 PDA
+        })
+        .instruction(); // 發送指令
+  
+      // 初始化交易
+      const transaction = new Transaction().add(ix);
+  
+      // 如果是 SOL，添加 transferSol 指令
+      let ix2 = null;
+      if (token === 'SOL') {
+        ix2 = await program.methods
+          .transferSol(new BN(reward), true) // 傳遞獎勵金額
+          .accounts({
+            signer: adminKeypair.publicKey, // 簽名者
+            sender: userPda,           // Jackpot PDA 作為發送者
+            recipient: userPda,            // 接收者
+            admin: adminPda,               // 管理員 PDA
+            jackpot: jackpot_pda           // Jackpot PDA
+          })
+          .instruction();
+  
+        // 添加到交易
+        transaction.add(ix2);
+      }else{
+        ix2 = await program.methods
+          .transferBonk(new BN(reward)) // 傳遞獎勵金額
+          .accounts({
+            signer: adminKeypair.publicKey, // 簽名者
+            sender: new PublicKey("21SRUQbqKT9qPGdVquTBh4HJHWVA8Zzi8zi8ZWWcPybC"),           // Jackpot PDA 作為發送者
+            recipient: tokenAccountpda,            // 接收者
+            user: userPda,               // 管理員 PDA
+            admin: adminPda,
+            jackpot: jackpot_pda           // Jackpot PDA
+          })
+          .instruction();
+  
+      }
 
-    transaction.feePayer = admin.publicKey;
-    transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
-
-     // 發送並確認交易
-     const signature = await sendAndConfirmTransaction(connection, transaction, [admin]);
-     console.log('交易已確認，簽名:', signature);
-
-    return true;
-  }catch(err){
-    console.error(err);
-    
+      
+  
+      // 配置交易
+      transaction.feePayer = adminKeypair.publicKey;
+      transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
+  
+      // 模擬交易
+      console.log("Simulating transaction...");
+      const simulateResult = await connection.simulateTransaction(transaction);
+      if (simulateResult.value.err) {
+          console.error("Simulation failed:", simulateResult.value.err);
+          console.error(simulateResult.value.logs);
+          return false;
+      }
+      // 簽名並發送交易
+      const signature = await sendAndConfirmTransaction(connection, transaction, [adminKeypair]);
+      console.log('交易已確認，簽名:', signature);
+  
+      return true;
+    } catch (err) {
+      console.error(err);
+      return false;
+    }
   }
-}
-
+  
 async function StretchOut() {
     
     const resp = await fetch(

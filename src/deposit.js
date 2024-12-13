@@ -3,6 +3,7 @@ import { Connection,PublicKey,Keypair,Transaction
         TransactionInstruction, } from '@solana/web3.js';
 import { createTransferInstruction } from '@solana/spl-token';
 import { Program, AnchorProvider, Wallet } from '@project-serum/anchor'; 
+
 import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import { Buffer } from 'buffer';
 
@@ -50,6 +51,7 @@ export async function setDeposit(){
     
     const programId = new PublicKey('EiSSSmeYvZUPSCHwQgHY27hN6WjjDQTaGXvEvX37KX8F');
     let currentCurrency = 'SOL'; // 預設為 SOL
+    const program = new Program(idl, programId, provider);
     
     const wallet = await window.solana.connect();
     const walletPK = wallet.publicKey;
@@ -162,14 +164,15 @@ export async function setDeposit(){
     //更新遊戲內餘額
     async function updateGameBalance() {
         try {
-            const solPdaBalance = await connection.getBalance(sol_pda);
+            const userPdaAccount = await program.account.userPda.fetch(sol_pda); //用userPda類別去查
+            const solPdaBalance = (await connection.getBalance(sol_pda))-userPdaAccount.stretchBetAmount;   //扣掉伸頭押進去的錢
             solBalanceText.forEach(sol_balance =>{
                 sol_balance.innerText = `${(solPdaBalance/ 1_000_000_000).toFixed(4)} SOL`;
             });
             console.log(`PDA SOL Balance: ${solPdaBalance / 1_000_000_000} SOL`);
 
 
-            const bonkPdaBalance = await connection.getTokenAccountBalance(pdaTokenAccount);
+            const bonkPdaBalance = (await connection.getTokenAccountBalance(pdaTokenAccount)) - userPdaAccount.stretchBetAmount; //未測試
             console.log(bonkPdaBalance.value.uiAmount);
             bonkBalanceText.forEach(bonk_balance =>{
                 bonk_balance.innerText = `${bonkPdaBalance.value.uiAmount} BONK`;
@@ -320,6 +323,9 @@ async function initializeUserAllPda(tokenAccountpda,sol_pda,pdaTokenAccount,prog
 }
 
 async function getWalletBalances(walletPublicKey) {
+    
+    
+        
     const solBalance = await connection.getBalance(walletPublicKey) / 1_000_000_000;
 
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(walletPublicKey,{

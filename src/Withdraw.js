@@ -149,8 +149,13 @@ export async function setWithdaw() {
     const wallet = await window.solana.connect();
     const walletPK = wallet.publicKey;
 
+    const [userPda, userBump] = await PublicKey.findProgramAddress(
+        [Buffer.from('user_solana'), walletPK.toBuffer()],
+        programId
+    );
+
     //抓取錢包餘額
-    await getWalletBalances(walletPK);
+    await getWalletBalances(userPda);
 
     
     document.getElementById("confirm-btn").addEventListener("click", async function () {

@@ -10,22 +10,6 @@
     margin: auto;
 }
 
-.back-btn {
-    background-color: #007BFF;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-bottom: 20px;
-}
-
-.back-btn:hover {
-    background-color: #0056b3;
-}
 
 h2 {
     font-size: 24px;
@@ -128,18 +112,45 @@ input[type="range"]::-webkit-slider-thumb:hover {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-.confirm-btn {
-    background-color: #4caf50;
-    color: white;
-    padding: 10px 20px;
+.back-btn, .confirm-btn {
     font-size: 16px;
     font-weight: bold;
-    border: none;
+    padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    width: 100%;  /* 讓按鈕充滿容器寬度 */
+}
+
+.back-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+}
+
+.back-btn:hover {
+    background-color: #0056b3;
+}
+
+.confirm-btn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
 }
 
 .confirm-btn:hover {
     background-color: #45a049;
+}
+
+/* 保持按鈕容器內部排列 */
+.buttons-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;  /* 按鈕之間的距離 */
+    margin-top: 20px;
+}
+
+.buttons-container button {
+    flex: 1;  /* 使兩個按鈕具有相同的寬度 */
+    max-width: 200px;  /* 以防止按鈕過大 */
 }

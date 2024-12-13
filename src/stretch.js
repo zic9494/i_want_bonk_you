@@ -44,7 +44,7 @@ export async function setStretch(){
         [Buffer.from('admin')],programId);
 
     const [tokenAccountpda,tokenAccountBump] = await PublicKey.findProgramAddress(
-        [Buffer.from('token'),walletPK.toBuffer()],programId);
+        [Buffer.from('User_Bonk'),walletPK.toBuffer()],programId);
     
     end_streching.addEventListener('click',async ()=>{
 
@@ -55,12 +55,12 @@ export async function setStretch(){
         const nowTime = Math.floor(Date.now() / 1000)
             
         const betAmount = userPdaAccount.stretchBetAmount.toNumber(); // 單位：Lamports (如果是 SOL，需先轉換)
-
+        console.log("bet:",betAmount);
         const hourlyRate = 0.05;
 
         // 計算已經過的小時數
         const elapsedTimeInSeconds = nowTime - startTime; // 經過的秒數
-        const elapsedHours = Math.floor(elapsedTimeInSeconds / (60 * 5)); // 經過的小時數（向下取整）
+        const elapsedHours = Math.floor(elapsedTimeInSeconds / (60 * 1)); // 經過的小時數（向下取整）
         
         const reward = betAmount * hourlyRate * elapsedHours;
 
@@ -68,7 +68,7 @@ export async function setStretch(){
         console.log("經過小時數:", elapsedHours);
         console.log("獎勵:", reward / 1_000_000_000, "SOL"); 
 
-        const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program,reward,token,adminKeypair,tokenAccountpda);
+        const isSuccess = await endStretch(admin_pda,adminKeypair,sol_pda,program,reward,token,tokenAccountpda);
 
         if(isSuccess){
             alert("Stretched back Success");
@@ -164,6 +164,8 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
         console.log(walletPK,program,token,amount,stopLoss);
         if(token==='SOL'){
             amount *= 1_000_000_000;
+        }else{
+            amount *= 100_000;
         }
         
         const ix = await program.methods
@@ -195,8 +197,13 @@ async function startStretch(walletPK,user_pda,program,token,amount,stopLoss) {
 async function endStretch(adminPda, adminKeypair, userPda, program, reward, token,tokenAccountpda) {
     try {
       // 計算 Jackpot PDA
+      
       const [jackpot_pda, jackpot_bump] = await PublicKey.findProgramAddress(
         [Buffer.from('jackpot'), adminKeypair.publicKey.toBuffer()],
+        programId
+      );
+      const [jackpotTokenAccount, jackpotTokenAccount_bump] = await PublicKey.findProgramAddress(
+        [Buffer.from('jackpot_Bonk'), adminKeypair.publicKey.toBuffer()],
         programId
       );
   
@@ -220,34 +227,37 @@ async function endStretch(adminPda, adminKeypair, userPda, program, reward, toke
   
       // 如果是 SOL，添加 transferSol 指令
       let ix2 = null;
+      console.log(reward)
+
       if (token === 'SOL') {
+        console.log(reward)
+
         ix2 = await program.methods
-          .transferSol(new BN(reward), true) // 傳遞獎勵金額
+          .transferSol(new BN(reward), true) 
           .accounts({
-            signer: adminKeypair.publicKey, // 簽名者
-            sender: userPda,           // Jackpot PDA 作為發送者
-            recipient: userPda,            // 接收者
-            admin: adminPda,               // 管理員 PDA
-            jackpot: jackpot_pda           // Jackpot PDA
+            signer: adminKeypair.publicKey, 
+            sender: userPda,           
+            recipient: userPda,            
+            admin: adminPda,               
+            jackpot: jackpot_pda           
           })
           .instruction();
-  
-        // 添加到交易
-        transaction.add(ix2);
+
       }else{
         ix2 = await program.methods
-          .transferBonk(new BN(reward)) // 傳遞獎勵金額
+          .transferBonk(new BN(reward)) 
           .accounts({
-            signer: adminKeypair.publicKey, // 簽名者
-            sender: new PublicKey("21SRUQbqKT9qPGdVquTBh4HJHWVA8Zzi8zi8ZWWcPybC"),           // Jackpot PDA 作為發送者
-            recipient: tokenAccountpda,            // 接收者
-            user: userPda,               // 管理員 PDA
+            signer: adminKeypair.publicKey,
+            sender: jackpotTokenAccount,           // Jackpot PDA 作為發送者
+            recipient: tokenAccountpda,           
+            user: userPda,               
             admin: adminPda,
-            jackpot: jackpot_pda           // Jackpot PDA
+            jackpot: jackpot_pda           
           })
           .instruction();
   
       }
+      transaction.add(ix2);
 
       
   
@@ -255,14 +265,7 @@ async function endStretch(adminPda, adminKeypair, userPda, program, reward, toke
       transaction.feePayer = adminKeypair.publicKey;
       transaction.recentBlockhash = (await connection.getLatestBlockhash("confirmed")).blockhash;
   
-      // 模擬交易
-      console.log("Simulating transaction...");
-      const simulateResult = await connection.simulateTransaction(transaction);
-      if (simulateResult.value.err) {
-          console.error("Simulation failed:", simulateResult.value.err);
-          console.error(simulateResult.value.logs);
-          return false;
-      }
+
       // 簽名並發送交易
       const signature = await sendAndConfirmTransaction(connection, transaction, [adminKeypair]);
       console.log('交易已確認，簽名:', signature);

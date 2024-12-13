@@ -18,8 +18,6 @@ export function setGamePage(){
     const profile = document.getElementById('profile');
     const toFriend = document.getElementById('friends-button');
     const friend = document.getElementById('friend');
-    const leaderBoard = document.getElementById("leaderboard-container");
-    const leaderBoardBtn = document.getElementById("leaderboard-button");
     const BonkPage = document.getElementById("bonk_page")
     const Target = document.getElementById("Target")
     const Bonk = document.getElementById("Bonk")
@@ -32,10 +30,6 @@ export function setGamePage(){
     const openSettingsButton = document.getElementById('open-settings-button');
     const end_streching = document.getElementById('stop-stretch-button')
 
-    leaderBoardBtn.addEventListener('click',()=>{
-        leaderBoard.style.display = 'block';
-        gameUI.style.display = 'none';
-    })
     //跳到FriendList
     toFriend.addEventListener('click',()=>{
         friend.style.display = 'block';

@@ -10,6 +10,8 @@ const itemsPerPage = 5; // 每頁顯示數量
 let currentPage = 1; // 當前頁
 let currentTab = "friends"; // 當前顯示的 Tab
 
+
+
 // DOM 元素
 const tbody = document.getElementById("friends-invites-tbody");
 const prevPageBtn = document.getElementById("prev-page");
@@ -22,6 +24,7 @@ const headerBonk = document.getElementById("table-header-bonk");
 const headerStatus = document.getElementById("table-header-status");
 const gameUI = document.getElementById("game_ui");
 const friend = document.getElementById("friend");
+const sendRequestButton = document.getElementById('add-detail-button');
 
 
 
@@ -74,6 +77,14 @@ export async function setFriend(){
 
     //剛開始初始化
     loadData(currentPage, currentTab);
+
+    const avatars = tbody.querySelectorAll('.friend-avatar');
+    avatars.forEach(avatar => {
+        avatar.addEventListener('click', () => {
+            const userID = avatar.dataset.userid; // 獲取數據
+            openUserInfo(userID); // 調用跳轉函數
+        });
+    });
 
 
 }
@@ -318,6 +329,16 @@ async function handleDeclineInvite(from_user) {
     } catch (err) {
         console.error(err);
     }
+}
+
+function openUserInfo(userID) {
+    if (!userID) return;
+
+    // 設置數據（可以使用 localStorage 或 URL 參數）
+    localStorage.setItem('viewedUserID', userID);
+
+    // 跳轉到 USER_INFO 頁面
+    window.location.href = '/user_info.html'; // 假設 USER_INFO 頁面為 user_info.html
 }
 
 //async function queryFriendList(params) {

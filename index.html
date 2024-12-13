@@ -160,48 +160,20 @@
                 </div>
                  <!-- 返回按鈕 -->
                  <button id="friend-back-to-game" class="friend-back-btn">Back</button>
+
+                <!-- BONK Detail Modal -->
+                <div id="bonk-detail-modal" class="modal hidden">
+                    <div class="modal-content">
+                        <span id="close-bonk-modal" class="close">&times;</span>
+                        <h3>BONK Details</h3>
+                        <p><strong>Max Reward:</strong> <span id="max-reward">XX</span></p>
+                        <p><strong>Need:</strong> <span id="bonk-need">XX</span></p>
+                        <button id="confirm-bonk-btn" class="confirm-btn">Confirm</button>
+                    </div>
+                </div>
             </div>
 
-            <!--Leaderboard-->
-            <div id="leaderboard-container" class="leaderboard hidden">
-                <!-- 標題 -->
-                <div class="leaderboard-header">
-                    <h2>Leaderboard</h2>
-                    <button id="leaderboard-rules-btn" class="rules-btn">!</button>
-                </div>
-            
-                <!-- 排行榜表格 -->
-                 
-                <div class="leaderboard-table-wrapper">
-                    <table class="leaderboard-table">
-                        <thead>
-                            <tr>
-                                <th>Rank</th>
-                                <th>Avatar</th>
-                                <th>Nickname</th>
-                                <th>Bonk Earnings</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboard-tbody">
-                            <!-- 動態數據加載 -->
-                        </tbody>
-                    </table>
-                </div>
-                <!-- 返回按鈕 -->
-                <button id="back-to-game-leaderboard" class="back-btn">Back</button>
-            </div>
-            
-            <!-- 排行榜規則彈窗 -->
-            <div id="rules-modal" class="modal hidden">
-                <div class="modal-content">
-                    <span id="close-rules-modal" class="close-btn">&times;</span>
-                    <h2>Leaderboard Rules</h2>
-                    <p>The leaderboard ranks players based on the total BONK earnings they have accumulated from BONKing others.</p>
-                    <p>Top 10 players with the highest BONK earnings are displayed here.</p>
-                    <p>Earn more BONK by BONKing others and climb the leaderboard!</p>
-                </div>
-            </div>
-            
+           
             <div id="deposit-container" class="deposit hidden">
                 <!-- 遊戲帳戶創建模態框 -->
 

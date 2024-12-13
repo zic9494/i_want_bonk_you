@@ -240,29 +240,45 @@
             <!-- Withdraw -->
             <div id="Withdorw_Page" style="display: none">
                 <div class="stretch-container">
-                    <button class="back-btn" id="Withdorw-back-button">Back</button>
+                    <!-- 餘額區域 -->
+                    <div class="balance-container">
+                        <div class="balance-item">
+                            <img src="./images/sol.png" alt="SOL Icon" class="balance-icon">
+                            <span id="sol-balance" class="sol-balance">0 SOL</span>
+                        </div>
+                        <div class="balance-item">
+                            <img src="./images/bonk.png" alt="BONK Icon" class="balance-icon">
+                            <span id="bonk-balance" class="bonk-balance">0 BONK</span>
+                        </div>
+                    </div>
                     <h2>Withdraw Funds</h2>
-        
+
                     <!-- 代幣選擇按鈕 -->
                     <div class="currency-switch">
                         <button class="currency-btn active" id="sol-btn">SOL</button>
                         <button class="currency-btn" id="token-btn">Bonk</button>
                     </div>
-        
+
                     <!-- 拉桿 -->
                     <div class="withdraw-slider-container">
                         <label class="slider-label" for="withdraw-amount">Select Amount:</label>
                         <input type="range" id="withdraw-amount" min="0" max="100" value="0" step="0.0001">
                     </div>
-        
+
                     <!-- 自訂金額輸入 -->
                     <div class="custom-amount-container">
                         <label for="custom-amount">Custom Amount:</label>
-                        <input type="number" class="custom-input" id="withdraw-custom-amount" placeholder="Enter Amount" >
+                        <input type="number" class="custom-input" id="withdraw-custom-amount" placeholder="Enter Amount">
                     </div>
-                    <input type="hidden" id="withdrawType", value="SOL">
-                    <!-- 確認按鈕 -->
-                    <button class="confirm-btn" id="confirm-btn">Confirm Withdrawal</button>
+                    <input type="hidden" id="withdrawType" value="SOL">
+
+                    <!-- 按鈕容器 -->
+                    <div class="buttons-container">
+                        <!-- 確認按鈕 -->
+                        <button class="confirm-btn" id="confirm-btn">Withdraw</button>
+                        <!-- 返回按鈕 -->
+                        <button class="back-btn" id="Withdorw-back-button">Back</button>
+                    </div>
                 </div>
             </div>
             
@@ -271,7 +287,7 @@
             <div id="stretch_ui" style="display: none;">
                 
                 <div class="stretch-container">
-                     <!-- 餘額區域 -->
+                    <!-- 餘額區域 -->
                     <div class="balance-container">
                         <div class="balance-item">
                             <img src="./images/sol.png" alt="SOL Icon" class="balance-icon">

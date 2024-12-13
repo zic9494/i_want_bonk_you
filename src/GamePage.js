@@ -6,6 +6,7 @@ import idl from '../idl/idl.json'; // 您的 IDL 檔案
 import { Buffer } from 'buffer';
 import bs58 from 'bs58';
 
+
 async function findUSEPDA() {
     const wallet = await window.solana.connect();
     const publicKey = wallet.publicKey;
@@ -20,8 +21,18 @@ async function findUSEPDA() {
     return userPdaAccount;
 }
 
+const pages = [
+    {
+        title: "BONK",
+        image: "./images/howtobonk.png" 
+    },
+    {
+        title: "Stretch",
+        image: "./images/howtostretch.png" 
+    }
+];
 
-
+let currentPage = 0;
 
 export function setGamePage(){
        
@@ -55,10 +66,28 @@ export function setGamePage(){
     const profile_name = document.getElementById('user-nickname');
     const profile_bio = document.getElementById('user-bio-display');
     const profile_photo = document.getElementById('user-avatar-image');  
+    const howToPlayModal = document.getElementById("how-to-play-modal");
+    const modalTitle = document.getElementById("modal-title");
+    const modalImage = document.getElementById("modal-image");
+    const prevButton = document.getElementById("prev-button");
+    const nextButton = document.getElementById("next-button");
+    const closeModal = document.querySelector(".close-btn");
+    const howToPlayButton = document.getElementById("how-to-play-button");
 
    
 
 
+    howToPlayButton.addEventListener("click", showModal);
+    closeModal.addEventListener("click", hideModal);
+    prevButton.addEventListener("click", showPreviousPage);
+    nextButton.addEventListener("click", showNextPage);
+
+    // 点击背景关闭弹窗
+    howToPlayModal.addEventListener("click", (event) => {
+        if (event.target === howToPlayModal) {
+            hideModal();
+        }
+    });
 
     const pda = findUSEPDA()
 
@@ -175,6 +204,53 @@ export function setGamePage(){
         document.getElementById("finish_page").style.display = "none"
         bonkButton.click()
     })
+
+    function showModal() {
+        howToPlayModal.style.display = "flex";
+        updateImage();
+    }
+    
+    function showModal() {
+        howToPlayModal.style.display = "flex";
+        updateModal();
+    }
+    
+    // 更新弹窗内容
+    function updateModal() {
+        const currentData = pages[currentPage];
+        modalTitle.textContent = currentData.title;
+        modalImage.src = currentData.image;
+    
+        // 根据当前页数显示或隐藏按钮
+        prevButton.style.display = currentPage === 0 ? "none" : "block";
+        nextButton.style.display = currentPage === pages.length - 1 ? "none" : "block";
+    }
+    
+    // 隐藏弹窗
+    function hideModal() {
+        howToPlayModal.style.display = "none";
+    }
+    
+    // 切换到上一页
+    function showPreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            updateModal();
+        }
+    }
+    
+    // 切换到下一页
+    function showNextPage() {
+        if (currentPage < pages.length - 1) {
+            currentPage++;
+            updateModal();
+        }
+    }
+    
+    
+    
+    
+    
 }
 
 

@@ -7,6 +7,7 @@
     text-align: center;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     font-family: 'Comic Sans MS', sans-serif;
+    size:16px;
     position: relative; /* 用於定位 "?" 按鈕 */
     display: none;
 }
@@ -108,7 +109,7 @@
 
 .action-button {
     padding: 15px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     color: white;
     border: none;
@@ -120,6 +121,8 @@
 }
 
 .bonk-btn {
+    size: 30px;
+    padding: 15px;
     background: #ff5252;
     border: 3px solid #ff7b72;
 }
@@ -209,3 +212,80 @@
     transform: scale(1.1);
 }
 
+/* Modal 基础样式 */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* 半透明背景 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal 内容 */
+.modal-content {
+    background: #fff9eb; /* 柔和米色背景 */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 阴影效果 */
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+    position: relative;
+}
+
+/* Modal 标题 */
+#modal-title {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Modal 图片 */
+.modal-image {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+/* Modal 导航按钮 */
+.modal-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-nav-btn {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.modal-nav-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05); /* 悬停放大 */
+}
+
+/* 关闭按钮 */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #ff5252;
+}

@@ -79,12 +79,24 @@
             
                 <!-- 遊戲功能按鈕 -->
                 <div class="game-actions">
-                    <button id='Bonk-button' class="action-button bonk-btn">BONK!</button>
+                    <button id='Bonk-button' class="action-button bonk-btn" style="font-size:20px;">BONK!</button>
                     <button id='stretch-button'class="action-button stretch-btn">Stretch!</button>
                 </div>
             
                 <!-- How to Play 按鈕 -->
                 <button id="how-to-play-button" class="help-btn">?</button>
+                <!-- How to Play Modal -->
+                <div id="how-to-play-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="close-btn">&times;</span>
+                        <h3 id="modal-title">Title</h3>
+                        <img id="modal-image" src="../images/howtobonk.png" alt="How to Play" class="modal-image">
+                        <div class="modal-footer">
+                            <button id="prev-button" class="modal-nav-btn" style="display: none;">Previous</button>
+                            <button id="next-button" class="modal-nav-btn">Next</button>
+                        </div>
+                    </div>
+                </div>
                 <!-- 遮罩 -->
                 <div id="wallet-overlay" class="wallet-overlay">
                     <div class="overlay-content">
@@ -161,15 +173,7 @@
                  <!-- 返回按鈕 -->
                  <button id="friend-back-to-game" class="friend-back-btn">Back</button>
                  <!-- BONK Detail Modal -->
-                <div id="bonk-detail-modal">
-                    <div class="modal-content">
-                        <span class="close">&times;</span>
-                        <h3>Bonk Details</h3>
-                        <p><strong>Max Reward:</strong> <span id="modal-max-reward"></span></p>
-                        <p><strong>Need:</strong> <span id="modal-need"></span></p>
-                        <button class="confirm-btn">Confirm</button>
-                    </div>
-                </div>
+               
             </div>
             
 

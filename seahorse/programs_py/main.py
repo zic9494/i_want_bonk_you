@@ -58,7 +58,6 @@ def init_admin(owner: Signer, admin: Empty[Admin]):
     admin.bump = bump
     admin.admin_address = owner.key()
     
-    
     print(f"Admin initialized successfully! Address: {admin.admin_address}, Bump: {admin.bump}")
 
 # 創建一個新代幣 (TokenMint)
@@ -96,7 +95,7 @@ def admin_token_account(signer: Signer, admin_account: Empty[TokenAccount], mint
                           )
 
     pda_pubkey, bump = Pubkey.find_program_address(['admin_token'])
-    
+
     amount = 3 * 1_000_000
     signer.transfer_lamports(admin_token_account, amount)
 
@@ -129,7 +128,7 @@ def transfer_tokens(signer: Signer, admin_token_account: TokenAccount, recipient
         authority = admin,
         to = recipient,
         amount = amount,
-        signer = ['admin', signer, bump]
+        signer = ['admin', bump]
     )
 
     print('transfer successful')
@@ -276,55 +275,55 @@ def withdraw_token(signer: Signer, pda_token: TokenAccount, user_account: TokenA
 @instruction
 def transfer_bonk(signer: Signer, sender: TokenAccount, recipient: TokenAccount, user: UserPda, admin: Admin, amount: u64, jackpot: Jackpot):
 
-    if(signer.key() == admin.admin_address):
-        if(sender.authority() == jackpot.key()): #這個轉帳是jackpot轉出，簽署者是FT7K，sender是JP的TokenAccount
-                                                 
-            bump = jackpot.bump_jp
+    if(signer.key() == admin.admin_address and sender.authority() == jackpot.key()): #這個轉帳是jackpot轉出，簽署者是FT7K，sender是JP的TokenAccount
+        bump = jackpot.bump_jp
 
-            sender.transfer(
-                authority = jackpot,
-                to = recipient,
-                amount = amount,
-                signer = ['jackpot', signer, bump]
-            )
-        else:  
-            bump = user.sol_bump    #這個轉帳是USERPDA轉出，簽署者是FT7K，sender是userpda的TokenAccount
-            owner = user.owner      #UserPda要輸入sender的擁有著
+        sender.transfer(
+            authority = jackpot,
+            to = recipient,
+            amount = amount,
+            signer = ['jackpot', signer, bump]
+        )
+           
+    else:  
 
-            sender.transfer(
-                authority = user,
-                to = recipient,
-                amount = amount,
-                signer = ['user_solana', owner, bump]
-            )
-    
+        bump = user.sol_bump    #這個轉帳是USERPDA轉出，簽署者是FT7K，sender是userpda的TokenAccount
+        owner = user.owner      #UserPda要輸入sender的擁有著
+
+        sender.transfer(
+            authority = user,
+            to = recipient,
+            amount = amount,
+            signer = ['user_solana', owner, bump]
+        )
+    '''
     else:
         sender.transfer(
             authority = user,       #這個轉帳是USER自己的錢包轉出，用於deposit
             to = recipient,         #signer要給該使用者簽
             amount = amount
         )
-
+'''
     print('transfer successful')
 
 @instruction
 def transfer_sol(signer: Signer, sender: UserPda, recipient: UserPda, admin: Admin, jackpot: Jackpot, amount: u64, option: bool):
     if(signer.key() == admin.admin_address):
-        sender.transfer_lamports(recipient, amount) #這個轉帳是USERPDA互相轉帳
-        print('transfer successful')
+        if(option == False):
+            sender.transfer_lamports(recipient, amount) #這個轉帳是USERPDA互相轉帳
+            print('transfer successful')
+
+        if(option == True):
+            jackpot.transfer_lamports(recipient, amount)   #這個轉帳是jackpot轉出
+            print('transfer successful')
 
     elif(signer.key() == recipient.owner):          #這個轉帳是USER自己的錢包轉出，用於deposit，signer要給該使用者簽
         signer.transfer_lamports(recipient, amount)
         print('transfer successful')
 
-    elif(option == True):
-        signer.transfer_lamports(jackpot, amount)   #這個轉帳是轉入jackpot
-        print('transfer successful')
-    
     else:
-        jackpot.transfer_lamports(signer, amount)   #這個轉帳是jackpot轉出
+        sender.transfer_lamports(jackpot, amount)   #這個轉帳是轉入jackpot
         print('transfer successful')
-
     
 
 #獎金池-----------------------------------------------------------------------------------------

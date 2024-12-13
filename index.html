@@ -15,6 +15,7 @@
     <link href="./css/LeaderBoard.css" rel="stylesheet">
     <link href="./css/GamePage.css" rel="stylesheet">
     <link href="./css/deposit.css" rel="stylesheet" >
+    <link href="./css/withdraw.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- 先借icon來用等確定後再改 -->
     <script src="./dist/main.js" defer></script>
@@ -75,6 +76,7 @@
                     <button id="friends-button" class="friends-btn">Friends</button>
                     <button id="leaderboard-button" class="leaderboard-btn">Leaderboard</button>
                     <button id="deposit-button" class="leaderboard-btn">Deposit</button>
+                    <button id=" Withdorw-button" class="leaderboard-btn">WithDraw</button>
                 </div>
             
                 <!-- 遊戲功能按鈕 -->
@@ -263,7 +265,35 @@
                 <button id="back-to-game-deposit" class="back-btn">Back</button>
             </div>
             
-            
+            <!-- Withdraw -->
+            <div id="Withdorw_Page" style="display: none">
+                <div class="stretch-container">
+                    <button class="back-btn">Back</button>
+                    <h2>Withdraw Funds</h2>
+        
+                    <!-- 代幣選擇按鈕 -->
+                    <div class="currency-switch">
+                        <button class="currency-btn active" id="sol-btn">SOL</button>
+                        <button class="currency-btn" id="token-btn">TOKEN</button>
+                    </div>
+        
+                    <!-- 拉桿 -->
+                    <div class="withdraw-slider-container">
+                        <label class="slider-label" for="withdraw-amount">Select Amount:</label>
+                        <input type="range" id="withdraw-amount" min="1" max="1000" step="1">
+                        <div class="slider-value" id="slider-value">500</div>
+                    </div>
+        
+                    <!-- 自訂金額輸入 -->
+                    <div class="custom-amount-container">
+                        <label for="custom-amount">Custom Amount:</label>
+                        <input type="number" class="custom-input" id="custom-amount" placeholder="Enter Amount">
+                    </div>
+        
+                    <!-- 確認按鈕 -->
+                    <button class="confirm-btn" id="confirm-btn">Confirm Withdrawal</button>
+                </div>
+            </div>
             
             
             <!-- Stretch UI -->
